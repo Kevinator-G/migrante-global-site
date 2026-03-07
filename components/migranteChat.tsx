@@ -129,34 +129,79 @@ export default function MigranteChat() {
     }
   }
 
-  async function handleLeadSubmit(e: React.FormEvent) {
-    e.preventDefault();
+ async function handleLeadSubmit(e: React.FormEvent) {
+  e.preventDefault();
 
-    if (
-      !leadForm.name.trim() ||
-      !leadForm.currentCountry.trim() ||
-      !leadForm.targetCountry.trim() ||
-      !leadForm.contact.trim()
-    ) {
-      return;
+  if (
+    !leadForm.name.trim() ||
+    !leadForm.currentCountry.trim() ||
+    !leadForm.targetCountry.trim() ||
+    !leadForm.contact.trim()
+  ) {
+    return;
+  }
+
+  try {
+    const lastUserMessage =
+      [...messages].reverse().find((msg) => msg.role === "user")?.content ||
+      `Interesado en emigrar desde ${leadForm.currentCountry} hacia ${leadForm.targetCountry}`;
+
+    const isEmail = leadForm.contact.includes("@");
+
+    console.log("ENVIANDO LEAD:", {
+      nombre: leadForm.name,
+      currentCountry: leadForm.currentCountry,
+      targetCountry: leadForm.targetCountry,
+      contact: leadForm.contact,
+    });
+
+    const res = await fetch("/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nombre: leadForm.name,
+        email: isEmail
+          ? leadForm.contact
+          : `${leadForm.name.trim().toLowerCase().replace(/\s+/g, ".")}@sin-email.com`,
+        telefono: isEmail ? "" : leadForm.contact,
+        pais: leadForm.currentCountry,
+        mensaje: `${lastUserMessage}\nDestino deseado: ${leadForm.targetCountry}`,
+        consentimiento: true,
+      }),
+    });
+
+    console.log("RESPUESTA /api/leads:", res.status);
+
+    if (!res.ok) {
+      throw new Error("No se pudo guardar el lead");
     }
 
-    // Por ahora solo lo mostramos en el chat.
-    // Luego lo conectamos a una API para guardarlo.
     setMessages((prev) => [
       ...prev,
       {
         role: "assistant",
         content:
-          "Gracias. Ya tengo tus datos básicos. El siguiente paso ideal es que te orientemos con más detalle según tu perfil.",
+          "Gracias. Ya tengo tus datos básicos. Desde Migrante Global podremos orientarte de forma más precisa según tu caso. Si quieres avanzar más rápido, también puedes escribirnos directamente por WhatsApp.",
       },
     ]);
 
     setLeadSent(true);
     setShowLeadForm(false);
+  } catch (error) {
+    console.error("Error al enviar lead:", error);
 
-    console.log("Lead capturado:", leadForm);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content:
+          "Hubo un problema al guardar tus datos. Inténtalo de nuevo en unos segundos.",
+      },
+    ]);
   }
+}
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
