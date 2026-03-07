@@ -6,10 +6,12 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    console.log("BODY LEAD RECIBIDO:", body);
 
     const { nombre, email, telefono, pais, mensaje, consentimiento } = body;
 
     if (!nombre || !email || !mensaje) {
+      console.log("FALTAN CAMPOS OBLIGATORIOS");
       return NextResponse.json(
         { error: "Faltan campos obligatorios." },
         { status: 400 }
@@ -27,16 +29,11 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(
-      {
-        success: true,
-        lead,
-      },
-      { status: 201 }
-    );
-  } catch (error) {
-    console.error("Lead error:", error);
+    console.log("LEAD GUARDADO:", lead);
 
+    return NextResponse.json({ success: true, lead }, { status: 201 });
+  } catch (error) {
+    console.error("LEAD ERROR:", error);
     return NextResponse.json(
       { error: "No se pudo guardar el lead." },
       { status: 500 }
