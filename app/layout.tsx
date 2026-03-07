@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import MigranteChat from "@/components/migranteChat";
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
@@ -25,12 +26,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <head>
-        <script src="https://apps.abacus.ai/chatllm/appllm-lib.js"></script>
-      </head>
-      <body suppressHydrationWarning>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
+  <head />
+<body suppressHydrationWarning>
+
+  <Providers>
+    {children}
+  </Providers>
+
+  <MigranteChat />
+
+</body>
+</html>
   );
 }
