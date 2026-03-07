@@ -43,6 +43,30 @@ export default function MigranteChat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading, showLeadForm]);
 
+  function isHotLead(message: string) {
+  const text = message.toLowerCase();
+
+  const keywords = [
+    "quiero emigrar",
+    "quiero irme",
+    "quiero mudarme",
+    "quiero trabajar en",
+    "quiero vivir en",
+    "necesito ayuda",
+    "asesoría",
+    "asesoria",
+    "mi caso",
+    "proceso migratorio",
+    "trabajar en suiza",
+    "emigrar a suiza",
+    "emigrar a alemania",
+    "mudarme a suiza",
+    "mudarse a suiza",
+  ];
+
+  return keywords.some((keyword) => text.includes(keyword));
+}
+
   async function sendMessage() {
     if (!input.trim() || loading) return;
 
