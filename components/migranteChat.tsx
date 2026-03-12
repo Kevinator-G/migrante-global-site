@@ -203,153 +203,152 @@ export default function MigranteChat() {
   }
 }
 
-  return (
-    <div className="fixed bottom-6 right-6 z-50">
-      {!isOpen ? (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="rounded-full bg-green-600 px-5 py-3 text-white shadow-lg"
-        >
-          Mentor Migrante Global
-        </button>
-      ) : (
-        <div className="w-[390px] rounded-2xl border bg-white shadow-2xl">
-          <div className="flex items-center justify-between border-b px-4 py-3">
-            <div>
-              <h3 className="font-semibold text-gray-900">
-                Mentor Migrante Global
-              </h3>
-              <p className="text-xs text-gray-500">
-                Orientación inicial para migrantes
-              </p>
-            </div>
-
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-sm text-gray-500"
-            >
-              ✕
-            </button>
+ return (
+  <div className="fixed bottom-6 right-6 z-50">
+    {!isOpen ? (
+      <button
+        onClick={() => setIsOpen(true)}
+        className="rounded-full border border-red-500/40 bg-red-600 px-5 py-3 text-white shadow-2xl transition hover:bg-red-700"
+      >
+        Mentor Migrante Global
+      </button>
+    ) : (
+      <div className="w-[390px] rounded-2xl border border-zinc-800 bg-zinc-950 text-white shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
+          <div>
+            <h3 className="font-semibold text-white">
+              Mentor Migrante Global
+            </h3>
+            <p className="text-xs text-zinc-400">
+              Orientación inicial para migrantes
+            </p>
           </div>
 
-          <div className="h-80 overflow-y-auto p-4 text-sm space-y-3">
-            {messages.map((msg, i) => (
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-sm text-zinc-400 transition hover:text-white"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="h-80 space-y-3 overflow-y-auto p-4 text-sm">
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`flex ${
+                msg.role === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
               <div
-                key={i}
-                className={`flex ${
-                  msg.role === "user" ? "justify-end" : "justify-start"
+                className={`max-w-[80%] break-words whitespace-pre-wrap rounded-2xl px-3 py-2 ${
+                  msg.role === "user"
+                    ? "border border-red-500/30 bg-red-600 text-white"
+                    : "border border-zinc-800 bg-zinc-900 text-zinc-100"
                 }`}
               >
-                <div
-                  className={`max-w-[80%] rounded-2xl px-3 py-2 break-words whitespace-pre-wrap ${
-                    msg.role === "user"
-                      ? "bg-gray-100 text-gray-900"
-                      : "bg-green-50 text-gray-900"
-                  }`}
-                >
-                  {msg.content}
-                </div>
+                {msg.content}
               </div>
-            ))}
+            </div>
+          ))}
 
-            {loading && (
-              <div className="flex justify-start">
-                <div className="max-w-[80%] rounded-2xl bg-green-50 px-3 py-2 text-gray-900">
-                  Pensando...
-                </div>
+          {loading && (
+            <div className="flex justify-start">
+              <div className="max-w-[80%] rounded-2xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-zinc-100">
+                Pensando...
               </div>
-            )}
+            </div>
+          )}
 
-            {showLeadForm && !leadSent && (
-              <form
-                onSubmit={handleLeadSubmit}
-                className="rounded-xl border p-3 space-y-2 bg-gray-50"
-              >
-                <input
-                  type="text"
-                  placeholder="Tu nombre"
-                  value={leadForm.name}
-                  onChange={(e) =>
-                    setLeadForm((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  className="w-full rounded-lg border px-3 py-2 text-sm text-gray-900"
-                />
-
-                <input
-                  type="text"
-                  placeholder="País actual"
-                  value={leadForm.currentCountry}
-                  onChange={(e) =>
-                    setLeadForm((prev) => ({
-                      ...prev,
-                      currentCountry: e.target.value,
-                    }))
-                  }
-                  className="w-full rounded-lg border px-3 py-2 text-sm text-gray-900"
-                />
-
-                <input
-                  type="text"
-                  placeholder="País al que quieres emigrar"
-                  value={leadForm.targetCountry}
-                  onChange={(e) =>
-                    setLeadForm((prev) => ({
-                      ...prev,
-                      targetCountry: e.target.value,
-                    }))
-                  }
-                  className="w-full rounded-lg border px-3 py-2 text-sm text-gray-900"
-                />
-
-                <input
-                  type="text"
-                  placeholder="Email o WhatsApp"
-                  value={leadForm.contact}
-                  onChange={(e) =>
-                    setLeadForm((prev) => ({
-                      ...prev,
-                      contact: e.target.value,
-                    }))
-                  }
-                  className="w-full rounded-lg border px-3 py-2 text-sm text-gray-900"
-                />
-
-                <button
-                  type="submit"
-                  className="w-full rounded-lg bg-black py-2 text-sm text-white"
-                >
-                  Enviar datos
-                </button>
-              </form>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div className="border-t p-3">
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Escribe tu pregunta..."
-              disabled={loading}
-              className="w-full rounded-xl border px-3 py-2 text-sm text-gray-900 outline-none disabled:opacity-60"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !loading) {
-                  sendMessage();
-                }
-              }}
-            />
-
-            <button
-              onClick={sendMessage}
-              disabled={loading}
-              className="mt-2 w-full rounded-xl bg-green-600 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
+          {showLeadForm && !leadSent && (
+            <form
+              onSubmit={handleLeadSubmit}
+              className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-900 p-3"
             >
-              {loading ? "Pensando..." : "Enviar"}
-            </button>
-          </div>
+              <input
+                type="text"
+                placeholder="Tu nombre"
+                value={leadForm.name}
+                onChange={(e) =>
+                  setLeadForm((prev) => ({ ...prev, name: e.target.value }))
+                }
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-500"
+              />
+
+              <input
+                type="text"
+                placeholder="País actual"
+                value={leadForm.currentCountry}
+                onChange={(e) =>
+                  setLeadForm((prev) => ({
+                    ...prev,
+                    currentCountry: e.target.value,
+                  }))
+                }
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-500"
+              />
+
+              <input
+                type="text"
+                placeholder="País al que quieres emigrar"
+                value={leadForm.targetCountry}
+                onChange={(e) =>
+                  setLeadForm((prev) => ({
+                    ...prev,
+                    targetCountry: e.target.value,
+                  }))
+                }
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-500"
+              />
+
+              <input
+                type="text"
+                placeholder="Email o WhatsApp"
+                value={leadForm.contact}
+                onChange={(e) =>
+                  setLeadForm((prev) => ({
+                    ...prev,
+                    contact: e.target.value,
+                  }))
+                }
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-500"
+              />
+
+              <button
+                type="submit"
+                className="w-full rounded-lg bg-red-600 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+              >
+                Enviar datos
+              </button>
+            </form>
+          )}
+
+          <div ref={messagesEndRef} />
         </div>
-      )}
-    </div>
-  );
-}
+
+        <div className="border-t border-zinc-800 p-3">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Escribe tu pregunta..."
+            disabled={loading}
+            className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-500 disabled:opacity-60"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !loading) {
+                sendMessage();
+              }
+            }}
+          />
+
+          <button
+            onClick={sendMessage}
+            disabled={loading}
+            className="mt-2 w-full rounded-xl bg-red-600 py-2 text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading ? "Pensando..." : "Enviar"}
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
+);
