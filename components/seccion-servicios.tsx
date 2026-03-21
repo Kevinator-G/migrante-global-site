@@ -12,6 +12,7 @@ import {
   Users,
   Video,
   Globe,
+  FilePenLine,
 } from 'lucide-react';
 
 export function SeccionServicios() {
@@ -30,6 +31,13 @@ export function SeccionServicios() {
       link: '/servicios/cv-formato-suizo',
       destacado: true,
     },
+    {
+  icon: FilePenLine,
+  titulo: 'Generador de Documentos',
+  descripcion: 'Crea cartas para vivienda, empleo y trámites con ayuda de IA.',
+  link: '/servicios/generador-documentos',
+  destacado: true,
+},
     {
       icon: Briefcase,
       titulo: 'Orientación Laboral',
