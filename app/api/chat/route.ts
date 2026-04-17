@@ -1,10 +1,6 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 const SYSTEM_PROMPT = `
 Eres Mentor Migrante Global.
 
@@ -91,6 +87,7 @@ Migrante Global no solo informa: ayuda a las personas a tomar decisiones migrato
 const MAX_MESSAGE_LENGTH = 1000;
 
 export async function POST(req: Request) {
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   try {
     const { message } = await req.json();
 
