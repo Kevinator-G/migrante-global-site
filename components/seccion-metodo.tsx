@@ -35,9 +35,9 @@ export function SeccionMetodo() {
     <section id="metodo" className="section bg-dark">
       <div className="max-w-[1200px] mx-auto px-6">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={{ y: 15 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -80px 0px" }}
           transition={{ duration: 0.6 }}
           className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">
@@ -52,9 +52,9 @@ export function SeccionMetodo() {
           {fases.map((fase, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              initial={{ y: 15 }}
+              whileInView={{ y: 0 }}
+              viewport={{ once: true, margin: "0px 0px -80px 0px" }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               className="card relative"
             >

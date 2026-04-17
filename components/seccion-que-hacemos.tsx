@@ -25,9 +25,9 @@ export function SeccionQueHacemos() {
     <section className="section bg-black">
       <div className="max-w-[1200px] mx-auto px-6">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={{ y: 15 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -80px 0px" }}
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
@@ -42,9 +42,9 @@ export function SeccionQueHacemos() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Qué hacemos */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            initial={{ x: -20 }}
+            whileInView={{ x: 0 }}
+            viewport={{ once: true, margin: "0px 0px -80px 0px" }}
             transition={{ duration: 0.6 }}
             className="card bg-gradient-to-br from-green/10 to-dark border border-green/20"
           >
@@ -64,9 +64,9 @@ export function SeccionQueHacemos() {
 
           {/* Qué NO hacemos */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            initial={{ x: 20 }}
+            whileInView={{ x: 0 }}
+            viewport={{ once: true, margin: "0px 0px -80px 0px" }}
             transition={{ duration: 0.6 }}
             className="card bg-gradient-to-br from-red/10 to-dark border border-red/20"
           >

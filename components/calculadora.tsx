@@ -178,7 +178,7 @@ const suizaSalary: Record<SectorKey, number> & { costIdx: number } = {
   costIdx: 175,
 };
 
-export function Calculadora() {
+export function Calculadora({ compact = false, onClose }: { compact?: boolean; onClose?: () => void }) {
   const [mode, setMode] = useState<Mode>('ch');
   const [region, setRegion] = useState<RegionFilter>('hispano');
 
@@ -347,262 +347,203 @@ export function Calculadora() {
     }));
   }, [mode, compCountry, originCountry, destCountry]);
 
+  /* ─── Inner content shared between compact & full mode ─── */
+  const calcInner = (
+    <>
+      {/* MODO + REGIÓN en una sola fila */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+        {/* Modo */}
+        <div className="calc-mode" style={{ marginBottom: 0 }}>
+          <button type="button" className={`calc-mode-btn ${mode === 'ch' ? 'active' : ''}`} onClick={() => setMode('ch')}>
+            🇨🇭 CH vs País
+          </button>
+          <button type="button" className={`calc-mode-btn ${mode === 'pvp' ? 'active' : ''}`} onClick={() => setMode('pvp')}>
+            🌍 País vs País
+          </button>
+        </div>
+        {/* Separador */}
+        <div style={{ width: 1, height: 28, background: 'rgba(128,128,128,0.2)', flexShrink: 0 }} />
+        {/* Región */}
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {(['hispano', 'ue', 'all'] as RegionFilter[]).map(r => (
+            <button
+              key={r}
+              type="button"
+              className={`calc-tab ${region === r ? 'active' : ''}`}
+              style={{ marginBottom: 0 }}
+              onClick={() => setRegion(r)}
+            >
+              {r === 'hispano' ? '🌎 Hispanoamérica' : r === 'ue' ? '🇪🇺 UE' : 'Todos'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="calc-main" style={{ padding: compact ? '18px 14px' : '28px 32px' }}>
+        {/* SELECTORES — 2 cols en modal, 3 cols en full */}
+        <div className="calc-top" style={{ gap: 12, marginBottom: 20, gridTemplateColumns: compact ? '1fr 1fr' : undefined }}>
+          {mode === 'ch' ? (
+            <div className="calc-group">
+              <label>🌍 TU PAÍS ACTUAL</label>
+              <select value={countryKey} onChange={(e) => setCountryKey(e.target.value)}>
+                {countriesList.map(([k, v]) => <option key={k} value={k}>{v.name}</option>)}
+              </select>
+            </div>
+          ) : (
+            <>
+              <div className="calc-group">
+                <label>🌍 PAÍS ORIGEN</label>
+                <select value={originKey} onChange={(e) => setOriginKey(e.target.value)}>
+                  {countriesList.map(([k, v]) => <option key={k} value={k}>{v.name}</option>)}
+                </select>
+              </div>
+              <div className="calc-group">
+                <label>🎯 PAÍS DESTINO</label>
+                <select value={destKey} onChange={(e) => setDestKey(e.target.value)}>
+                  {countriesList.map(([k, v]) => <option key={k} value={k}>{v.name}</option>)}
+                </select>
+              </div>
+            </>
+          )}
+          <div className="calc-group">
+            <label>💼 SECTOR</label>
+            <select value={sector} onChange={(e) => setSector(e.target.value as SectorKey)}>
+              {(Object.keys(sectorNames) as SectorKey[]).map((k) => (
+                <option key={k} value={k}>{sectorNames[k]}</option>
+              ))}
+            </select>
+          </div>
+          {!compact && (
+            <div className="calc-group">
+              <label>💰 TU SALARIO (opcional)</label>
+              <input
+                type="number"
+                placeholder="0"
+                value={salaryOwn}
+                onChange={(e) => setSalaryOwn(e.target.value === '' ? '' : Number(e.target.value))}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* RESULTADOS — 4 tarjetas compactas */}
+        <div className="calc-results-grid" style={{ gap: 10, marginBottom: 16 }}>
+          <div className="calc-card highlight" style={{ padding: 14 }}>
+            <div className="cc-label">{result.dest.isSuiza ? '🇨🇭 SUIZA' : '🎯 DESTINO'}</div>
+            <div className="cc-value" style={{ fontSize: 20 }}>{fmt(result.destVal)} {result.dest.isSuiza ? 'CHF' : '€'}</div>
+            <div className="cc-sub">{sectorNames[sector]}</div>
+          </div>
+          <div className="calc-card" style={{ padding: 14 }}>
+            <div className="cc-label">🌍 {result.comp.name.toUpperCase()}</div>
+            <div className="cc-value" style={{ fontSize: 20 }}>{fmt(result.compVal)} €</div>
+            <div className="cc-sub">Promedio sector</div>
+          </div>
+          <div className="calc-card" style={{ padding: 14 }}>
+            <div className="cc-label">📈 DIFERENCIA</div>
+            <div className="cc-value" style={{ fontSize: 20 }}>{result.diffPct >= 0 ? '+' : ''}{fmt(result.diffPct)}%</div>
+            <div className="cc-sub">{result.diff >= 0 ? '+' : ''}{fmt(result.diff)} {result.dest.isSuiza ? 'CHF' : '€'}</div>
+          </div>
+          <div className="calc-card" style={{ padding: 14 }}>
+            <div className="cc-label">🏠 VIDA</div>
+            <div className="cc-value" style={{ fontSize: 20 }}>{result.costValue}</div>
+            <div className="cc-sub" style={{ fontSize: 10 }}>{result.costSub}</div>
+          </div>
+        </div>
+
+        {/* BARRAS — más delgadas */}
+        <div className="calc-visual" style={{ marginBottom: 14 }}>
+          <div className="calc-bar-row" style={{ marginBottom: 6 }}>
+            <span className="calc-bar-name">B</span>
+            <div className="calc-bar-track" style={{ height: 18 }}>
+              <div className={`calc-bar-fill ${result.dest.isSuiza ? 'ch' : 'dest'}`} style={{ width: `${Math.max(8, result.destWidth)}%` }}>
+                {fmt(result.destVal)} {result.dest.isSuiza ? 'CHF' : '€'}
+              </div>
+            </div>
+          </div>
+          <div className="calc-bar-row" style={{ marginBottom: 0 }}>
+            <span className="calc-bar-name">A</span>
+            <div className="calc-bar-track" style={{ height: 18 }}>
+              <div className="calc-bar-fill comp" style={{ width: `${Math.max(8, result.compWidth)}%` }}>
+                {fmt(result.compVal)} €
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* INSIGHT + AHORRO en una sola fila */}
+        <div style={{ display: 'grid', gridTemplateColumns: savings ? '1fr 1fr' : '1fr', gap: 8, marginBottom: 16 }}>
+          <div className="calc-card" style={{ padding: 12 }}>
+            <div className="cc-label" style={{ marginBottom: 4 }}>🧠 Insight</div>
+            <div className="calc-insight-text" style={{ fontSize: 12, lineHeight: 1.45 }}>{seoText}</div>
+          </div>
+          {savings && (
+            <div className="calc-card" style={{ padding: 12 }}>
+              <div className="cc-label" style={{ marginBottom: 4 }}>📊 Ahorro potencial</div>
+              <div className="calc-insight-text" style={{ fontSize: 12, lineHeight: 1.6 }}>
+                <div>Salario: {fmt(savings.salaryCHF)} CHF</div>
+                <div>Gastos: ~{fmt(savings.livingCostCHF)} CHF</div>
+                <div>Ahorro: <strong className="calc-savings-strong">{fmt(savings.savingsCHF)} CHF/mes</strong></div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* CTA */}
+        <div className="flex justify-center">
+          <a
+            href="/#contacto"
+            onClick={() => onClose?.()}
+            style={{
+              background: 'linear-gradient(180deg, #ef4444 0%, #dc2626 100%)',
+              color: 'white',
+              padding: '10px 22px',
+              borderRadius: '10px',
+              fontWeight: 700,
+              textDecoration: 'none',
+              display: 'inline-block',
+              fontSize: 13,
+              boxShadow: '0 3px 0 #7f1d1d, 0 5px 14px rgba(0,0,0,0.3)',
+            }}
+          >
+            Quiero orientación personalizada →
+          </a>
+        </div>
+
+        <p className="calc-note" style={{ marginTop: 10, fontSize: 10 }}>
+          ⚠ Datos orientativos. Los salarios reales varían según experiencia, cantón y empresa.
+        </p>
+      </div>
+    </>
+  );
+
+  /* ─── Compact mode (dentro de modal) ─── */
+  if (compact) {
+    return (
+      <div style={{ padding: '12px 0 16px' }}>
+        <div className="calc-wrapper" style={{ marginTop: 0 }}>
+          {calcInner}
+        </div>
+      </div>
+    );
+  }
+
+  /* ─── Full mode (en la landing) ─── */
   return (
     <section id="calculadora" className="calc-section">
       <div className="container">
         <div className="section-tag">HERRAMIENTA</div>
-
         <div className="flex items-center gap-3 mb-2">
           <Calculator className="w-6 h-6 text-red-500" />
           <h2 className="section-title">Calculadora de salarios: compara países.</h2>
         </div>
-
         <p className="section-text">
           Compara salarios por sector entre países (Hispanoamérica y UE) y también contra Suiza. Datos orientativos.
         </p>
-
         <p className="mt-2 text-xs text-[rgba(255,255,255,0.6)] max-w-[650px]">
-          Herramienta orientativa basada en promedios nacionales. No debe usarse como asesoramiento financiero ni base única
-          para decisiones.
+          Herramienta orientativa basada en promedios nacionales. No debe usarse como asesoramiento financiero ni base única para decisiones.
         </p>
-
         <div className="calc-wrapper">
-          {/* MODO */}
-          <div className="calc-mode">
-            <button
-              type="button"
-              className={`calc-mode-btn ${mode === 'ch' ? 'active' : ''}`}
-              onClick={() => setMode('ch')}
-            >
-              CH vs País
-            </button>
-            <button
-              type="button"
-              className={`calc-mode-btn ${mode === 'pvp' ? 'active' : ''}`}
-              onClick={() => setMode('pvp')}
-            >
-              🌍 País vs País
-            </button>
-          </div>
-
-          {/* FILTRO REGIÓN */}
-          <div className="calc-tabs">
-            <button
-              type="button"
-              className={`calc-tab ${region === 'hispano' ? 'active' : ''}`}
-              onClick={() => setRegion('hispano')}
-            >
-              🌎 Hispanoamérica
-            </button>
-            <button
-              type="button"
-              className={`calc-tab ${region === 'ue' ? 'active' : ''}`}
-              onClick={() => setRegion('ue')}
-            >
-              🇪🇺 Unión Europea
-            </button>
-            <button
-              type="button"
-              className={`calc-tab ${region === 'all' ? 'active' : ''}`}
-              onClick={() => setRegion('all')}
-            >
-              Todos
-            </button>
-          </div>
-
-          <div className="calc-main">
-            {/* TOP */}
-            <div className="calc-top">
-              {mode === 'ch' ? (
-                <div className="calc-group">
-                  <label>🌍 TU PAÍS ACTUAL</label>
-                  <select value={countryKey} onChange={(e) => setCountryKey(e.target.value)}>
-                    {countriesList.map(([k, v]) => (
-                      <option key={k} value={k}>
-                        {v.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : (
-                <>
-                  <div className="calc-group">
-                    <label>🌍 PAÍS A (ORIGEN)</label>
-                    <select value={originKey} onChange={(e) => setOriginKey(e.target.value)}>
-                      {countriesList.map(([k, v]) => (
-                        <option key={k} value={k}>
-                          {v.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="calc-group">
-                    <label>🎯 PAÍS B (DESTINO)</label>
-                    <select value={destKey} onChange={(e) => setDestKey(e.target.value)}>
-                      {countriesList.map(([k, v]) => (
-                        <option key={k} value={k}>
-                          {v.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </>
-              )}
-
-              <div className="calc-group">
-                <label>💼 SECTOR PROFESIONAL</label>
-                <select value={sector} onChange={(e) => setSector(e.target.value as SectorKey)}>
-                  {(Object.keys(sectorNames) as SectorKey[]).map((k) => (
-                    <option key={k} value={k}>
-                      {sectorNames[k]}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="calc-group">
-                <label>💰 TU SALARIO MENSUAL (opcional)</label>
-                <input
-                  type="number"
-                  placeholder="0"
-                  value={salaryOwn}
-                  onChange={(e) => setSalaryOwn(e.target.value === '' ? '' : Number(e.target.value))}
-                />
-              </div>
-            </div>
-
-            {/* RESULTADOS */}
-            <div className="calc-results-grid">
-              <div className="calc-card highlight">
-                <div className="cc-label">{result.dest.isSuiza ? '🇨🇭 SALARIO EN SUIZA' : '🎯 SALARIO DESTINO'}</div>
-                <div className="cc-value">
-                  {fmt(result.destVal)} {result.dest.isSuiza ? 'CHF' : '€'}
-                </div>
-                <div className="cc-sub">{sectorNames[sector]} · mensual aproximado</div>
-              </div>
-
-              <div className="calc-card">
-                <div className="cc-label">🌍 SALARIO EN {result.comp.name.toUpperCase()}</div>
-                <div className="cc-value">{fmt(result.compVal)} €</div>
-                <div className="cc-sub">Promedio nacional por sector</div>
-              </div>
-
-              <div className="calc-card">
-                <div className="cc-label">📈 DIFERENCIA</div>
-                <div className="cc-value">
-                  {result.diffPct >= 0 ? '+' : ''}
-                  {fmt(result.diffPct)}%
-                </div>
-                <div className="cc-sub">
-                  {result.diff >= 0 ? '+' : ''}
-                  {fmt(result.diff)} {result.dest.isSuiza ? 'CHF' : '€'} vs {result.comp.name}
-                </div>
-              </div>
-
-              <div className="calc-card">
-                <div className="cc-label">🏠 COSTE DE VIDA</div>
-                <div className="cc-value">{result.costValue}</div>
-                <div className="cc-sub">{result.costSub}</div>
-              </div>
-            </div>
-
-            {/* BARRAS (A/B) */}
-            <div className="calc-visual">
-              <div className="calc-bar-row">
-                <span className="calc-bar-name">B</span>
-                <div className="calc-bar-track">
-                  <div
-                    className={`calc-bar-fill ${result.dest.isSuiza ? 'ch' : 'dest'}`}
-                    style={{ width: `${Math.max(8, result.destWidth)}%` }}
-                  >
-                    {fmt(result.destVal)} {result.dest.isSuiza ? 'CHF' : '€'}
-                  </div>
-                </div>
-              </div>
-
-              <div className="calc-bar-row">
-                <span className="calc-bar-name">A</span>
-                <div className="calc-bar-track">
-                  <div className="calc-bar-fill comp" style={{ width: `${Math.max(8, result.compWidth)}%` }}>
-                    {fmt(result.compVal)} €
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* GRID SECTORES */}
-            <div className="calc-sectors-grid">
-              {sectorCards.map((s) => (
-                <div key={s.key} className="calc-sector">
-                  <div className="cs-name">{sectorNames[s.key]}</div>
-
-                  <div className="cs-row">
-                    <span className="cs-comp">{s.aName}:</span>
-                    <span className="cs-comp">{fmt(s.aVal)} €</span>
-                  </div>
-
-                  <div className="cs-row">
-                    <span className="cs-ch">{s.bName}:</span>
-                    <span className="cs-ch">
-                      {fmt(s.bVal)} {mode === 'ch' ? 'CHF' : '€'}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* TEXTO DINÁMICO (SEO) */}
-            <div className="mt-5 calc-card" style={{ padding: 18 }}>
-              <div className="cc-label">🧠 Insight</div>
-              <div className="cc-sub" style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)' }}>
-                {seoText}
-              </div>
-            </div>
-
-            {/* AHORRO POTENCIAL (solo modo Suiza) */}
-            {savings && (
-              <div className="mt-4 calc-card" style={{ padding: 18 }}>
-                <div className="cc-label">📊 Ahorro potencial en Suiza</div>
-                <div className="cc-sub" style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)' }}>
-                  <div>Salario en Suiza: {fmt(savings.salaryCHF)} CHF</div>
-                  <div>Coste de vida promedio: {fmt(savings.livingCostCHF)} CHF</div>
-                  <div>
-                    Ahorro estimado:{' '}
-                    <strong style={{ color: 'white' }}>
-                      {fmt(savings.savingsCHF)} CHF
-                    </strong>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* CTA WHATSAPP */}
-            <div className="mt-8 flex justify-center">
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  backgroundColor: '#25D366',
-                  color: 'white',
-                  padding: '14px 22px',
-                  borderRadius: '10px',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  display: 'inline-block',
-                  boxShadow: '0 10px 24px rgba(37, 211, 102, 0.25)',
-                }}
-              >
-                Quiero emigrar y cambiar mi vida 
-              </a>
-            </div>
-
-            <p className="calc-note" style={{ marginTop: 18 }}>
-              ⚠ Datos orientativos basados en promedios nacionales. Los salarios reales varían según experiencia,
-              cantón/ciudad, empresa y cualificación.
-            </p>
-          </div>
+          {calcInner}
         </div>
       </div>
     </section>

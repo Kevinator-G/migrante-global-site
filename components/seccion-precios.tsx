@@ -1,148 +1,259 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { Check, Star, Zap } from 'lucide-react';
+import { Check, Home, Package2, Users, ShoppingCart, CheckCircle2 } from 'lucide-react';
+import { useCart } from '@/lib/cart-context';
+
+const GOLD = '#c9a96e';
+
+const planes = [
+  {
+    id: 'solo-alojamiento',
+    nombre: 'Solo Alojamiento',
+    precio: 780,
+    moneda: 'CHF',
+    tipo: 'Pago único',
+    descripcion: 'Servicio puntual',
+    destacado: false,
+    icon: Home,
+    caracteristicas: [
+      'Asesoría para encontrar alojamiento',
+      'Guía de búsqueda de vivienda',
+      'Revisión de contratos de alquiler',
+      'Orientación sobre zonas y costos',
+      'Soporte durante 30 días',
+    ],
+  },
+  {
+    id: 'pack-completo',
+    nombre: 'Pack Completo',
+    precio: 1280,
+    moneda: 'CHF',
+    tipo: 'Pago único',
+    descripcion: 'Reubicación integral',
+    destacado: true,
+    icon: Package2,
+    caracteristicas: [
+      'Todo lo de Solo Alojamiento',
+      'CV adaptado al formato suizo',
+      'Estrategia de búsqueda de empleo',
+      'Guía completa de trámites',
+      'Acceso a comunidad durante 3 meses',
+      '2 sesiones personalizadas 1:1',
+      'Soporte prioritario 90 días',
+    ],
+  },
+  {
+    id: 'comunidad',
+    nombre: 'Comunidad',
+    precio: 80,
+    moneda: 'CHF/mes',
+    tipo: 'Suscripción mensual',
+    descripcion: 'Sin permanencia',
+    destacado: false,
+    icon: Users,
+    caracteristicas: [
+      'Acceso a comunidad exclusiva',
+      'Eventos mensuales de networking',
+      'Recursos y guías actualizadas',
+      'Descuentos en servicios adicionales',
+      'Cancela cuando quieras',
+    ],
+  },
+];
 
 export function SeccionPrecios() {
-  const planes = [
-    {
-      nombre: 'Solo Alojamiento',
-      precio: '780',
-      moneda: 'CHF',
-      tipo: 'Pago único',
-      descripcion: 'Servicio puntual',
-      destacado: false,
-      icon: Check,
-      caracteristicas: [
-        'Asesoría para encontrar alojamiento',
-        'Guía de búsqueda de vivienda',
-        'Revisión de contratos de alquiler',
-        'Orientación sobre zonas y costos',
-        'Soporte durante 30 días',
-      ],
-    },
-    {
-      nombre: 'Pack Completo',
-      precio: '1,280',
-      moneda: 'CHF',
-      tipo: 'Pago único',
-      descripcion: 'Reubicación integral',
-      destacado: true,
-      icon: Star,
-      caracteristicas: [
-        'Todo lo de Solo Alojamiento',
-        'CV adaptado al formato suizo',
-        'Estrategia de búsqueda de empleo',
-        'Guía completa de trámites',
-        'Acceso a comunidad durante 3 meses',
-        '2 sesiones personalizadas 1:1',
-        'Soporte prioritario 90 días',
-      ],
-    },
-    {
-      nombre: 'Comunidad',
-      precio: '80',
-      moneda: 'CHF',
-      tipo: 'Suscripción mensual',
-      descripcion: 'Sin permanencia',
-      destacado: false,
-      icon: Zap,
-      caracteristicas: [
-        'Acceso a comunidad exclusiva',
-        'Eventos mensuales de networking',
-        'Recursos y guías actualizadas',
-        'Descuentos en servicios adicionales',
-        'Cancela cuando quieras',
-      ],
-    },
-  ];
+  const { addItem, openCart, isInCart } = useCart();
+
+  const handleAddToCart = (plan: typeof planes[0]) => {
+    if (isInCart(plan.id)) { openCart(); return; }
+    addItem({
+      id: plan.id,
+      nombre: plan.nombre,
+      precio: plan.precio,
+      moneda: plan.moneda,
+      tipo: plan.tipo,
+      emoji: plan.id === 'solo-alojamiento' ? '🏠' : plan.id === 'pack-completo' ? '📦' : '🤝',
+    });
+  };
 
   return (
-    <section id="planes" className="section bg-black">
-      <div className="max-w-[1200px] mx-auto px-6">
+    <section id="planes" className="section" style={{ background: '#111318' }}>
+      <div className="max-w-[1100px] mx-auto px-6">
+
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={{ y: 15 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: '0px 0px -80px 0px' }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-14"
         >
-          <h2 className="text-4xl font-bold mb-4">
-            Planes y <span className="text-gold">Precios</span>
+          <span className="section-tag">Inversión en tu futuro</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Planes y <span style={{ color: GOLD }}>Precios</span>
           </h2>
-          <p className="text-bone/70 text-lg max-w-2xl mx-auto">
+          <p className="text-white/50 text-lg max-w-xl mx-auto">
             Elige el plan que mejor se adapte a tu situación y necesidades
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {planes.map((plan, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              className={`card relative ${
-                plan.destacado
-                  ? 'border-2 border-gold bg-gradient-to-br from-dark via-gray to-dark scale-105'
-                  : 'border border-gray/30'
-              }`}
-            >
-              {plan.destacado && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-gold to-red px-6 py-2 rounded-full text-black font-bold text-sm shadow-lg">
-                  🌟 MÁS POPULAR
-                </div>
-              )}
+        {/* Cards */}
+        <div className="grid md:grid-cols-3 gap-5 items-start">
+          {planes.map((plan, index) => {
+            const inCart = isInCart(plan.id);
+            const Icon = plan.icon;
 
-              <div className="text-center mb-6 mt-2">
-                <div className="bg-gradient-to-br from-gold/20 to-red/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <plan.icon className="w-8 h-8 text-gold" />
-                </div>
-                <h3 className="text-2xl font-bold mb-2">{plan.nombre}</h3>
-                <p className="text-bone/60 text-sm mb-4">{plan.descripcion}</p>
-                <div className="mb-2">
-                  <span className="text-5xl font-bold text-gold">{plan.precio}</span>
-                  <span className="text-bone/70 ml-2">{plan.moneda}</span>
-                </div>
-                <p className="text-bone/50 text-sm">{plan.tipo}</p>
-              </div>
-
-              <ul className="space-y-3 mb-8">
-                {plan.caracteristicas.map((caracteristica, i) => (
-                  <li key={i} className="flex items-start gap-3 text-bone/80 text-sm">
-                    <Check className="w-5 h-5 text-green flex-shrink-0 mt-0.5" />
-                    <span>{caracteristica}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href="/#contacto"
-                className={`block text-center py-3 px-6 rounded-lg font-semibold transition ${
-                  plan.destacado
-                    ? 'bg-gradient-to-r from-gold to-red text-black hover:shadow-lg hover:scale-105'
-                    : 'bg-gray text-bone hover:bg-gold hover:text-black'
+            return (
+              <motion.div
+                key={plan.id}
+                initial={{ y: 15 }}
+                whileInView={{ y: 0 }}
+                viewport={{ once: true, margin: '0px 0px -80px 0px' }}
+                transition={{ duration: 0.5, delay: index * 0.12 }}
+                data-light-card="true"
+                className={`relative rounded-2xl flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 ${
+                  plan.destacado ? 'md:-translate-y-2' : ''
                 }`}
+                style={{
+                  background: 'var(--surface-card)',
+                  border: plan.destacado
+                    ? `1px solid ${GOLD}40`
+                    : '1px solid rgba(255,255,255,0.07)',
+                  boxShadow: plan.destacado
+                    ? `0 0 0 1px ${GOLD}20, 0 24px 48px rgba(0,0,0,0.4)`
+                    : 'none',
+                }}
               >
-                Comenzar Ahora
-              </Link>
-            </motion.div>
-          ))}
+                {/* Badge "más popular" */}
+                {plan.destacado && (
+                  <div
+                    className="text-center py-2 text-[11px] font-bold tracking-widest uppercase"
+                    style={{ background: GOLD, color: '#111318', letterSpacing: '2.5px' }}
+                  >
+                    Recomendado
+                  </div>
+                )}
+
+                <div className="p-7 flex flex-col flex-1">
+                  {/* Icono + nombre */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{
+                        background: plan.destacado
+                          ? `${GOLD}12`
+                          : 'var(--surface-card-elevated)',
+                        border: plan.destacado
+                          ? `1px solid ${GOLD}30`
+                          : '1px solid rgba(128,128,128,0.15)',
+                      }}
+                    >
+                      <Icon
+                        className={`w-5 h-5 ${!plan.destacado ? 'text-white/65' : ''}`}
+                        style={{ color: plan.destacado ? GOLD : undefined }}
+                      />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-white leading-tight">{plan.nombre}</div>
+                      <div className="text-white/35 text-xs mt-0.5">{plan.descripcion}</div>
+                    </div>
+                  </div>
+
+                  {/* Precio */}
+                  <div className="mb-6">
+                    <div className="flex items-end gap-2">
+                      <span
+                        className={`text-5xl font-bold leading-none ${!plan.destacado ? 'text-white' : ''}`}
+                        style={{ color: plan.destacado ? GOLD : undefined }}
+                      >
+                        {plan.precio.toLocaleString('es-CH')}
+                      </span>
+                      <span className="text-white/35 text-sm mb-1">{plan.moneda}</span>
+                    </div>
+                    <div className="text-white/30 text-xs mt-1">{plan.tipo}</div>
+                  </div>
+
+                  {/* Divider */}
+                  <div
+                    className="h-px mb-5"
+                    style={{ background: 'rgba(128,128,128,0.12)' }}
+                  />
+
+                  {/* Características */}
+                  <ul className="space-y-2.5 mb-7 flex-1">
+                    {plan.caracteristicas.map((c, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-sm text-white/60">
+                        <Check
+                          className={`w-4 h-4 flex-shrink-0 mt-0.5 ${!plan.destacado ? 'text-white/35' : ''}`}
+                          style={{ color: plan.destacado ? GOLD : undefined }}
+                        />
+                        {c}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Botón carrito */}
+                  <button
+                    onClick={() => handleAddToCart(plan)}
+                    className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-95"
+                    style={
+                      inCart
+                        ? {
+                            background: 'rgba(201,169,110,0.1)',
+                            border: `1px solid ${GOLD}40`,
+                            color: GOLD,
+                          }
+                        : plan.destacado
+                        ? {
+                            background: GOLD,
+                            color: '#111318',
+                            fontWeight: 700,
+                            boxShadow: `0 4px 12px ${GOLD}30`,
+                          }
+                        : {
+                            background: 'var(--surface-card-elevated)',
+                            border: '1px solid rgba(128,128,128,0.2)',
+                            color: 'var(--white)',
+                          }
+                    }
+                    onMouseEnter={e => {
+                      if (!inCart && !plan.destacado) {
+                        (e.currentTarget as HTMLElement).style.borderColor = `${GOLD}50`;
+                        (e.currentTarget as HTMLElement).style.color = GOLD;
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!inCart && !plan.destacado) {
+                        (e.currentTarget as HTMLElement).style.borderColor = 'rgba(128,128,128,0.2)';
+                        (e.currentTarget as HTMLElement).style.color = 'var(--white)';
+                      }
+                    }}
+                  >
+                    {inCart ? (
+                      <><CheckCircle2 className="w-4 h-4" /> En tu carrito · Ver</>
+                    ) : (
+                      <><ShoppingCart className="w-4 h-4" /> Agregar al carrito</>
+                    )}
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
+        {/* Nota legal */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-center mt-12"
+          initial={{ y: 10 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: '0px 0px -80px 0px' }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="text-center mt-10 space-y-1"
         >
-          <p className="text-bone/60 text-sm">
-            * Todos los precios son en francos suizos (CHF). Servicios adicionales disponibles bajo demanda.
+          <p className="text-white/30 text-sm">
+            * Todos los precios en francos suizos (CHF). El pago se coordina personalmente.
           </p>
-          <p className="text-bone/50 text-xs mt-2">
+          <p className="text-white/20 text-xs">
             No garantizamos empleo, residencia ni aprobación de trámites. Ofrecemos orientación y acompañamiento.
           </p>
         </motion.div>

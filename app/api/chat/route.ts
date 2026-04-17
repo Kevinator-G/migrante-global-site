@@ -88,6 +88,8 @@ Cuando sea adecuado, invita al usuario a seguir con Migrante Global para obtener
 Migrante Global no solo informa: ayuda a las personas a tomar decisiones migratorias con más claridad, estrategia y acompañamiento.
 `;
 
+const MAX_MESSAGE_LENGTH = 1000;
+
 export async function POST(req: Request) {
   try {
     const { message } = await req.json();
@@ -99,9 +101,16 @@ export async function POST(req: Request) {
       );
     }
 
-    const response = await client.responses.create({
-      model: "gpt-5.4",
-      input: [
+    if (message.length > MAX_MESSAGE_LENGTH) {
+      return NextResponse.json(
+        { reply: "El mensaje es demasiado largo. Por favor, resúmelo." },
+        { status: 400 }
+      );
+    }
+
+    const response = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
         {
           role: "system",
           content: SYSTEM_PROMPT,
@@ -111,10 +120,12 @@ export async function POST(req: Request) {
           content: message,
         },
       ],
+      max_tokens: 500,
+      temperature: 0.7,
     });
 
     const reply =
-      response.output_text?.trim() ||
+      response.choices[0]?.message?.content?.trim() ||
       "No pude responder en este momento.";
 
     return NextResponse.json({ reply });

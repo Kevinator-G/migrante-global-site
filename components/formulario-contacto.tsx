@@ -23,7 +23,7 @@ export function FormularioContacto() {
     setErrorMessage('');
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -55,9 +55,9 @@ export function FormularioContacto() {
     <section id="contacto" className="section bg-black">
       <div className="max-w-[800px] mx-auto px-6">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={{ y: 15 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -80px 0px" }}
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
@@ -69,9 +69,9 @@ export function FormularioContacto() {
         
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={{ y: 15 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -80px 0px" }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="card"
         >

@@ -6,37 +6,51 @@ import { ServicioTemplate } from '@/components/servicio-template';
 export default function CVFormatoSuizoPage() {
   return (
     <ServicioTemplate
+      id="cv-formato-suizo"
       titulo="CV Formato Suizo"
-      subtitulo="Adapta tu currículum a los estándares suizos para aumentar tus oportunidades"
+      subtitulo="Adapta tu currículum a los estándares suizos y multiplica tus respuestas"
+      tagline="Un CV mal formateado descarta tu candidatura antes de que lean la primera línea"
       icon={FileText}
+      categoria="Empleo en Suiza"
+      precio={290}
+      moneda="CHF"
+      precioTipo="Pago único · incluye 1 revisión adicional"
+      valorMercado="Servicios de CV profesional en Europa: €250–500"
       problema={{
         titulo: '¿Por qué tu CV actual no funciona en Suiza?',
         descripcion:
-          'El mercado laboral suizo valora la precisión, la estructura y la adaptación cultural. Un CV latinoamericano o español no tiene el formato esperado, lo que reduce tus posibilidades. Te enseñamos a adaptarlo correctamente.',
+          'El mercado laboral suizo es preciso, estructurado y culturalmente muy específico. Un CV latinoamericano o español — aunque sea brillante en contenido — tiene el formato equivocado: demasiado largo, sin foto correcta, con estructura que no sigue los estándares locales. Resultado: carpeta de rechazados sin siquiera ser leído.',
       }}
+      beneficios={[
+        'Tu CV adaptado al formato exacto que usan los empleadores suizos',
+        'Descripción de experiencias con lenguaje y estructura locales',
+        'Corrección de foto, longitud, secciones y orden de contenido',
+        'Traducción contextual de títulos y cargos al sistema suizo',
+        'Una revisión adicional incluida hasta que quedes satisfecho',
+      ]}
       incluye={[
-        'Revisión completa de tu CV actual',
-        'Adaptación al formato suizo estándar',
-        'Optimización de descripción de experiencias',
-        'Traducción de títulos y cargos al contexto suizo',
-        'Consejos sobre foto, estructura y longitud',
-        '1 revisión adicional incluida',
+        'Revisión completa de tu CV actual (estructura, contenido, formato)',
+        'Adaptación al formato suizo estándar (Europass / local)',
+        'Optimización de la descripción de cada experiencia laboral',
+        'Traducción contextual de títulos universitarios y cargos',
+        'Consejos sobre foto, longitud (máx. 2 páginas), secciones clave',
+        '1 revisión adicional incluida (ajustes después del primer entregable)',
       ]}
       noIncluye={[
-        'No escribimos tu CV desde cero (debes tener uno base)',
-        'No garantizamos entrevistas ni empleo',
+        'No escribimos tu CV desde cero — necesitas tener uno base',
+        'No garantizamos entrevistas ni respuestas de empleadores',
         'No traducimos el CV completo a alemán/francés (solo orientamos)',
-        'No ofrecemos servicio de carta de presentación (se cotiza aparte)',
+        'La carta de presentación se cotiza aparte (CHF 120)',
       ]}
       paraQuien={[
-        'Profesionales que quieren aplicar a empleos en Suiza',
-        'Personas con experiencia pero sin formato adecuado',
-        'Quienes han enviado CVs sin resultados y necesitan mejorar',
+        'Profesionales que aplican a empleos suizos sin obtener respuesta',
+        'Personas con experiencia sólida pero CV con formato inadecuado',
+        'Quienes quieren maximizar sus posibilidades antes de aplicar masivamente',
       ]}
-      planes={{
-        inicio: 'Disponible como servicio adicional.',
-        estrategia: 'Incluido completamente en este plan con 1 revisión adicional.',
-        perfecto: 'Incluido con revisiones ilimitadas durante 3 meses.',
+      planInfo={{
+        inicio: 'Disponible como servicio adicional al plan de alojamiento.',
+        estrategia: 'Incluido con revisiones adicionales y seguimiento de 90 días.',
+        comunidad: 'Acceso a plantillas de CV actualizadas dentro de la comunidad.',
       }}
     />
   );

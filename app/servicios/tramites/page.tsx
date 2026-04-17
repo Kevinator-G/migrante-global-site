@@ -6,37 +6,51 @@ import { ServicioTemplate } from '@/components/servicio-template';
 export default function TramitesPage() {
   return (
     <ServicioTemplate
+      id="tramites-suiza"
       titulo="Acompañamiento en Trámites"
-      subtitulo="Te guiamos en los trámites administrativos necesarios para tu migración"
+      subtitulo="Navega la burocracia suiza con claridad, sin errores y sin perder tiempo"
+      tagline="Cada cantón tiene sus propias reglas — conocerlas de antemano vale oro"
       icon={FileCheck}
+      categoria="Trámites Administrativos"
+      precio={320}
+      moneda="CHF"
+      precioTipo="Pago único · 45 días de soporte activo"
+      valorMercado="Servicios de orientación administrativa para migrantes: CHF 300–600"
       problema={{
-        titulo: '¿Por qué los trámites en Suiza son complicados?',
+        titulo: '¿Por qué los trámites en Suiza pueden hundirte?',
         descripcion:
-          'La burocracia suiza es eficiente pero compleja. Desde registros comunales hasta seguros de salud, cada cantón tiene sus propias reglas. Sin orientación, es fácil cometer errores costosos. Te explicamos todo paso a paso.',
+          'La burocracia suiza es eficiente pero implacable. El Anmeldung, el seguro de salud obligatorio, la cuenta bancaria, los seguros sociales — cada uno tiene plazos, formularios y requisitos específicos que varían por cantón. Un error o un retraso puede derivar en multas, problemas con permisos o retrasos en beneficios. La orientación correcta desde el inicio es la diferencia entre avanzar o estancarse.',
       }}
+      beneficios={[
+        'Checklist completo y personalizado de trámites según tu cantón y situación',
+        'Guía paso a paso del Anmeldung (registro comunal obligatorio)',
+        'Orientación sobre seguros de salud: qué elegir, cuándo y cómo',
+        'Guía de apertura de cuenta bancaria para recién llegados',
+        'Soporte por email durante 45 días para resolver dudas que surjan',
+      ]}
       incluye={[
-        'Guía completa de trámites por cantón',
-        'Checklist de documentos necesarios',
-        'Orientación sobre registro comunal (Anmeldung)',
-        'Información sobre seguros de salud obligatorios',
-        'Guía de apertura de cuenta bancaria',
-        'Soporte por email durante 45 días',
+        'Checklist personalizado de trámites según tu cantón de residencia',
+        'Guía detallada del registro comunal (Anmeldung / Anmeldestelle)',
+        'Información sobre seguros de salud obligatorios y cómo compararlos',
+        'Orientación para apertura de cuenta bancaria (PostFinance, Neon, etc.)',
+        'Documentos necesarios para cada trámite y dónde conseguirlos',
+        'Soporte por email durante 45 días desde el inicio del servicio',
       ]}
       noIncluye={[
-        'No somos asesoría legal (no gestionamos permisos de residencia)',
-        'No llenamos formularios por ti (te orientamos)',
-        'No garantizamos aprobación de trámites',
-        'No ofrecemos servicio de traducción oficial',
+        'No somos asesoría legal — no gestionamos permisos de residencia',
+        'No rellenamos formularios por ti — te orientamos para hacerlo correctamente',
+        'No garantizamos aprobación de ningún trámite',
+        'No ofrecemos servicio de traducción oficial certificada',
       ]}
       paraQuien={[
         'Personas que acaban de llegar a Suiza y no saben por dónde empezar',
-        'Quienes necesitan entender qué trámites son obligatorios',
-        'Personas que quieren evitar multas o problemas administrativos',
+        'Quienes necesitan entender qué trámites son obligatorios y en qué orden',
+        'Migrantes que quieren evitar multas o complicaciones administrativas',
       ]}
-      planes={{
+      planInfo={{
         inicio: 'Disponible como servicio adicional.',
-        estrategia: 'Incluido con guía completa y soporte de 45 días.',
-        perfecto: 'Incluido con soporte prioritario y sesiones de consulta.',
+        estrategia: 'Incluido con guía completa, checklist y soporte de 45 días.',
+        comunidad: 'Acceso a guías de trámites actualizadas dentro de la comunidad.',
       }}
     />
   );

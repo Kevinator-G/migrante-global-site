@@ -2,122 +2,335 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft, Check, X, Users, Package } from 'lucide-react';
+import {
+  ArrowLeft,
+  Check,
+  X,
+  Users,
+  ShoppingCart,
+  CheckCircle2,
+  Star,
+  ChevronRight,
+  MessageCircle,
+} from 'lucide-react';
 import { Navbar } from './navbar';
 import { Footer } from './footer';
+import { useCart } from '@/lib/cart-context';
 
-interface ServicioTemplateProps {
+const GOLD = '#c9a96e';
+const GOLD_BG = 'rgba(201,169,110,0.08)';
+const GOLD_BORDER = 'rgba(201,169,110,0.25)';
+
+interface PlanInfo {
+  inicio: string;
+  estrategia: string;
+  comunidad: string;
+}
+
+export interface ServicioTemplateProps {
+  id: string;
   titulo: string;
   subtitulo: string;
-  icon: React.ComponentType<{ className?: string }>;
-  problema: {
-    titulo: string;
-    descripcion: string;
-  };
+  tagline: string;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  categoria: string;
+  precio: number;
+  moneda: string;
+  precioTipo: string;
+  valorMercado: string;
+  problema: { titulo: string; descripcion: string };
+  beneficios: string[];
   incluye: string[];
   noIncluye: string[];
   paraQuien: string[];
-  planes: {
-    inicio: string;
-    estrategia: string;
-    perfecto: string;
-  };
+  planInfo: PlanInfo;
 }
 
 export function ServicioTemplate({
+  id,
   titulo,
   subtitulo,
+  tagline,
   icon: Icon,
+  categoria,
+  precio,
+  moneda,
+  precioTipo,
+  valorMercado,
   problema,
+  beneficios,
   incluye,
   noIncluye,
   paraQuien,
-  planes,
+  planInfo,
 }: ServicioTemplateProps) {
+  const { addItem, openCart, isInCart } = useCart();
+  const inCart = isInCart(id);
+
+  const handleCartAction = () => {
+    if (inCart) { openCart(); return; }
+    addItem({
+      id,
+      nombre: titulo,
+      precio,
+      moneda,
+      tipo: precioTipo,
+      emoji: '⭐',
+    });
+  };
+
   return (
     <>
       <Navbar />
-      <main className="pt-24">
-        {/* Hero */}
-        <section className="section bg-gradient-to-br from-black via-dark to-black">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-bone/60 hover:text-gold transition mb-8"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Volver al inicio
-            </Link>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center max-w-3xl mx-auto"
-            >
-              <div className="bg-gradient-to-br from-gold/20 to-red/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Icon className="w-10 h-10 text-gold" />
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">{titulo}</h1>
-              <p className="text-xl text-bone/70">{subtitulo}</p>
-            </motion.div>
-          </div>
-        </section>
+      <main
+        className="pt-20"
+        data-light-card="true"
+        style={{ background: '#0a0c10', minHeight: '100vh' }}
+      >
+        {/* ─── HERO ─── */}
+        <section
+          className="relative overflow-hidden"
+          style={{ padding: '80px 0 70px' }}
+        >
+          {/* Ambient glow */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,169,110,0.07) 0%, transparent 65%)',
+            }}
+          />
 
-        {/* Problema */}
-        <section className="section bg-dark">
-          <div className="max-w-[1200px] mx-auto px-6">
+          <div className="relative z-10 max-w-[960px] mx-auto px-6">
+            {/* Back link */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="card bg-gradient-to-br from-red/10 to-dark border border-red/20"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-bold mb-4">{problema.titulo}</h2>
-              <p className="text-bone/70 text-lg">{problema.descripcion}</p>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Qué incluye / No incluye */}
-        <section className="section bg-black">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <div className="grid md:grid-cols-2 gap-8">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="card bg-gradient-to-br from-green/10 to-dark border border-green/20"
+              <Link
+                href="/servicios"
+                className="inline-flex items-center gap-2 text-sm mb-10 transition-all duration-200 group"
+                style={{ color: 'rgba(255,255,255,0.4)' }}
+                onMouseEnter={e =>
+                  ((e.currentTarget as HTMLElement).style.color = GOLD)
+                }
+                onMouseLeave={e =>
+                  ((e.currentTarget as HTMLElement).style.color =
+                    'rgba(255,255,255,0.4)')
+                }
               >
-                <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                  <Check className="w-7 h-7 text-green" />
-                  Qué Incluye
-                </h3>
-                <ul className="space-y-3">
-                  {incluye.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-green flex-shrink-0 mt-0.5" />
-                      <span className="text-bone/80">{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                <ArrowLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1" />
+                Todos los servicios
+              </Link>
+            </motion.div>
+
+            <div className="text-center">
+              {/* Category badge */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.05 }}
+                className="mb-6"
+              >
+                <span
+                  className="text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full"
+                  style={{
+                    background: GOLD_BG,
+                    border: `1px solid ${GOLD_BORDER}`,
+                    color: GOLD,
+                  }}
+                >
+                  {categoria}
+                </span>
               </motion.div>
 
+              {/* Icon */}
               <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="card bg-gradient-to-br from-red/10 to-dark border border-red/20"
+                initial={{ scale: 0.7, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="mx-auto mb-6 w-20 h-20 rounded-2xl flex items-center justify-center"
+                style={{
+                  background: GOLD_BG,
+                  border: `1px solid ${GOLD_BORDER}`,
+                  boxShadow: `0 0 40px rgba(201,169,110,0.12)`,
+                }}
               >
-                <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                  <X className="w-7 h-7 text-red-600" />
-                  Qué NO Incluye
+                <Icon className="w-9 h-9" style={{ color: GOLD }} />
+              </motion.div>
+
+              {/* Title */}
+              <motion.h1
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+                className="text-4xl md:text-5xl font-bold mb-4 text-white"
+              >
+                {titulo}
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.25 }}
+                className="text-lg mb-2 text-white/60 max-w-xl mx-auto"
+              >
+                {subtitulo}
+              </motion.p>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.35 }}
+                className="text-sm text-white/30 mb-10 italic max-w-lg mx-auto"
+              >
+                {tagline}
+              </motion.p>
+
+              {/* Price + Cart CTA */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.45 }}
+                className="flex flex-col items-center gap-4"
+              >
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span
+                      className="text-5xl font-bold leading-none"
+                      style={{ color: GOLD }}
+                    >
+                      {precio.toLocaleString('es-CH')}
+                    </span>
+                    <span className="text-white/55 text-base font-medium">
+                      {moneda}
+                    </span>
+                  </div>
+                  <div className="text-white/25 text-xs text-center">{precioTipo}</div>
+                </div>
+
+                <button
+                  onClick={handleCartAction}
+                  className="flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 active:scale-95 hover:-translate-y-0.5"
+                  style={
+                    inCart
+                      ? {
+                          background: GOLD_BG,
+                          border: `1px solid ${GOLD_BORDER}`,
+                          color: GOLD,
+                        }
+                      : {
+                          background: GOLD,
+                          color: '#111318',
+                          boxShadow: `0 4px 20px rgba(201,169,110,0.35)`,
+                        }
+                  }
+                >
+                  {inCart ? (
+                    <>
+                      <CheckCircle2 className="w-4 h-4" />
+                      En tu carrito · Ver
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-4 h-4" />
+                      Agregar al carrito
+                    </>
+                  )}
+                </button>
+
+                <p className="text-white/25 text-xs text-center max-w-xs">
+                  {valorMercado}
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── PROBLEMA + BENEFICIOS ─── */}
+        <section style={{ padding: '70px 0' }}>
+          <div className="max-w-[960px] mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+              transition={{ duration: 0.5 }}
+              className="text-center mb-10"
+            >
+              <span className="section-tag">Por qué importa</span>
+              <h2 className="text-2xl font-bold text-white">
+                El problema que resolvemos
+              </h2>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 gap-5">
+              {/* Problem card */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+                transition={{ duration: 0.5 }}
+                className="rounded-2xl p-7"
+                style={{
+                  background: 'rgba(220,38,38,0.05)',
+                  border: '1px solid rgba(220,38,38,0.15)',
+                }}
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-2 h-2 rounded-full bg-red-500" />
+                  <span className="text-xs uppercase tracking-widest font-semibold text-white/40">
+                    El desafío
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-white mb-3">
+                  {problema.titulo}
                 </h3>
-                <ul className="space-y-3">
-                  {noIncluye.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <X className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-bone/80">{item}</span>
-                    </li>
+                <p className="text-white/55 leading-relaxed text-sm">
+                  {problema.descripcion}
+                </p>
+              </motion.div>
+
+              {/* Benefits card */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="rounded-2xl p-7"
+                style={{
+                  background: GOLD_BG,
+                  border: `1px solid ${GOLD_BORDER}`,
+                }}
+              >
+                <div className="flex items-center gap-2 mb-5">
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: GOLD }}
+                  />
+                  <span
+                    className="text-xs uppercase tracking-widest font-semibold"
+                    style={{ color: GOLD }}
+                  >
+                    Nuestra respuesta
+                  </span>
+                </div>
+                <ul className="space-y-3.5">
+                  {beneficios.map((b, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, x: 10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.1 + i * 0.1 }}
+                      className="flex items-start gap-3 text-sm"
+                    >
+                      <Check
+                        className="w-4 h-4 flex-shrink-0 mt-0.5"
+                        style={{ color: GOLD }}
+                      />
+                      <span className="text-white/75">{b}</span>
+                    </motion.li>
                   ))}
                 </ul>
               </motion.div>
@@ -125,100 +338,323 @@ export function ServicioTemplate({
           </div>
         </section>
 
-        {/* Para quién es */}
-        <section className="section bg-dark">
-          <div className="max-w-[1200px] mx-auto px-6">
+        {/* ─── QUÉ INCLUYE / NO INCLUYE ─── */}
+        <section style={{ padding: '70px 0' }}>
+          <div className="max-w-[960px] mx-auto px-6">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-8"
+              viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+              transition={{ duration: 0.5 }}
+              className="text-center mb-10"
             >
-              <Users className="w-10 h-10 text-gold mx-auto mb-4" />
-              <h2 className="text-3xl font-bold">Para Quién es Este Servicio</h2>
+              <span className="section-tag">Alcance del servicio</span>
+              <h2 className="text-2xl font-bold text-white">
+                ¿Qué cubre este servicio?
+              </h2>
             </motion.div>
-            <div className="grid md:grid-cols-3 gap-6">
-              {paraQuien.map((perfil, index) => (
+
+            <div className="grid md:grid-cols-2 gap-5">
+              {/* Incluye */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+                transition={{ duration: 0.5 }}
+                className="rounded-2xl p-7"
+                data-light-card="true"
+                style={{
+                  background: 'var(--surface-card)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                }}
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background: GOLD_BG,
+                      border: `1px solid ${GOLD_BORDER}`,
+                    }}
+                  >
+                    <Check className="w-4 h-4" style={{ color: GOLD }} />
+                  </div>
+                  <h3 className="font-bold text-white text-lg">Qué incluye</h3>
+                </div>
+                <ul className="space-y-3">
+                  {incluye.map((item, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.06 }}
+                      className="flex items-start gap-3 text-sm"
+                    >
+                      <ChevronRight
+                        className="w-4 h-4 flex-shrink-0 mt-0.5"
+                        style={{ color: GOLD }}
+                      />
+                      <span className="text-white/70">{item}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
+
+              {/* No incluye */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="rounded-2xl p-7"
+                data-light-card="true"
+                style={{
+                  background: 'var(--surface-card)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                }}
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background: 'rgba(220,38,38,0.08)',
+                      border: '1px solid rgba(220,38,38,0.2)',
+                    }}
+                  >
+                    <X className="w-4 h-4 text-red-400" />
+                  </div>
+                  <h3 className="font-bold text-white text-lg">Qué NO incluye</h3>
+                </div>
+                <ul className="space-y-3">
+                  {noIncluye.map((item, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.06 }}
+                      className="flex items-start gap-3 text-sm"
+                    >
+                      <X className="w-4 h-4 flex-shrink-0 mt-0.5 text-white/25" />
+                      <span className="text-white/45">{item}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── PARA QUIÉN ─── */}
+        <section style={{ padding: '70px 0' }}>
+          <div className="max-w-[960px] mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+              transition={{ duration: 0.5 }}
+              className="text-center mb-10"
+            >
+              <div
+                className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4"
+                style={{ background: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}
+              >
+                <Users className="w-5 h-5" style={{ color: GOLD }} />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">
+                ¿Para quién es este servicio?
+              </h2>
+              <p className="text-white/40 text-sm">
+                Diseñado para personas en estas situaciones
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-5">
+              {paraQuien.map((perfil, i) => (
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
+                  key={i}
+                  initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="card text-center"
+                  viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  data-light-card="true"
+                  className="rounded-2xl p-6 text-center transition-all duration-300 hover:-translate-y-1"
+                  style={{
+                    background: 'var(--surface-card)',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                  }}
                 >
-                  <p className="text-bone/80">{perfil}</p>
+                  <div
+                    className="w-8 h-8 rounded-full mx-auto mb-3 flex items-center justify-center"
+                    style={{ background: GOLD_BG }}
+                  >
+                    <Star className="w-3.5 h-3.5" style={{ color: GOLD }} />
+                  </div>
+                  <p className="text-white/65 text-sm leading-relaxed">{perfil}</p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Integración con planes */}
-        <section className="section bg-black">
-          <div className="max-w-[1200px] mx-auto px-6">
+        {/* ─── PRICING DESTACADO ─── */}
+        <section style={{ padding: '70px 0' }}>
+          <div className="max-w-[680px] mx-auto px-6 text-center">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-8"
+              viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+              transition={{ duration: 0.6 }}
             >
-              <Package className="w-10 h-10 text-gold mx-auto mb-4" />
-              <h2 className="text-3xl font-bold">Cómo se Integra con Nuestros Planes</h2>
+              <span className="section-tag">Inversión</span>
+              <h2 className="text-3xl font-bold text-white mb-2">
+                Precio del servicio
+              </h2>
+              <p className="text-white/35 text-sm mb-8 max-w-sm mx-auto">
+                {valorMercado}
+              </p>
+
+              {/* Pricing card */}
+              <div
+                className="rounded-2xl p-8 mb-5"
+                style={{
+                  background:
+                    'linear-gradient(145deg, var(--surface-card-elevated) 0%, var(--surface-card) 100%)',
+                  border: `1px solid ${GOLD_BORDER}`,
+                  boxShadow: `0 0 0 1px rgba(201,169,110,0.08), 0 24px 48px rgba(0,0,0,0.4)`,
+                }}
+              >
+                <div className="flex flex-col items-center gap-1 mb-3">
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span
+                      className="text-6xl font-bold leading-none"
+                      style={{ color: GOLD }}
+                    >
+                      {precio.toLocaleString('es-CH')}
+                    </span>
+                    <span className="text-white/55 text-lg font-medium">
+                      {moneda}
+                    </span>
+                  </div>
+                  <div className="text-white/25 text-xs text-center">{precioTipo}</div>
+                </div>
+                <p className="text-white/30 text-xs mb-7">
+                  El pago se coordina personalmente — sin plataformas, sin sorpresas
+                </p>
+                <button
+                  onClick={handleCartAction}
+                  className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-sm transition-all duration-200 active:scale-95 hover:-translate-y-0.5"
+                  style={
+                    inCart
+                      ? {
+                          background: GOLD_BG,
+                          border: `1px solid ${GOLD_BORDER}`,
+                          color: GOLD,
+                        }
+                      : {
+                          background: GOLD,
+                          color: '#111318',
+                          boxShadow: `0 4px 20px rgba(201,169,110,0.3)`,
+                        }
+                  }
+                >
+                  {inCart ? (
+                    <>
+                      <CheckCircle2 className="w-4 h-4" />
+                      En tu carrito · Ver resumen
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-4 h-4" />
+                      Agregar al carrito
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Plans integration */}
+              <div
+                className="rounded-2xl p-6 text-left"
+                style={{
+                  background: 'rgba(255,255,255,0.025)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                }}
+              >
+                <p
+                  className="text-xs uppercase tracking-widest font-semibold mb-5 text-center"
+                  style={{ color: GOLD, letterSpacing: '2.5px' }}
+                >
+                  También disponible en nuestros planes
+                </p>
+                <div className="space-y-3.5">
+                  {[
+                    { plan: 'Solo Alojamiento — 780 CHF', info: planInfo.inicio },
+                    { plan: 'Pack Completo — 1.280 CHF', info: planInfo.estrategia },
+                    { plan: 'Comunidad — 80 CHF/mes', info: planInfo.comunidad },
+                  ].map((p, i) => (
+                    <div key={i} className="flex items-start gap-3 text-sm">
+                      <ChevronRight
+                        className="w-4 h-4 flex-shrink-0 mt-0.5"
+                        style={{ color: GOLD, opacity: 0.5 }}
+                      />
+                      <div>
+                        <span className="text-white/50 font-medium">{p.plan}:</span>{' '}
+                        <span className="text-white/30">{p.info}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div
+                  className="mt-5 pt-4 flex justify-center"
+                  style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
+                >
+                  <Link
+                    href="/#planes"
+                    className="text-sm font-semibold transition-all duration-200 hover:opacity-80"
+                    style={{ color: GOLD }}
+                  >
+                    Ver todos los planes →
+                  </Link>
+                </div>
+              </div>
             </motion.div>
-            <div className="grid md:grid-cols-3 gap-6">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="card"
-              >
-                <h3 className="text-xl font-bold mb-3 text-gold">Solo Alojamiento</h3>
-                <p className="text-bone/70">{planes.inicio}</p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="card bg-gradient-to-br from-dark to-gray border border-gold/20"
-              >
-                <h3 className="text-xl font-bold mb-3 text-gold">Pack Completo</h3>
-                <p className="text-bone/70">{planes.estrategia}</p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="card"
-              >
-                <h3 className="text-xl font-bold mb-3 text-gold">Comunidad</h3>
-                <p className="text-bone/70">{planes.perfecto}</p>
-              </motion.div>
-            </div>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="section bg-gradient-to-br from-dark to-black">
-          <div className="max-w-[800px] mx-auto px-6 text-center">
+        {/* ─── CTA FINAL ─── */}
+        <section style={{ padding: '70px 0' }}>
+          <div className="max-w-[680px] mx-auto px-6 text-center">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+              transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl font-bold mb-4">¿Interesado en este servicio?</h2>
-              <p className="text-bone/70 mb-8">
-                Contáctanos para más información o elige el plan que mejor se adapte a tus
-                necesidades.
+              <div
+                className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-5"
+                style={{ background: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}
+              >
+                <MessageCircle className="w-5 h-5" style={{ color: GOLD }} />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-3">
+                ¿Tienes preguntas antes de decidir?
+              </h2>
+              <p className="text-white/45 mb-8 text-sm leading-relaxed max-w-md mx-auto">
+                Escríbenos sin compromiso. Te explicamos exactamente qué puedes
+                esperar y si este servicio es el adecuado para tu situación.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/#contacto" className="btn-primary text-lg px-8 py-3">
-                  Contactar Ahora
+                <Link
+                  href="/#contacto"
+                  className="btn-primary text-sm px-8 py-3"
+                >
+                  Contactar ahora
                 </Link>
-                <Link href="/#planes" className="btn-secondary text-lg px-8 py-3">
-                  Ver Planes
+                <Link
+                  href="/servicios"
+                  className="btn-secondary text-sm px-8 py-3"
+                >
+                  Ver todos los servicios
                 </Link>
               </div>
             </motion.div>
@@ -226,17 +662,15 @@ export function ServicioTemplate({
         </section>
 
         {/* Disclaimer */}
-        <section className="section bg-dark">
-          <div className="max-w-[1200px] mx-auto px-6">
-            <div className="card bg-gray/30 text-center">
-              <p className="text-bone/50 text-sm">
-                <strong>Importante:</strong> Migrante Global no es una agencia de empleo,
-                inmobiliaria ni asesoría legal. Ofrecemos orientación y acompañamiento. No
-                garantizamos empleo, residencia ni aprobación de trámites.
-              </p>
-            </div>
+        <div style={{ padding: '28px 0' }}>
+          <div className="max-w-[960px] mx-auto px-6 text-center">
+            <p className="text-white/18 text-xs leading-relaxed">
+              Migrante Global no es agencia de empleo, inmobiliaria ni asesoría legal.
+              Ofrecemos orientación y acompañamiento. No garantizamos empleo, residencia
+              ni aprobación de trámites. Todos los precios indicativos en CHF.
+            </p>
           </div>
-        </section>
+        </div>
       </main>
       <Footer />
     </>

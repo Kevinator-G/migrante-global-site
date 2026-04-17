@@ -47,7 +47,6 @@ export default function MigranteChat() {
     if (!input.trim() || loading) return;
 
     const userMessage = input.trim();
-
     setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     setInput("");
     setLoading(true);
@@ -56,26 +55,18 @@ export default function MigranteChat() {
     setUserMessageCount(nextCount);
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage }),
       });
 
-      if (!res.ok) {
-        throw new Error(`Error HTTP: ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
 
       const data = await res.json();
-
       setMessages((prev) => [
         ...prev,
-        {
-          role: "assistant",
-          content: data.reply ?? "No pude responder en este momento.",
-        },
+        { role: "assistant", content: data.reply ?? "No pude responder en este momento." },
       ]);
 
       if (nextCount >= 3 && !leadSent) {
@@ -94,10 +85,7 @@ export default function MigranteChat() {
     } catch (error) {
       setMessages((prev) => [
         ...prev,
-        {
-          role: "assistant",
-          content: "Hubo un problema al conectar con el asistente.",
-        },
+        { role: "assistant", content: "Hubo un problema al conectar con el asistente." },
       ]);
       console.error("Error en el chat:", error);
     } finally {
@@ -107,15 +95,7 @@ export default function MigranteChat() {
 
   async function handleLeadSubmit(e: React.FormEvent) {
     e.preventDefault();
-
-    if (
-      !leadForm.name.trim() ||
-      !leadForm.currentCountry.trim() ||
-      !leadForm.targetCountry.trim() ||
-      !leadForm.contact.trim()
-    ) {
-      return;
-    }
+    if (!leadForm.name.trim() || !leadForm.currentCountry.trim() || !leadForm.targetCountry.trim() || !leadForm.contact.trim()) return;
 
     try {
       const lastUserMessage =
@@ -124,11 +104,9 @@ export default function MigranteChat() {
 
       const isEmail = leadForm.contact.includes("@");
 
-      const res = await fetch("/api/leads", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/leads`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nombre: leadForm.name,
           email: isEmail
@@ -141,9 +119,7 @@ export default function MigranteChat() {
         }),
       });
 
-      if (!res.ok) {
-        throw new Error("No se pudo guardar el lead");
-      }
+      if (!res.ok) throw new Error("No se pudo guardar el lead");
 
       setMessages((prev) => [
         ...prev,
@@ -153,65 +129,62 @@ export default function MigranteChat() {
             "Gracias. Ya tengo tus datos básicos. Desde Migrante Global podremos orientarte de forma más precisa según tu caso. Si quieres avanzar más rápido, también puedes escribirnos directamente por WhatsApp.",
         },
       ]);
-
       setLeadSent(true);
       setShowLeadForm(false);
     } catch (error) {
       console.error("Error al enviar lead:", error);
-
       setMessages((prev) => [
         ...prev,
-        {
-          role: "assistant",
-          content:
-            "Hubo un problema al guardar tus datos. Inténtalo de nuevo en unos segundos.",
-        },
+        { role: "assistant", content: "Hubo un problema al guardar tus datos. Inténtalo de nuevo en unos segundos." },
       ]);
     }
   }
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
+      {/* Botón de apertura */}
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
-          className="rounded-full border border-red-500/40 bg-red-600 px-5 py-3 text-white shadow-2xl transition hover:bg-red-700"
+          className="chat-trigger rounded-full px-5 py-3 text-white shadow-2xl transition-all hover:scale-105"
         >
-          Mentor Migrante Global
+          💬 Mentor Migrante Global
         </button>
       ) : (
-        <div className="w-[390px] rounded-2xl border border-zinc-800 bg-zinc-950 text-white shadow-2xl">
-          <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
-            <div>
-              <h3 className="font-semibold text-white">
-                Mentor Migrante Global
-              </h3>
-              <p className="text-xs text-zinc-400">
-                Orientación inicial para migrantes
-              </p>
-            </div>
+        <div className="chat-widget w-[360px] rounded-2xl shadow-2xl overflow-hidden">
 
+          {/* Header */}
+          <div className="chat-header flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-3">
+              {/* Avatar */}
+              <div className="chat-avatar w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
+                MG
+              </div>
+              <div>
+                <h3 className="chat-title font-semibold text-sm">Mentor Migrante Global</h3>
+                <p className="chat-subtitle text-xs">Orientación inicial · En línea</p>
+              </div>
+            </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-sm text-zinc-400 transition hover:text-white"
+              className="chat-close w-7 h-7 rounded-full flex items-center justify-center text-sm transition hover:opacity-80"
             >
               ✕
             </button>
           </div>
 
-          <div className="h-80 space-y-3 overflow-y-auto p-4 text-sm">
+          {/* Mensajes */}
+          <div className="chat-messages h-72 space-y-3 overflow-y-auto p-4 text-sm">
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`flex ${
-                  msg.role === "user" ? "justify-end" : "justify-start"
-                }`}
+                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[80%] break-words whitespace-pre-wrap rounded-2xl px-3 py-2 ${
+                  className={`max-w-[82%] break-words whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm leading-relaxed ${
                     msg.role === "user"
-                      ? "border border-red-500/30 bg-red-600 text-white"
-                      : "border border-zinc-800 bg-zinc-900 text-zinc-100"
+                      ? "chat-bubble-user text-white"
+                      : "chat-bubble-assistant"
                   }`}
                 >
                   {msg.content}
@@ -221,8 +194,10 @@ export default function MigranteChat() {
 
             {loading && (
               <div className="flex justify-start">
-                <div className="max-w-[80%] rounded-2xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-zinc-100">
-                  Pensando...
+                <div className="chat-bubble-assistant rounded-2xl px-3 py-2 text-sm flex gap-1 items-center">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-current animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-current animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-current animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
               </div>
             )}
@@ -230,62 +205,30 @@ export default function MigranteChat() {
             {showLeadForm && !leadSent && (
               <form
                 onSubmit={handleLeadSubmit}
-                className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-900 p-3"
+                className="chat-lead-form space-y-2 rounded-xl p-3"
               >
-                <input
-                  type="text"
-                  placeholder="Tu nombre"
-                  value={leadForm.name}
-                  onChange={(e) =>
-                    setLeadForm((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-500"
-                />
-
-                <input
-                  type="text"
-                  placeholder="País actual"
-                  value={leadForm.currentCountry}
-                  onChange={(e) =>
-                    setLeadForm((prev) => ({
-                      ...prev,
-                      currentCountry: e.target.value,
-                    }))
-                  }
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-500"
-                />
-
-                <input
-                  type="text"
-                  placeholder="País al que quieres emigrar"
-                  value={leadForm.targetCountry}
-                  onChange={(e) =>
-                    setLeadForm((prev) => ({
-                      ...prev,
-                      targetCountry: e.target.value,
-                    }))
-                  }
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-500"
-                />
-
-                <input
-                  type="text"
-                  placeholder="Email o WhatsApp"
-                  value={leadForm.contact}
-                  onChange={(e) =>
-                    setLeadForm((prev) => ({
-                      ...prev,
-                      contact: e.target.value,
-                    }))
-                  }
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-500"
-                />
-
+                <p className="chat-lead-label text-xs font-semibold mb-2">📋 4 datos rápidos</p>
+                {[
+                  { placeholder: "Tu nombre", key: "name", value: leadForm.name },
+                  { placeholder: "País actual", key: "currentCountry", value: leadForm.currentCountry },
+                  { placeholder: "País al que quieres emigrar", key: "targetCountry", value: leadForm.targetCountry },
+                  { placeholder: "Email o WhatsApp", key: "contact", value: leadForm.contact },
+                ].map(({ placeholder, key, value }) => (
+                  <input
+                    key={key}
+                    type="text"
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={(e) => setLeadForm((prev) => ({ ...prev, [key]: e.target.value }))}
+                    className="chat-lead-input w-full rounded-lg px-3 py-2 text-sm outline-none"
+                  />
+                ))}
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-red-600 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                  className="w-full rounded-lg py-2 text-sm font-semibold text-white transition hover:opacity-90"
+                  style={{ background: '#dc2626' }}
                 >
-                  Enviar datos
+                  Enviar datos →
                 </button>
               </form>
             )}
@@ -293,26 +236,24 @@ export default function MigranteChat() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="border-t border-zinc-800 p-3">
+          {/* Footer / Input */}
+          <div className="chat-footer p-3 flex gap-2">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Escribe tu pregunta..."
               disabled={loading}
-              className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-red-500 disabled:opacity-60"
+              className="chat-input flex-1 rounded-xl px-3 py-2 text-sm outline-none disabled:opacity-60"
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !loading) {
-                  sendMessage();
-                }
+                if (e.key === "Enter" && !loading) sendMessage();
               }}
             />
-
             <button
               onClick={sendMessage}
               disabled={loading}
-              className="mt-2 w-full rounded-xl bg-red-600 py-2 text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="chat-send-btn rounded-xl px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {loading ? "Pensando..." : "Enviar"}
+              {loading ? "···" : "↑"}
             </button>
           </div>
         </div>

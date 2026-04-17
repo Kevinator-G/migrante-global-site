@@ -6,37 +6,51 @@ import { ServicioTemplate } from '@/components/servicio-template';
 export default function ComunidadApoyoPage() {
   return (
     <ServicioTemplate
+      id="comunidad"
       titulo="Comunidad de Apoyo"
-      subtitulo="Acceso exclusivo a nuestra comunidad de migrantes y eventos"
+      subtitulo="Conecta con personas que ya han vivido lo que tú estás viviendo"
+      tagline="Migrar en red es más fácil, más rápido y mucho menos solitario"
       icon={Users}
+      categoria="Red y Comunidad"
+      precio={80}
+      moneda="CHF / mes"
+      precioTipo="Suscripción mensual · cancela cuando quieras"
+      valorMercado="Membresías de comunidades para migrantes: CHF 60–150/mes"
       problema={{
-        titulo: '¿Por qué es importante tener una comunidad?',
+        titulo: '¿Por qué la comunidad es el recurso más infravalorodo en migración?',
         descripcion:
-          'Migrar es solitario. Estar lejos de familia y amigos, sin red de apoyo, afecta tu bienestar y motivación. Nuestra comunidad te conecta con personas en tu misma situación, eventos y networking real.',
+          'Migrar es profundamente solitario. El apoyo emocional, los contactos laborales, los tips prácticos del día a día — todo lo que antes venía de amigos y familia, ahora tienes que construirlo desde cero. Sin una red, el proceso es más largo, más duro y más costoso. Las personas que migran con comunidad llegan antes y llegan mejor.',
       }}
+      beneficios={[
+        'Acceso inmediato a una red de migrantes reales con experiencia en Suiza',
+        'Eventos mensuales de networking online y (cuando es posible) presenciales',
+        'Respuestas rápidas a dudas prácticas de personas que ya las vivieron',
+        'Recursos, guías y actualizaciones sobre vida en Suiza compartidos en tiempo real',
+        'Descuentos en servicios adicionales de Migrante Global',
+      ]}
       incluye={[
-        'Acceso a grupo privado de WhatsApp/Telegram',
-        'Eventos mensuales de networking (online y presenciales)',
-        'Conexión con otros migrantes en Suiza',
-        'Recursos compartidos y actualizaciones',
-        'Soporte emocional y motivacional',
-        'Descuentos en servicios adicionales',
+        'Acceso al grupo privado de WhatsApp/Telegram de la comunidad',
+        'Eventos mensuales de networking (online y presenciales cuando aplica)',
+        'Conexión con migrantes latinos en Suiza y en proceso de mudarse',
+        'Recursos compartidos: guías, contactos, actualizaciones por cantón',
+        'Soporte emocional y motivacional dentro del grupo',
+        'Descuentos del 15–20% en servicios adicionales de Migrante Global',
       ]}
       noIncluye={[
-        'No garantizamos empleo a través de la comunidad',
-        'No ofrecemos terapia psicológica profesional',
-        'No organizamos eventos pagos fuera de Suiza',
-        'Los eventos presenciales pueden tener costo adicional',
+        'No garantizamos empleo a través de los contactos de la comunidad',
+        'No ofrecemos terapia psicológica — somos una comunidad de pares, no clínicos',
+        'Los eventos presenciales pueden tener costo adicional de acceso',
+        'No organizamos eventos fuera de Suiza',
       ]}
       paraQuien={[
-        'Personas que ya migraron y se sienten solas',
-        'Quienes buscan networking real en Suiza',
-        'Personas que quieren conocer otros migrantes antes de llegar',
+        'Personas que ya están en Suiza y se sienten solas o aisladas',
+        'Quienes buscan networking genuino en el entorno suizo',
+        'Personas planificando migrar que quieren hacer contactos antes de llegar',
       ]}
-      planes={{
-        inicio: 'Acceso durante 30 días como prueba.',
-        estrategia: 'Acceso durante 3 meses incluido.',
-        perfecto: 'Acceso mensual incluido mientras mantengas la suscripción.',
+      planInfo={{
+        inicio: 'Acceso de prueba durante 30 días incluido con el plan.',
+        estrategia: 'Acceso durante 3 meses incluido dentro del Pack Completo.',
+        comunidad: 'Este servicio es el núcleo del plan Comunidad (80 CHF/mes).',
       }}
     />
   );

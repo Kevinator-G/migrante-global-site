@@ -15,6 +15,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(String(email))) {
+      return NextResponse.json(
+        { error: 'El email no es válido' },
+        { status: 400 }
+      );
+    }
+
     if (!consentimiento) {
       return NextResponse.json(
         { error: 'Debe aceptar la política de privacidad' },
@@ -24,12 +32,12 @@ export async function POST(req: NextRequest) {
 
     const lead = await prisma.lead.create({
       data: {
-        nombre,
-        email,
-        telefono: telefono || null,
-        pais: pais || null,
-        mensaje,
-        consentimiento,
+        nombre: String(nombre).trim().slice(0, 200),
+        email: String(email).trim().slice(0, 200),
+        telefono: telefono ? String(telefono).trim().slice(0, 50) : null,
+        pais: pais ? String(pais).trim().slice(0, 100) : null,
+        mensaje: String(mensaje).trim().slice(0, 2000),
+        consentimiento: Boolean(consentimiento),
       },
     });
 
