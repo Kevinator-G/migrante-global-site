@@ -53,7 +53,7 @@ function DashboardContent() {
     const fetchOrder = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/order?session_id=${sessionId}`);
+        const res = await fetch(`/api/dashboard/order?session_id=${sessionId}`);
 
         if (res.status === 404 && attempts < MAX_ATTEMPTS) {
           // Webhook not processed yet — retry after 5s

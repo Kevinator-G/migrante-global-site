@@ -55,7 +55,7 @@ export default function MigranteChat() {
     setUserMessageCount(nextCount);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, {
+      const res = await fetch(`/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage }),
@@ -104,7 +104,7 @@ export default function MigranteChat() {
 
       const isEmail = leadForm.contact.includes("@");
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/leads`, {
+      const res = await fetch(`/api/leads`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -123,7 +123,7 @@ export default function GeneradorDocumentosPage() {
     try {
       setLoading(true);
       setResult("");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/generate-document`, {
+      const res = await fetch(`/api/generate-document`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
