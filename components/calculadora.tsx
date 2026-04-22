@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Calculator } from 'lucide-react';
+import { Calculator, Globe, TrendingUp, Home, Lightbulb, PiggyBank, AlertTriangle, MapPin, Target, Briefcase, DollarSign } from 'lucide-react';
 
 type SectorKey =
   | 'general'
@@ -355,10 +355,12 @@ export function Calculadora({ compact = false, onClose }: { compact?: boolean; o
         {/* Modo */}
         <div className="calc-mode" style={{ marginBottom: 0 }}>
           <button type="button" className={`calc-mode-btn ${mode === 'ch' ? 'active' : ''}`} onClick={() => setMode('ch')}>
-            🇨🇭 CH vs País
+            <span style={{ fontWeight: 800, fontSize: 10, letterSpacing: '0.04em', padding: '1px 5px', borderRadius: 3, border: '1px solid currentColor', opacity: 0.75, marginRight: 4 }}>CH</span>
+            CH vs País
           </button>
           <button type="button" className={`calc-mode-btn ${mode === 'pvp' ? 'active' : ''}`} onClick={() => setMode('pvp')}>
-            🌍 País vs País
+            <Globe style={{ width: 13, height: 13, display: 'inline', verticalAlign: 'middle', marginRight: 5, marginBottom: 1 }} />
+            País vs País
           </button>
         </div>
         {/* Separador */}
@@ -373,7 +375,11 @@ export function Calculadora({ compact = false, onClose }: { compact?: boolean; o
               style={{ marginBottom: 0 }}
               onClick={() => setRegion(r)}
             >
-              {r === 'hispano' ? '🌎 Hispanoamérica' : r === 'ue' ? '🇪🇺 UE' : 'Todos'}
+              {r === 'hispano' ? (
+                <><Globe style={{ width: 12, height: 12, display: 'inline', verticalAlign: 'middle', marginRight: 4, marginBottom: 1 }} />Hispanoamérica</>
+              ) : r === 'ue' ? (
+                <><span style={{ fontWeight: 800, fontSize: 9, padding: '0 4px', border: '1px solid currentColor', borderRadius: 2, marginRight: 4, opacity: 0.75 }}>EU</span>UE</>
+              ) : 'Todos'}
             </button>
           ))}
         </div>
@@ -384,7 +390,7 @@ export function Calculadora({ compact = false, onClose }: { compact?: boolean; o
         <div className="calc-top" style={{ gap: 12, marginBottom: 20, gridTemplateColumns: compact ? '1fr 1fr' : undefined }}>
           {mode === 'ch' ? (
             <div className="calc-group">
-              <label>🌍 TU PAÍS ACTUAL</label>
+              <label>TU PAÍS ACTUAL</label>
               <select value={countryKey} onChange={(e) => setCountryKey(e.target.value)}>
                 {countriesList.map(([k, v]) => <option key={k} value={k}>{v.name}</option>)}
               </select>
@@ -392,13 +398,13 @@ export function Calculadora({ compact = false, onClose }: { compact?: boolean; o
           ) : (
             <>
               <div className="calc-group">
-                <label>🌍 PAÍS ORIGEN</label>
+                <label>PAÍS ORIGEN</label>
                 <select value={originKey} onChange={(e) => setOriginKey(e.target.value)}>
                   {countriesList.map(([k, v]) => <option key={k} value={k}>{v.name}</option>)}
                 </select>
               </div>
               <div className="calc-group">
-                <label>🎯 PAÍS DESTINO</label>
+                <label>PAÍS DESTINO</label>
                 <select value={destKey} onChange={(e) => setDestKey(e.target.value)}>
                   {countriesList.map(([k, v]) => <option key={k} value={k}>{v.name}</option>)}
                 </select>
@@ -406,7 +412,7 @@ export function Calculadora({ compact = false, onClose }: { compact?: boolean; o
             </>
           )}
           <div className="calc-group">
-            <label>💼 SECTOR</label>
+            <label>SECTOR</label>
             <select value={sector} onChange={(e) => setSector(e.target.value as SectorKey)}>
               {(Object.keys(sectorNames) as SectorKey[]).map((k) => (
                 <option key={k} value={k}>{sectorNames[k]}</option>
@@ -415,7 +421,7 @@ export function Calculadora({ compact = false, onClose }: { compact?: boolean; o
           </div>
           {!compact && (
             <div className="calc-group">
-              <label>💰 TU SALARIO (opcional)</label>
+              <label>TU SALARIO (opcional)</label>
               <input
                 type="number"
                 placeholder="0"
@@ -429,22 +435,22 @@ export function Calculadora({ compact = false, onClose }: { compact?: boolean; o
         {/* RESULTADOS — 4 tarjetas compactas */}
         <div className="calc-results-grid" style={{ gap: 10, marginBottom: 16 }}>
           <div className="calc-card highlight" style={{ padding: 14 }}>
-            <div className="cc-label">{result.dest.isSuiza ? '🇨🇭 SUIZA' : '🎯 DESTINO'}</div>
+            <div className="cc-label">{result.dest.isSuiza ? 'SUIZA' : 'DESTINO'}</div>
             <div className="cc-value" style={{ fontSize: 20 }}>{fmt(result.destVal)} {result.dest.isSuiza ? 'CHF' : '€'}</div>
             <div className="cc-sub">{sectorNames[sector]}</div>
           </div>
           <div className="calc-card" style={{ padding: 14 }}>
-            <div className="cc-label">🌍 {result.comp.name.toUpperCase()}</div>
+            <div className="cc-label">{result.comp.name.toUpperCase()}</div>
             <div className="cc-value" style={{ fontSize: 20 }}>{fmt(result.compVal)} €</div>
             <div className="cc-sub">Promedio sector</div>
           </div>
           <div className="calc-card" style={{ padding: 14 }}>
-            <div className="cc-label">📈 DIFERENCIA</div>
+            <div className="cc-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><TrendingUp style={{ width: 11, height: 11 }} />DIFERENCIA</div>
             <div className="cc-value" style={{ fontSize: 20 }}>{result.diffPct >= 0 ? '+' : ''}{fmt(result.diffPct)}%</div>
             <div className="cc-sub">{result.diff >= 0 ? '+' : ''}{fmt(result.diff)} {result.dest.isSuiza ? 'CHF' : '€'}</div>
           </div>
           <div className="calc-card" style={{ padding: 14 }}>
-            <div className="cc-label">🏠 VIDA</div>
+            <div className="cc-label" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Home style={{ width: 11, height: 11 }} />VIDA</div>
             <div className="cc-value" style={{ fontSize: 20 }}>{result.costValue}</div>
             <div className="cc-sub" style={{ fontSize: 10 }}>{result.costSub}</div>
           </div>
@@ -473,12 +479,12 @@ export function Calculadora({ compact = false, onClose }: { compact?: boolean; o
         {/* INSIGHT + AHORRO en una sola fila */}
         <div style={{ display: 'grid', gridTemplateColumns: savings ? '1fr 1fr' : '1fr', gap: 8, marginBottom: 16 }}>
           <div className="calc-card" style={{ padding: 12 }}>
-            <div className="cc-label" style={{ marginBottom: 4 }}>🧠 Insight</div>
+            <div className="cc-label" style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}><Lightbulb style={{ width: 11, height: 11 }} />INSIGHT</div>
             <div className="calc-insight-text" style={{ fontSize: 12, lineHeight: 1.45 }}>{seoText}</div>
           </div>
           {savings && (
             <div className="calc-card" style={{ padding: 12 }}>
-              <div className="cc-label" style={{ marginBottom: 4 }}>📊 Ahorro potencial</div>
+              <div className="cc-label" style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 4 }}><PiggyBank style={{ width: 11, height: 11 }} />AHORRO ESTIMADO</div>
               <div className="calc-insight-text" style={{ fontSize: 12, lineHeight: 1.6 }}>
                 <div>Salario: {fmt(savings.salaryCHF)} CHF</div>
                 <div>Gastos: ~{fmt(savings.livingCostCHF)} CHF</div>
@@ -510,7 +516,8 @@ export function Calculadora({ compact = false, onClose }: { compact?: boolean; o
         </div>
 
         <p className="calc-note" style={{ marginTop: 10, fontSize: 10 }}>
-          ⚠ Datos orientativos. Los salarios reales varían según experiencia, cantón y empresa.
+          <AlertTriangle style={{ width: 10, height: 10, display: 'inline', verticalAlign: 'middle', marginRight: 4, marginBottom: 1 }} />
+          Datos orientativos. Los salarios reales varían según experiencia, cantón y empresa.
         </p>
       </div>
     </>

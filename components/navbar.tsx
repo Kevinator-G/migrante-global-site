@@ -92,7 +92,8 @@ export function Navbar() {
                 >
                   <div className="mb-3">
                     <div className="text-yellow-500 font-semibold mb-1 flex items-center gap-2 text-sm">
-                      🇨🇭 Suiza (Principal)
+                      <span style={{ fontWeight: 800, fontSize: 10, padding: '1px 5px', border: '1px solid currentColor', borderRadius: 3, opacity: 0.8 }}>CH</span>
+                      Suiza (Principal)
                     </div>
                     <div className="text-white/50 text-xs">Nuestro enfoque principal</div>
                   </div>

@@ -1,8 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ComponentType } from 'react';
+import type { LucideProps } from 'lucide-react';
+
+const ITEM_ICONS: Record<string, ComponentType<LucideProps>> = {
+  'solo-alojamiento': Home,
+  'pack-completo': Package2,
+  'comunidad': Users,
+  'orientacion-laboral': Briefcase,
+  'cv-suizo': FileText,
+  'sesiones-1-1': Star,
+  'tramites-documentos': FileCheck,
+  'preparacion-entrevistas': Video,
+  'plan-migracion': Plane,
+  'idiomas': Languages,
+  'networking': Globe,
+};
 import { useCart } from '@/lib/cart-context';
-import { X, Trash2, ShoppingCart, ArrowRight, CreditCard, Loader2 } from 'lucide-react';
+import { X, Trash2, ShoppingCart, ArrowRight, CreditCard, Loader2, Home, Package2, Users, Star, Briefcase, FileText, Video, Plane, FileCheck, Globe, Languages } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function CartDrawer() {
@@ -114,12 +129,15 @@ export function CartDrawer() {
                       className="flex items-start gap-4 rounded-xl p-4 group"
                       style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
                     >
-                      {/* Emoji / Icon */}
+                      {/* Icon */}
                       <div
-                        className="w-10 h-10 rounded-lg flex items-center justify-center text-xl flex-shrink-0"
+                        className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                         style={{ background: 'rgba(245,158,11,0.12)' }}
                       >
-                        {item.emoji}
+                        {(() => {
+                          const Icon = ITEM_ICONS[item.id] ?? ShoppingCart;
+                          return <Icon className="w-4 h-4 text-yellow-500" />;
+                        })()}
                       </div>
 
                       {/* Info */}

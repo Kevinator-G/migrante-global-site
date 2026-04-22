@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FilePenLine, ShieldCheck, Sparkles, ArrowLeft, Copy, Download, CheckCircle } from "lucide-react";
+import { FilePenLine, ShieldCheck, Sparkles, ArrowLeft, Copy, Download, CheckCircle, Briefcase, ClipboardList, Home, Lightbulb, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import jsPDF from "jspdf";
 import { Navbar } from "@/components/navbar";
@@ -37,7 +37,7 @@ const TIPO_INFO: Record<string, { titulo: string; desc: string; idioma: string; 
   vivienda: {
     titulo: "Carta de vivienda",
     desc: "Genera en alemán formal (Hochdeutsch) para propietarios o inmobiliarias suizas.",
-    idioma: "🇩🇪 Se generará en alemán",
+    idioma: "DE · Se generará en alemán",
     consejos: [
       "Menciona tu contrato indefinido — es el argumento más fuerte.",
       "Indica si no fumas y no tienes mascotas explícitamente.",
@@ -48,7 +48,7 @@ const TIPO_INFO: Record<string, { titulo: string; desc: string; idioma: string; 
   trabajo: {
     titulo: "Carta de presentación laboral",
     desc: "Bewerbungsschreiben profesional en alemán para candidaturas en Suiza.",
-    idioma: "🇩🇪 Se generará en alemán",
+    idioma: "DE · Se generará en alemán",
     consejos: [
       "Especifica el puesto exacto al que aplicas en 'Profesión'.",
       "Añade en 'Información adicional' tus 2-3 logros más relevantes.",
@@ -59,7 +59,7 @@ const TIPO_INFO: Record<string, { titulo: string; desc: string; idioma: string; 
   cv: {
     titulo: "Currículum formato suizo",
     desc: "Lebenslauf estructurado con el estándar profesional suizo.",
-    idioma: "🇪🇸 Se generará en español con estructura suiza",
+    idioma: "ES · Se generará en español con estructura suiza",
     consejos: [
       "Detalla tu experiencia laboral en 'Información adicional'.",
       "Lista tus idiomas con nivel (A1-C2). El alemán es clave.",
@@ -81,7 +81,7 @@ const TIPO_INFO: Record<string, { titulo: string; desc: string; idioma: string; 
   personal: {
     titulo: "Carta personal / motivación",
     desc: "Carta de presentación humana y auténtica para contexto migratorio.",
-    idioma: "🇪🇸 Se generará en español (o indica alemán en el mensaje)",
+    idioma: "ES · Se generará en español (o indica alemán en el mensaje)",
     consejos: [
       "Cuéntanos tu historia real — por qué Suiza, qué buscas.",
       "Menciona tu familia, valores y proyecto de vida.",
@@ -382,7 +382,8 @@ export default function GeneradorDocumentosPage() {
                       Generando documento...
                     </span>
                   ) : (
-                    "✨ Generar documento"
+                    <><Sparkles className="w-4 h-4 inline mr-2" />Generar documento</>
+
                   )}
                 </button>
               </div>
@@ -423,8 +424,13 @@ export default function GeneradorDocumentosPage() {
                         color: 'var(--light-gray)',
                       }}
                     >
-                      <span className="mt-0.5 flex-shrink-0 text-base">
-                        {["💼", "📋", "🏠", "💡"][i] || "✅"}
+                      <span className="mt-0.5 flex-shrink-0" style={{ color: '#c9a96e' }}>
+                        {[
+                          <Briefcase key="b" className="w-3.5 h-3.5" />,
+                          <ClipboardList key="c" className="w-3.5 h-3.5" />,
+                          <Home key="h" className="w-3.5 h-3.5" />,
+                          <Lightbulb key="l" className="w-3.5 h-3.5" />,
+                        ][i] || <CheckCircle2 className="w-3.5 h-3.5" />}
                       </span>
                       {c}
                     </div>
