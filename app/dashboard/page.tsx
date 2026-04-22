@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
+import { useCart } from "@/lib/cart-context";
 import {
   CheckCircle,
   Package,
@@ -43,6 +44,11 @@ function DashboardContent() {
   const [order, setOrder] = useState<OrderData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { clearCart } = useCart();
+
+  useEffect(() => {
+    if (isSuccess) clearCart();
+  }, [isSuccess]);
 
   useEffect(() => {
     if (!sessionId) return;

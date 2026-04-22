@@ -9,16 +9,31 @@ export function CartDrawer() {
   const { items, removeItem, clearCart, isOpen, closeCart, total, itemCount } = useCart();
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
   const handleCheckout = async () => {
     if (checkoutLoading || items.length === 0) return;
+
+    if (!email.trim()) {
+      setEmailError('Ingresa tu email para recibir la confirmación.');
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setEmailError('Email inválido.');
+      return;
+    }
+
+    setEmailError(null);
     setCheckoutLoading(true);
     setCheckoutError(null);
     try {
       const res = await fetch(`/api/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ items, customerEmail: email }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error al iniciar el pago');
@@ -146,6 +161,19 @@ export function CartDrawer() {
                 <p className="text-white/30 text-xs mb-5">
                   Pago seguro con Stripe. Recibirás confirmación por email.
                 </p>
+
+                {/* Email */}
+                <div className="mb-4">
+                  <input
+                    type="email"
+                    placeholder="Tu email para la confirmación"
+                    value={email}
+                    onChange={e => { setEmail(e.target.value); setEmailError(null); }}
+                    className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/30 outline-none focus:ring-2 focus:ring-yellow-500/50"
+                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)' }}
+                  />
+                  {emailError && <p className="text-red-400 text-xs mt-1.5 pl-1">{emailError}</p>}
+                </div>
 
                 {/* Error */}
                 {checkoutError && (
