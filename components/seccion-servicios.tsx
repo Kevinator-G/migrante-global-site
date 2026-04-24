@@ -14,6 +14,7 @@ import {
   Plane,
   Users,
   Globe,
+  Map,
   ChevronDown,
   ArrowRight,
 } from 'lucide-react';
@@ -28,8 +29,10 @@ const destacados = [
     link: '/servicios/orientacion-laboral',
     accentColor: '#f59e0b',
     iconBg: 'rgba(245,158,11,0.12)',
-    tag: 'Más solicitado',
+    tag: 'Empleo',
     tagColor: '#f59e0b',
+    headerGradient: 'linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(245,158,11,0.04) 100%)',
+    headerEmoji: '💼',
   },
   {
     icon: FileText,
@@ -39,8 +42,10 @@ const destacados = [
     link: '/servicios/cv-formato-suizo',
     accentColor: '#dc2626',
     iconBg: 'rgba(220,38,38,0.12)',
-    tag: 'Alta demanda',
+    tag: 'Documentos',
     tagColor: '#ef4444',
+    headerGradient: 'linear-gradient(135deg, rgba(220,38,38,0.18) 0%, rgba(220,38,38,0.04) 100%)',
+    headerEmoji: '📄',
   },
   {
     icon: Video,
@@ -52,6 +57,8 @@ const destacados = [
     iconBg: 'rgba(59,130,246,0.12)',
     tag: 'Incluido en planes',
     tagColor: '#60a5fa',
+    headerGradient: 'linear-gradient(135deg, rgba(59,130,246,0.18) 0%, rgba(59,130,246,0.04) 100%)',
+    headerEmoji: '🎥',
   },
 ];
 
@@ -63,6 +70,7 @@ const adicionales = [
   { icon: Languages,   titulo: 'Clases de Alemán',         link: '/servicios/clases-aleman',            descripcion: 'Clases personalizadas con profesora nativa.' },
   { icon: Users,       titulo: 'Comunidad de Apoyo',       link: '/servicios/comunidad-apoyo',          descripcion: 'Red exclusiva de migrantes y eventos mensuales.' },
   { icon: Plane,       titulo: 'Recogida en Aeropuerto',   link: '/servicios/recogida-aeropuerto',      descripcion: 'Traslado desde el aeropuerto a tu alojamiento.' },
+  { icon: Map,         titulo: 'Guía Turística Local',     link: '/servicios/guia-turistica',           descripcion: 'Descubre Suiza con un local · jornadas a medida.' },
   { icon: Globe,       titulo: 'Otros Países',             link: '/servicios/orientacion-otros-paises', descripcion: 'Orientación para migrar a otros países europeos.' },
 ];
 
@@ -100,11 +108,10 @@ export function SeccionServicios() {
             >
               <Link href={s.link} className="group block h-full">
                 <div
-                  className="h-full rounded-2xl p-6 flex flex-col transition-all duration-300 group-hover:-translate-y-1"
+                  className="h-full rounded-2xl flex flex-col overflow-hidden transition-all duration-300 group-hover:-translate-y-1"
                   style={{
                     background: 'var(--surface-card, #161a20)',
                     border: `1px solid rgba(255,255,255,0.07)`,
-                    borderTop: `3px solid ${s.accentColor}`,
                   }}
                   onMouseEnter={e => {
                     (e.currentTarget as HTMLElement).style.boxShadow = `0 16px 40px rgba(0,0,0,0.3), 0 0 0 1px ${s.accentColor}40`;
@@ -113,39 +120,40 @@ export function SeccionServicios() {
                     (e.currentTarget as HTMLElement).style.boxShadow = 'none';
                   }}
                 >
-                  {/* Tag */}
-                  <div className="flex items-center gap-2 mb-4">
+                  {/* Visual header */}
+                  <div
+                    className="h-28 flex items-center justify-center relative overflow-hidden"
+                    style={{ background: s.headerGradient }}
+                  >
+                    <span className="text-5xl select-none" style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}>
+                      {s.headerEmoji}
+                    </span>
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{ background: `radial-gradient(circle at 50% 120%, ${s.accentColor}20 0%, transparent 70%)` }}
+                    />
+                    {/* Tag esquina */}
                     <span
-                      className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                      style={{
-                        color: s.tagColor,
-                        background: `${s.tagColor}15`,
-                        border: `1px solid ${s.tagColor}30`,
-                      }}
+                      className="absolute top-3 right-3 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                      style={{ color: s.tagColor, background: `${s.tagColor}15`, border: `1px solid ${s.tagColor}30` }}
                     >
                       {s.tag}
                     </span>
                   </div>
 
-                  {/* Icono */}
-                  <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
-                    style={{ background: s.iconBg }}
-                  >
-                    <s.icon className="w-5 h-5" style={{ color: s.accentColor }} />
-                  </div>
+                  <div className="p-5 flex flex-col flex-1">
+                    {/* Texto */}
+                    <h3 className="font-bold text-white text-lg mb-2 leading-snug">{s.titulo}</h3>
+                    <p className="text-white/55 text-sm leading-relaxed flex-1">{s.descripcion}</p>
 
-                  {/* Texto */}
-                  <h3 className="font-bold text-white text-lg mb-2 leading-snug">{s.titulo}</h3>
-                  <p className="text-white/55 text-sm leading-relaxed flex-1">{s.descripcion}</p>
-
-                  {/* CTA */}
-                  <div
-                    className="mt-5 flex items-center gap-1.5 text-sm font-semibold transition-all duration-200 group-hover:gap-2.5"
-                    style={{ color: s.accentColor }}
-                  >
-                    Ver detalles
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    {/* CTA */}
+                    <div
+                      className="mt-4 flex items-center gap-1.5 text-sm font-semibold transition-all duration-200 group-hover:gap-2.5"
+                      style={{ color: s.accentColor }}
+                    >
+                      Ver detalles
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
                   </div>
                 </div>
               </Link>

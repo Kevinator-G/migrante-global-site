@@ -26,9 +26,9 @@ const valores = [
   {
     numero: '03',
     icon: Shield,
-    titulo: 'Transparencia total',
+    titulo: 'Orientación con resultados',
     descripcion:
-      'No prometemos empleos ni residencia garantizada. Te guiamos, orientamos y acompañamos honestamente. El resto depende de ti.',
+      'Sabemos qué puertas tocar, cómo llegar y qué esperar en cada etapa. Información concreta, no teoría genérica.',
   },
 ];
 
@@ -58,10 +58,10 @@ export function SeccionValidacion() {
         >
           <span className="section-tag">Por qué elegirnos</span>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Por qué <span className="text-yellow-500">confiarnos</span> tu proceso
+            Lo que nos hace <span className="text-yellow-500">diferentes</span>
           </h2>
           <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
-            No somos una agencia más. Somos personas que han migrado y quieren ayudarte a hacerlo bien.
+            Personas que ya vivieron el proceso que tú estás a punto de comenzar.
           </p>
         </motion.div>
 
@@ -126,33 +126,6 @@ export function SeccionValidacion() {
           ))}
         </div>
 
-        {/* Stats strip */}
-        <motion.div
-          initial={{ y: 10 }}
-          whileInView={{ y: 0 }}
-          viewport={{ once: true, margin: '0px 0px -80px 0px' }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-14 grid grid-cols-3 gap-px rounded-2xl overflow-hidden"
-          style={{ background: 'rgba(255,255,255,0.05)' }}
-        >
-          {[
-            { valor: '150+', label: 'Familias orientadas', color: '#f59e0b' },
-            { valor: '10+', label: 'Países de origen', color: '#ef4444' },
-            { valor: '0', label: 'Promesas falsas', color: '#60a5fa' },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              data-light-card="true"
-              className="flex flex-col items-center justify-center py-7 px-4 text-center"
-              style={{ background: 'var(--surface-card)' }}
-            >
-              <span className="text-3xl font-bold mb-1" style={{ color: stat.color }}>
-                {stat.valor}
-              </span>
-              <span className="text-white/45 text-sm">{stat.label}</span>
-            </div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { ChevronDown, Menu, X, MapPin, ShoppingCart, Sun, Moon } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { ChevronDown, Menu, X, MapPin, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart-context';
 
@@ -16,7 +17,6 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isDark, setIsDark] = useState(true);
   const { itemCount, openCart } = useCart();
 
   useEffect(() => {
@@ -24,24 +24,6 @@ export function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('mg-theme');
-    setIsDark(saved !== 'light');
-  }, []);
-
-  const toggleTheme = useCallback(() => {
-    const html = document.documentElement;
-    if (isDark) {
-      html.classList.add('light');
-      localStorage.setItem('mg-theme', 'light');
-      setIsDark(false);
-    } else {
-      html.classList.remove('light');
-      localStorage.setItem('mg-theme', 'dark');
-      setIsDark(true);
-    }
-  }, [isDark]);
 
   return (
     <nav
@@ -54,10 +36,26 @@ export function Navbar() {
       <div className="max-w-[1200px] mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold flex items-center gap-1">
-            <span className="text-red-600">Migrante</span>
-            <span className="text-yellow-500">Global</span>
-          </Link>
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: 'easeOut' }}
+          >
+            <Link href="/" className="text-2xl font-bold flex items-center gap-1 select-none">
+              <span
+                className="text-red-600"
+                style={{ textShadow: '0 0 18px rgba(220,38,38,0.5), 0 2px 4px rgba(0,0,0,0.4)' }}
+              >
+                Migrante
+              </span>
+              <span
+                className="text-yellow-500"
+                style={{ textShadow: '0 0 18px rgba(245,158,11,0.5), 0 2px 4px rgba(0,0,0,0.4)' }}
+              >
+                Global
+              </span>
+            </Link>
+          </motion.div>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-6">
@@ -111,16 +109,6 @@ export function Navbar() {
               )}
             </div>
 
-            {/* Theme toggle */}
-            <button
-              onClick={toggleTheme}
-              title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-              className="w-9 h-9 rounded-lg flex items-center justify-center text-white/60 hover:text-yellow-500 transition-colors"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
-            >
-              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
-
             {/* Cart button */}
             <button
               onClick={openCart}
@@ -141,15 +129,8 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile: theme + cart + hamburger */}
+          {/* Mobile: cart + hamburger */}
           <div className="md:hidden flex items-center gap-2">
-            <button
-              onClick={toggleTheme}
-              className="w-9 h-9 rounded-lg flex items-center justify-center text-white/60"
-              style={{ background: 'rgba(255,255,255,0.06)' }}
-            >
-              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
             <button
               onClick={openCart}
               className="relative w-9 h-9 rounded-lg flex items-center justify-center text-white/60"

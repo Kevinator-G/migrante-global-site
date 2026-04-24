@@ -93,7 +93,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning className={`${inter.variable} ${outfit.variable}`}>
+    <html lang="es" suppressHydrationWarning className={`dark ${inter.variable} ${outfit.variable}`}>
       <head>
         <script
           type="application/ld+json"

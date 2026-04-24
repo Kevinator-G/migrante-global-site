@@ -55,9 +55,9 @@ export function Hero() {
             className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed"
             style={{ textShadow: '0 1px 12px rgba(0,0,0,0.7)' }}
           >
-            Acompañamiento profesional y honesto para tu proceso de migración.
+            Acompañamiento real de alguien que ya vivió el proceso.
             <br className="hidden md:block" />
-            Sin promesas falsas, con transparencia total.
+            Más de 10 años en Europa, 3 años viviendo y trabajando en Suiza.
           </p>
 
           {/* CTAs */}

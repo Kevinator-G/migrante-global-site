@@ -16,7 +16,7 @@ const testimonios = [
     nombre: 'Valeria R.',
     pais: '🇲🇽 México → 🇨🇭 Suiza',
     texto:
-      'Lo que más valoro es la honestidad. No me prometieron trabajo ni residencia garantizada. Me explicaron exactamente qué esperar y eso me dio confianza para tomar la decisión.',
+      'Lo que más valoro es que me explicaron exactamente cómo funciona el mercado suizo, los sectores donde hay más oportunidades y cómo presentarme. Esa claridad fue lo que me dio confianza para dar el paso.',
     servicio: 'Sesiones 1:1',
     estrellas: 5,
   },

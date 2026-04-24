@@ -13,6 +13,7 @@ import {
   Users,
   Globe,
   FilePenLine,
+  Map,
   ArrowRight,
   ShoppingCart,
   CheckCircle2,
@@ -37,7 +38,7 @@ const servicios = [
     precio: 350,
     moneda: 'CHF',
     precioTipo: 'Pago único',
-    tag: 'Más solicitado',
+    tag: 'Empleo',
     tagColor: GOLD,
     destacado: true,
   },
@@ -52,7 +53,7 @@ const servicios = [
     precio: 290,
     moneda: 'CHF',
     precioTipo: 'Pago único',
-    tag: 'Alta demanda',
+    tag: 'Documentos',
     tagColor: '#ef4444',
     destacado: true,
   },
@@ -79,7 +80,8 @@ const servicios = [
     titulo: 'Gestión de Alojamiento',
     descripcion:
       'Orientación completa para encontrar tu primer alojamiento en Suiza sin caer en trampas ni sobrepagar.',
-    precio: 780,
+    precio: 290,
+    precioEur: 305,
     moneda: 'CHF',
     precioTipo: 'Pago único',
     tag: null,
@@ -139,11 +141,28 @@ const servicios = [
     titulo: 'Comunidad de Apoyo',
     descripcion:
       'Acceso mensual a nuestra red de migrantes latinos en Suiza. Networking, eventos y recursos actualizados.',
-    precio: 80,
+    precio: 25,
+    precioEur: 26,
     moneda: 'CHF/mes',
-    precioTipo: 'Suscripción',
+    precioTipo: 'Suscripción · cancela cuando quieras',
     tag: null,
     tagColor: '',
+    destacado: false,
+  },
+  {
+    id: 'guia-turistica',
+    href: '/servicios/guia-turistica',
+    icon: Map,
+    categoria: 'Experiencias',
+    titulo: 'Guía Turística Local',
+    descripcion:
+      'Descubre Suiza con alguien que ya vive aquí. Rincones reales, anécdotas locales y los lugares donde van los suizos de verdad.',
+    precio: 150,
+    precioEur: 158,
+    moneda: 'CHF',
+    precioTipo: 'Por jornada · hasta 4 personas',
+    tag: 'Nuevo',
+    tagColor: '#10b981',
     destacado: false,
   },
   {
@@ -186,7 +205,7 @@ function ServiceCard({
   index,
   compact = false,
 }: {
-  servicio: (typeof servicios)[0];
+  servicio: (typeof servicios)[0] & { precioEur?: number };
   index: number;
   compact?: boolean;
 }) {
@@ -320,6 +339,11 @@ function ServiceCard({
               <span className="text-white/40 text-sm">{servicio.moneda}</span>
             )}
           </div>
+          {'precioEur' in servicio && servicio.precioEur && (
+            <div className="text-white/35 text-xs mt-0.5">
+              ≈ {servicio.precioEur} €{servicio.moneda?.includes('/mes') ? '/mes' : ''}
+            </div>
+          )}
           <div className="text-white/25 text-xs mt-0.5">{servicio.precioTipo}</div>
         </div>
 
@@ -512,11 +536,9 @@ export default function ServiciosPage() {
           </div>
         </section>
 
-        {/* Disclaimer */}
         <div style={{ padding: '24px 0' }}>
-          <p className="text-white/18 text-xs text-center max-w-[800px] mx-auto px-6">
-            Migrante Global no es agencia de empleo, inmobiliaria ni asesoría legal. No garantizamos
-            empleo, residencia ni aprobación de trámites. Todos los precios son orientativos en CHF.
+          <p className="text-white/20 text-xs text-center max-w-[800px] mx-auto px-6">
+            Todos los precios en CHF · Equivalencia en euros aproximada · Pago coordinado personalmente
           </p>
         </div>
       </main>

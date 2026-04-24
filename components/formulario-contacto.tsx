@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Send, CheckCircle, AlertCircle, MessageCircle, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function FormularioContacto() {
@@ -59,14 +59,60 @@ export function FormularioContacto() {
           whileInView={{ y: 0 }}
           viewport={{ once: true, margin: "0px 0px -80px 0px" }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-10"
         >
-          <h2 className="text-4xl font-bold mb-4">Contáctanos</h2>
-          <p className="text-bone/70 text-lg">
-            ¿Tienes dudas o quieres empezar tu proceso? Escríbenos y te responderemos pronto.
+          <span className="inline-block text-[10px] font-bold tracking-[3px] uppercase px-4 py-1.5 rounded-full mb-4"
+            style={{ background: 'rgba(220,38,38,0.12)', border: '1px solid rgba(220,38,38,0.3)', color: '#ef4444' }}>
+            Hablemos
+          </span>
+          <h2 className="text-4xl font-bold mb-4 text-white">Contáctanos</h2>
+          <p className="text-white/60 text-lg">
+            ¿Tienes dudas o quieres empezar tu proceso? Escríbenos y te responderemos en menos de 48 horas.
           </p>
         </motion.div>
-        
+
+        {/* Contacto directo */}
+        <motion.div
+          initial={{ y: 15 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -80px 0px" }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="grid sm:grid-cols-2 gap-4 mb-8"
+        >
+          <a
+            href="https://wa.me/41772337353"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-4 rounded-xl p-4 transition-all duration-300 hover:-translate-y-0.5"
+            style={{ background: 'rgba(37,211,102,0.07)', border: '1px solid rgba(37,211,102,0.2)' }}
+          >
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+              style={{ background: 'rgba(37,211,102,0.15)' }}>
+              <MessageCircle className="w-5 h-5" style={{ color: '#25d366' }} />
+            </div>
+            <div>
+              <div className="font-bold text-white text-sm">WhatsApp</div>
+              <div className="text-white/50 text-xs mt-0.5">+41 77 233 73 53</div>
+            </div>
+          </a>
+
+          <a
+            href="mailto:hola@migranteglobal.ch"
+            className="group flex items-center gap-4 rounded-xl p-4 transition-all duration-300 hover:-translate-y-0.5"
+            style={{ background: 'rgba(201,169,110,0.07)', border: '1px solid rgba(201,169,110,0.2)' }}
+          >
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+              style={{ background: 'rgba(201,169,110,0.15)' }}>
+              <Mail className="w-5 h-5" style={{ color: '#c9a96e' }} />
+            </div>
+            <div>
+              <div className="font-bold text-white text-sm">Email</div>
+              <div className="text-white/50 text-xs mt-0.5">hola@migranteglobal.ch</div>
+            </div>
+          </a>
+        </motion.div>
+
+
 
         <motion.div
           initial={{ y: 15 }}

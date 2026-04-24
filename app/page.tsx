@@ -5,12 +5,10 @@ import { SeccionCalculadoraModal } from '@/components/seccion-calculadora-modal'
 import { FormularioContacto } from '@/components/formulario-contacto';
 import { SeccionValidacion } from '@/components/seccion-validacion';
 import { SeccionServicios } from '@/components/seccion-servicios';
-import { SeccionQueHacemos } from '@/components/seccion-que-hacemos';
 import { SeccionMetodo } from '@/components/seccion-metodo';
 import { SeccionPrecios } from '@/components/seccion-precios';
-import { SeccionTransparencia } from '@/components/seccion-transparencia';
-import { SeccionCTA } from '@/components/seccion-cta';
 import { SeccionTestimonios } from '@/components/seccion-testimonios';
+import { SeccionQuienSoy } from '@/components/seccion-quien-soy';
 
 export default function HomePage() {
   return (
@@ -21,13 +19,11 @@ export default function HomePage() {
         <SeccionValidacion />
         <SeccionServicios />
         <SeccionCalculadoraModal />
-        <SeccionQueHacemos />
         <SeccionMetodo />
+        <SeccionQuienSoy />
         <SeccionTestimonios />
         <SeccionPrecios />
-        <SeccionTransparencia />
         <FormularioContacto />
-        <SeccionCTA />
       </main>
       <Footer />
     </>

@@ -10,7 +10,8 @@ const planes = [
   {
     id: 'solo-alojamiento',
     nombre: 'Solo Alojamiento',
-    precio: 780,
+    precio: 290,
+    precioEur: 305,
     moneda: 'CHF',
     tipo: 'Pago único',
     descripcion: 'Servicio puntual',
@@ -27,9 +28,10 @@ const planes = [
   {
     id: 'pack-completo',
     nombre: 'Pack Completo',
-    precio: 1280,
+    precio: 590,
+    precioEur: 620,
     moneda: 'CHF',
-    tipo: 'Pago único',
+    tipo: 'Pago único · cuotas disponibles',
     descripcion: 'Reubicación integral',
     destacado: true,
     icon: Package2,
@@ -46,7 +48,8 @@ const planes = [
   {
     id: 'comunidad',
     nombre: 'Comunidad',
-    precio: 80,
+    precio: 25,
+    precioEur: 26,
     moneda: 'CHF/mes',
     tipo: 'Suscripción mensual',
     descripcion: 'Sin permanencia',
@@ -89,12 +92,12 @@ export function SeccionPrecios() {
           transition={{ duration: 0.6 }}
           className="text-center mb-14"
         >
-          <span className="section-tag">Inversión en tu futuro</span>
+          <span className="section-tag">Elige tu acompañamiento</span>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Planes y <span style={{ color: GOLD }}>Precios</span>
           </h2>
           <p className="text-white/50 text-lg max-w-xl mx-auto">
-            Elige el plan que mejor se adapte a tu situación y necesidades
+            Precios pensados para que migrar no te cueste el sueldo de un año.
           </p>
         </motion.div>
 
@@ -170,6 +173,9 @@ export function SeccionPrecios() {
                         {plan.precio.toLocaleString('es-CH')}
                       </span>
                       <span className="text-white/35 text-sm mb-1">{plan.moneda}</span>
+                    </div>
+                    <div className="text-white/45 text-xs mt-1">
+                      ≈ {plan.precioEur} €{plan.moneda.includes('/mes') ? '/mes' : ''}
                     </div>
                     <div className="text-white/30 text-xs mt-1">{plan.tipo}</div>
                   </div>
@@ -251,10 +257,7 @@ export function SeccionPrecios() {
           className="text-center mt-10 space-y-1"
         >
           <p className="text-white/30 text-sm">
-            * Todos los precios en francos suizos (CHF). El pago se coordina personalmente.
-          </p>
-          <p className="text-white/20 text-xs">
-            No garantizamos empleo, residencia ni aprobación de trámites. Ofrecemos orientación y acompañamiento.
+            * Precios en francos suizos (CHF). Equivalencia en euros aproximada (1 CHF ≈ 1,05 €). Pago coordinado personalmente · Cuotas disponibles en el Pack Completo.
           </p>
         </motion.div>
       </div>
