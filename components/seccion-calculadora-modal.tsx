@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calculator, X, TrendingUp, ArrowRight, Globe } from 'lucide-react';
 import { Calculadora } from '@/components/calculadora';
@@ -32,6 +32,15 @@ const ejemplos = [
 
 export function SeccionCalculadoraModal() {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
 
   return (
     <>

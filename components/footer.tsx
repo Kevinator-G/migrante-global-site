@@ -19,7 +19,7 @@ export function Footer() {
             {/* Redes sociales */}
             <div className="flex gap-3 mt-5">
               <a
-                href="https://instagram.com/migranteglobal"
+                href="https://www.instagram.com/kevin.migranteglobal/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram Migrante Global"

@@ -44,6 +44,8 @@ export interface ServicioTemplateProps {
   noIncluye: string[];
   paraQuien: string[];
   planInfo: PlanInfo;
+  hideNavbar?: boolean;
+  hideHero?: boolean;
 }
 
 export function ServicioTemplate({
@@ -63,6 +65,8 @@ export function ServicioTemplate({
   noIncluye,
   paraQuien,
   planInfo,
+  hideNavbar = false,
+  hideHero = false,
 }: ServicioTemplateProps) {
   const { addItem, openCart, isInCart } = useCart();
   const inCart = isInCart(id);
@@ -81,14 +85,14 @@ export function ServicioTemplate({
 
   return (
     <>
-      <Navbar />
+      {!hideNavbar && <Navbar />}
       <main
-        className="pt-20"
+        className={hideNavbar ? '' : 'pt-20'}
         data-light-card="true"
         style={{ background: '#0a0c10', minHeight: '100vh' }}
       >
         {/* ─── HERO ─── */}
-        <section
+        {!hideHero && <section
           className="relative overflow-hidden"
           style={{ padding: '80px 0 70px' }}
         >
@@ -246,7 +250,7 @@ export function ServicioTemplate({
               </motion.div>
             </div>
           </div>
-        </section>
+        </section>}
 
         {/* ─── PROBLEMA + BENEFICIOS ─── */}
         <section style={{ padding: '70px 0' }}>

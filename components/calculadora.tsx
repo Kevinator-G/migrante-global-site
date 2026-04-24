@@ -314,7 +314,7 @@ export function Calculadora({ compact = false, onClose }: { compact?: boolean; o
     if (mode !== 'ch') return null;
 
     // Aproximación simple (ajustable):
-    const livingCostCHF = 3500; // “coste de vida promedio” (tú lo ajustas cuando quieras)
+    const livingCostCHF = 2200; // estimación conservadora para migrante recién llegado
     const salaryCHF = suizaSalary[sector];
     const savingsCHF = salaryCHF - livingCostCHF;
 

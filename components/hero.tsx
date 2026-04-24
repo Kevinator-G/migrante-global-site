@@ -14,22 +14,13 @@ const stats = [
 export function Hero() {
   return (
     <section data-hero="true" className="relative min-h-[92vh] flex flex-col items-center justify-center overflow-hidden">
-      {/* Background Video */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <video
-          src="/20260402_150057.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        />
-        {/* Fallback image si el vídeo no carga */}
         <Image
           src="/zurich-ch-hero.ffeOwgdK.webp"
           alt="Vista aérea de Zúrich, Suiza al atardecer"
           fill
-          className="object-cover object-center -z-10"
+          className="object-cover object-center"
           priority
           sizes="100vw"
         />
