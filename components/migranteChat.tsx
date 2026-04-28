@@ -146,9 +146,10 @@ export default function MigranteChat() {
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
-          className="chat-trigger rounded-full px-5 py-3 text-white shadow-2xl transition-all hover:scale-105"
+          className="chat-trigger rounded-full shadow-2xl transition-all hover:scale-105 text-white px-4 py-3 md:px-5"
         >
-          💬 Mentor Migrante Global
+          <span className="md:hidden text-xl leading-none">💬</span>
+          <span className="hidden md:inline">💬 Mentor Migrante Global</span>
         </button>
       ) : (
         <div className="chat-widget w-[360px] rounded-2xl shadow-2xl overflow-hidden">
