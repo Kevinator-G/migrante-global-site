@@ -17,6 +17,7 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isPaisesOpen, setIsPaisesOpen] = useState(false);
   const { itemCount, openCart } = useCart();
 
   useEffect(() => {
@@ -172,6 +173,27 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+            {/* Países acordeón */}
+            <div className="border-b border-white/5">
+              <button
+                onClick={() => setIsPaisesOpen(!isPaisesOpen)}
+                className="w-full flex items-center justify-between text-white/80 hover:text-yellow-500 transition py-2 text-sm font-medium"
+              >
+                <span className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> Países</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isPaisesOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isPaisesOpen && (
+                <div className="pb-3">
+                  <div className="text-yellow-500 text-xs font-semibold mb-2">🇨🇭 Suiza (Principal)</div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {paisesUE.map(pais => (
+                      <div key={pais} className="text-white/60 text-xs py-0.5">{pais}</div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <Link
               href="/#contacto"
               className="block btn-primary text-center mt-2"
