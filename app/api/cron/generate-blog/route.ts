@@ -1,220 +1,250 @@
-import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
-import { prisma } from '@/lib/db';
+import { NextRequest, NextResponse } from 'next/server'
+import { PrismaClient } from '@prisma/client'
+import OpenAI from 'openai'
 
-export const dynamic = 'force-dynamic';
-export const maxDuration = 60;
+const prisma = new PrismaClient()
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-// Rotación diaria de categorías y temas — 10 categorías, ciclo de 10 días
-const CATEGORIES = [
-  {
-    key: 'trabajo',
-    label: 'Trabajo',
-    topics: [
-      'Cómo encontrar trabajo en Suiza siendo extranjero: guía paso a paso',
-      'Los sectores con más demanda laboral en Suiza para hispanohablantes',
-      'Diferencias entre contrato fijo e indefinido en Suiza',
-      'Cómo funciona el desempleo en Suiza: prestaciones y requisitos',
-      'Salarios mínimos en Suiza por sector en 2025',
-      'Cómo usar LinkedIn y Jobs.ch para buscar trabajo en Suiza',
-      'Trabajar en Suiza sin hablar alemán: sectores y consejos',
-    ],
-  },
-  {
-    key: 'vivienda',
-    label: 'Vivienda',
-    topics: [
-      'Cómo alquilar un piso en Suiza: guía completa para extranjeros',
-      'El depósito de alquiler en Suiza: SwissCaution y otras opciones',
-      'Cuánto cuesta vivir en Zúrich vs Berna vs Ginebra en 2025',
-      'Plataformas para buscar piso en Suiza: Homegate, ImmoScout24 y más',
-      'Qué es el Nebenkosten y qué gastos incluye tu alquiler suizo',
-      'Comprar vs alquilar en Suiza: ¿qué conviene más como emigrante?',
-    ],
-  },
-  {
-    key: 'tramites',
-    label: 'Trámites',
-    topics: [
-      'Permisos de residencia en Suiza: tipos L, B, C y G explicados',
-      'Cómo registrarse en el municipio al llegar a Suiza (Einwohnerkontrolle)',
-      'Reagrupación familiar en Suiza: requisitos y proceso',
-      'Cómo obtener el permiso de trabajo en Suiza paso a paso',
-      'Renovar el permiso de residencia en Suiza: plazos y documentos',
-      'Naturalización suiza: requisitos para obtener la ciudadanía',
-      'Qué hacer en Suiza los primeros 30 días: trámites esenciales',
-    ],
-  },
-  {
-    key: 'medicina',
-    label: 'Medicina',
-    topics: [
-      'El seguro de salud obligatorio en Suiza (LAMal): cómo funciona',
-      'Cómo elegir la mejor caja de seguro médico en Suiza',
-      'Ayudas para pagar el seguro de salud en Suiza (Prämienverbilligung)',
-      'Sistema de salud suizo para extranjeros: médico de cabecera y especialistas',
-      'Seguro dental en Suiza: qué cubre y qué no',
-      'Baja por enfermedad en Suiza: derechos y procedimiento',
-      'Medicamentos en Suiza: cómo funcionan las recetas y la farmacia',
-    ],
-  },
-  {
-    key: 'finanzas',
-    label: 'Finanzas',
-    topics: [
-      'Cómo hacer la declaración de impuestos en Suiza como extranjero',
-      'Deducciones fiscales permitidas en Suiza que debes aprovechar',
-      'El sistema de pensiones suizo: pilares 1, 2 y 3 explicados',
-      'Cómo abrir una cuenta bancaria en Suiza siendo extranjero',
-      'Impuesto en la fuente (Quellensteuer): qué es y cómo recuperarlo',
-      'Enviar dinero desde Suiza a Latinoamérica: mejores opciones y costes',
-      'Cómo ahorrar dinero viviendo en Suiza: consejos prácticos',
-    ],
-  },
-  {
-    key: 'alemán',
-    label: 'Alemán',
-    topics: [
-      'Cómo aprender alemán rápido para trabajar en Suiza',
-      'Diferencias entre el alemán estándar y el Schweizerdeutsch',
-      'Las mejores apps y recursos gratuitos para aprender alemán suizo',
-      'Nivel de alemán necesario para trabajar en Suiza según el sector',
-      'Cursos de alemán subvencionados para emigrantes en Suiza',
-      'Vocabulario laboral esencial en alemán para el trabajo en Suiza',
-    ],
-  },
-  {
-    key: 'vida-en-suiza',
-    label: 'Conocer Suiza',
-    topics: [
-      'Las mejores ciudades de Suiza para vivir como hispanohablante',
-      'Cultura suiza: costumbres y normas que debes conocer al llegar',
-      'Transporte público en Suiza: el Halbtax, GA y cómo moverse',
-      'Ocio y tiempo libre en Suiza sin gastar una fortuna',
-      'Integración en Suiza: cómo hacer amigos y crear red social',
-      'Comparativa: vivir en Zúrich vs Lausanne vs Basilea',
-      'Los mejores mercados y tiendas baratas para hacer la compra en Suiza',
-    ],
-  },
-  {
-    key: 'reglas-normas',
-    label: 'Reglas y Normas',
-    topics: [
-      'Normas de convivencia en Suiza que todo emigrante debe conocer',
-      'Las leyes de ruido en Suiza: qué puedes y qué no puedes hacer',
-      'Multas y sanciones más comunes para extranjeros en Suiza',
-      'Derechos laborales en Suiza: lo que la empresa no puede hacerte',
-      'Reciclaje y separación de residuos en Suiza: guía práctica',
-      'Conducir en Suiza: canje del carnet extranjero y normas de tráfico',
-    ],
-  },
-  {
-    key: 'noticias',
-    label: 'Noticias',
-    topics: [
-      'Cambios en las leyes de inmigración suiza en 2025',
-      'Novedades en el mercado laboral suizo para extranjeros este año',
-      'Actualización del coste de vida en Suiza: qué ha cambiado',
-      'Nuevas ayudas y subvenciones para emigrantes en Suiza en 2025',
-      'Cambios en el seguro médico suizo que te afectan como extranjero',
-    ],
-  },
-  {
-    key: 'herramientas',
-    label: 'Herramientas',
-    topics: [
-      'Las mejores apps imprescindibles para vivir en Suiza',
-      'Herramientas online para calcular tu salario neto en Suiza',
-      'Comparadores de seguros médicos en Suiza: cuál usar',
-      'Plataformas para aprender alemán online desde Latinoamérica',
-      'Recursos oficiales del gobierno suizo que todo emigrante debe conocer',
-      'Comunidades y grupos de hispanohablantes en Suiza: dónde encontrarlos',
-    ],
-  },
-];
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim()
-    .slice(0, 80);
-}
-
-function pickTodayCategory() {
-  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-  const cat = CATEGORIES[dayOfYear % CATEGORIES.length];
-  const topic = cat.topics[dayOfYear % cat.topics.length];
-  return { category: cat, topic };
-}
-
-export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
-  }
-
-  const { category, topic } = pickTodayCategory();
-
-  const prompt = `Eres un experto en migración a Suiza y redactor de contenido en español para hispanohablantes.
-
-Escribe un artículo de blog completo, informativo y útil sobre:
-"${topic}"
-
-El artículo debe:
-- Estar en español neutro (válido para España y Latinoamérica)
-- Tener entre 700 y 1000 palabras
-- Ser práctico con datos reales y actuales sobre Suiza
-- Incluir subtítulos con ## para estructurar el contenido
-- Dirigirse a personas que quieren emigrar o ya viven en Suiza
-- Terminar con una llamada a la acción sutil hacia Migrante Global
-
-Responde ÚNICAMENTE con JSON en este formato exacto:
-{
-  "title": "Título del artículo (atractivo, SEO-friendly, en español)",
-  "excerpt": "Resumen de 1-2 frases del artículo (máx 160 caracteres)",
-  "content": "Contenido completo del artículo en Markdown",
-  "tags": ["tag1", "tag2", "tag3", "tag4"]
-}`;
+// ── GNews ──────────────────────────────────────────────────────────────────
+async function fetchTrendingNews(query: string): Promise<{
+  title: string
+  description: string
+  url: string
+  source: string
+} | null> {
+  const apiKey = process.env.GNEWS_API_KEY
+  if (!apiKey) return null
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
-      temperature: 0.7,
-    });
-
-    const raw = completion.choices[0].message.content;
-    if (!raw) throw new Error('Respuesta vacía de OpenAI');
-
-    const generated = JSON.parse(raw);
-    const baseSlug = slugify(generated.title);
-    const uniqueSlug = `${baseSlug}-${Date.now()}`;
-
-    const post = await prisma.blogPost.create({
-      data: {
-        title: generated.title,
-        slug: uniqueSlug,
-        excerpt: generated.excerpt,
-        content: generated.content,
-        category: category.key,
-        tags: generated.tags || [],
-        published: false,
-        aiGenerated: true,
-        sourceTitle: topic,
-      },
-    });
-
-    return NextResponse.json({ success: true, category: category.label, post: { id: post.id, title: post.title } });
-  } catch (error) {
-    console.error('Error generando blog post:', error);
-    return NextResponse.json({ error: 'Error generando post' }, { status: 500 });
+    const params = new URLSearchParams({
+      q: query,
+      lang: 'es',
+      country: 'ch',
+      max: '5',
+      apikey: apiKey,
+    })
+    const res = await fetch(`https://gnews.io/api/v4/search?${params}`)
+    if (!res.ok) return null
+    const data = await res.json()
+    if (!data.articles?.length) return null
+    const article = data.articles[0]
+    return {
+      title: article.title,
+      description: article.description ?? '',
+      url: article.url,
+      source: article.source?.name ?? '',
+    }
+  } catch {
+    return null
   }
+}
+
+// ── Unsplash ───────────────────────────────────────────────────────────────
+async function fetchUnsplashImage(query: string): Promise<string | null> {
+  const accessKey = process.env.UNSPLASH_ACCESS_KEY
+  if (!accessKey) return null
+
+  try {
+    const params = new URLSearchParams({
+      query: `Switzerland ${query}`,
+      per_page: '1',
+      orientation: 'landscape',
+    })
+    const res = await fetch(`https://api.unsplash.com/search/photos?${params}`, {
+      headers: { Authorization: `Client-ID ${accessKey}` },
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.results?.[0]?.urls?.regular ?? null
+  } catch {
+    return null
+  }
+}
+
+// ── Category config ────────────────────────────────────────────────────────
+const CATEGORIES: Record<
+  string,
+  { searchQuery: string; fallbackTopic: string; imageQuery: string }
+> = {
+  'Visas y permisos': {
+    searchQuery: 'permiso residencia Suiza inmigrante 2024',
+    fallbackTopic: 'Los nuevos cambios en el sistema de permisos B y C en Suiza para 2025',
+    imageQuery: 'visa permit document Switzerland',
+  },
+  'Mercado laboral': {
+    searchQuery: 'empleo trabajo Suiza salario extranjero',
+    fallbackTopic: 'Cómo encontrar trabajo en Suiza sin hablar alemán: lo que nadie te dice',
+    imageQuery: 'Switzerland office work professionals',
+  },
+  'Homologación de títulos': {
+    searchQuery: 'homologación título universitario Suiza reconocimiento',
+    fallbackTopic: 'Paso a paso: cómo homologar tu título universitario en Suiza',
+    imageQuery: 'university degree diploma Switzerland',
+  },
+  'Bienestar y salud': {
+    searchQuery: 'seguro salud Suiza inmigrante KVG',
+    fallbackTopic: 'Cómo funciona el seguro médico en Suiza y qué cubre para los recién llegados',
+    imageQuery: 'Switzerland health insurance medical',
+  },
+  'Educación y familia': {
+    searchQuery: 'educación hijos Suiza familia reagrupación',
+    fallbackTopic: 'Reagrupación familiar en Suiza: qué necesitas saber antes de empezar',
+    imageQuery: 'Switzerland family education children',
+  },
+  'Finanzas y vivienda': {
+    searchQuery: 'alquiler piso Suiza caro vivienda inmigrante',
+    fallbackTopic: 'Cómo alquilar un piso en Suiza siendo extranjero: errores que cometen todos',
+    imageQuery: 'Switzerland apartment housing city',
+  },
+  'Noticias Suiza': {
+    searchQuery: 'noticias Suiza latinos hispanos comunidad',
+    fallbackTopic: 'Lo que está pasando en Suiza que afecta directamente a los inmigrantes latinos',
+    imageQuery: 'Switzerland news city landscape',
+  },
+  'Cultura y adaptación': {
+    searchQuery: 'cultura suiza adaptación extranjero integración',
+    fallbackTopic: 'Choques culturales reales que nadie te advierte antes de llegar a Suiza',
+    imageQuery: 'Switzerland culture integration people',
+  },
+  Emprendimiento: {
+    searchQuery: 'emprender negocio Suiza startup extranjero',
+    fallbackTopic: 'Cómo registrar una empresa en Suiza siendo extranjero y no morir en el intento',
+    imageQuery: 'Switzerland business startup entrepreneur',
+  },
+  Impuestos: {
+    searchQuery: 'impuestos declaración renta Suiza inmigrante',
+    fallbackTopic: 'Declaración de impuestos en Suiza: guía clara para quien lleva menos de 2 años',
+    imageQuery: 'Switzerland tax finance money',
+  },
+}
+
+// ── Prompt (Kevin's voice) ─────────────────────────────────────────────────
+function buildPrompt(
+  category: string,
+  topic: string,
+  newsContext: string
+): string {
+  return `Eres Kevin García, consultor de inmigración en Suiza con 10 años de experiencia ayudando a latinos a migrar de forma segura y ordenada. Escribes de forma directa, cercana y honesta — sin corporativismo ni jerga burocrática. Usas "tú", párrafos cortos, y abres cada artículo con un gancho que para al lector en seco.
+
+CATEGORÍA: ${category}
+TEMA: ${topic}
+${newsContext ? `CONTEXTO DE ACTUALIDAD:\n${newsContext}\n` : ''}
+
+Escribe un artículo de blog en español (mínimo 600 palabras) con esta estructura JSON exacta:
+
+{
+  "title": "Título directo y específico — sin clickbait barato, pero que genere urgencia real",
+  "excerpt": "Resumen de 1-2 frases que engancha sin revelar todo",
+  "content": "Contenido completo en Markdown. Empieza con un párrafo gancho de 2-3 líneas que describe la situación del lector. Sigue con H2 para cada sección. Termina con una llamada a la acción natural hacia una consulta personalizada.",
+  "imageQuery": "2-3 palabras en inglés para buscar una foto real en Unsplash (ej: 'Zurich street immigrants')",
+  "tags": ["tag1", "tag2", "tag3"]
+}
+
+REGLAS DE VOZ:
+- Párrafos de máximo 3 líneas
+- Nada de "En el competitivo mundo de..." — entra directo al problema
+- Usa datos concretos cuando los tengas
+- Humaniza: "yo lo he visto decenas de veces", "mis clientes me preguntan esto constantemente"
+- El CTA final debe sentirse como un consejo de amigo, no como publicidad
+
+Devuelve SOLO el JSON. Sin markdown extra, sin explicaciones fuera del JSON.`
+}
+
+// ── POST handler ───────────────────────────────────────────────────────────
+export async function POST(req: NextRequest) {
+  // Authorize cron calls
+  const secret = req.headers.get('x-cron-secret')
+  if (secret !== process.env.CRON_SECRET) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const categoryNames = Object.keys(CATEGORIES)
+  const results: Array<{
+    category: string
+    title?: string
+    hasTrend: boolean
+    hasImage: boolean
+    error?: string
+  }> = []
+
+  for (const categoryName of categoryNames) {
+    try {
+      const config = CATEGORIES[categoryName]
+
+      // 1. Try to get trending news
+      const news = await fetchTrendingNews(config.searchQuery)
+      const hasTrend = !!news
+
+      const topic = hasTrend
+        ? `${news!.title} — ${news!.description}`
+        : config.fallbackTopic
+
+      const newsContext = hasTrend
+        ? `Fuente: ${news!.source}\nURL: ${news!.url}\nTítulo: ${news!.title}\nDescripción: ${news!.description}`
+        : ''
+
+      // 2. Generate content with GPT-4o
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [{ role: 'user', content: buildPrompt(categoryName, topic, newsContext) }],
+        temperature: 0.75,
+        max_tokens: 2000,
+      })
+
+      const raw = completion.choices[0].message.content ?? '{}'
+      const parsed = JSON.parse(raw)
+
+      const { title, excerpt, content, imageQuery, tags } = parsed
+
+      // 3. Fetch real image from Unsplash
+      const imageSearchQuery = imageQuery || config.imageQuery
+      const imageUrl = await fetchUnsplashImage(imageSearchQuery)
+      const hasImage = !!imageUrl
+
+      // 4. Create slug
+      const slug =
+        title
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .replace(/[^a-z0-9\s-]/g, '')
+          .trim()
+          .replace(/\s+/g, '-')
+          .slice(0, 80) +
+        '-' +
+        Date.now()
+
+      // 5. Save to database
+      await prisma.blogPost.create({
+        data: {
+          title,
+          slug,
+          excerpt,
+          content,
+          imageUrl: imageUrl ?? null,
+          category: categoryName,
+          tags: tags ?? [],
+          published: true,
+          publishedAt: new Date(),
+          readTime: Math.ceil(content.split(' ').length / 200),
+        },
+      })
+
+      results.push({ category: categoryName, title, hasTrend, hasImage })
+    } catch (err) {
+      results.push({
+        category: categoryName,
+        hasTrend: false,
+        hasImage: false,
+        error: err instanceof Error ? err.message : 'Unknown error',
+      })
+    }
+  }
+
+  return NextResponse.json({
+    success: true,
+    generated: results.filter((r) => !r.error).length,
+    failed: results.filter((r) => r.error).length,
+    results,
+  })
 }
