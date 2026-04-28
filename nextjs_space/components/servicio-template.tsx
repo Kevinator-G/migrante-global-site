@@ -107,9 +107,9 @@ export function ServicioTemplate({
                 src={foto}
                 alt={fotoAlt ?? titulo}
                 className="absolute inset-0 w-full h-full object-cover"
-                style={{ opacity: 0.18 }}
+                style={{ opacity: 0.35 }}
               />
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,12,16,0.5) 0%, rgba(10,12,16,0.92) 100%)' }} />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,12,16,0.3) 0%, rgba(10,12,16,0.80) 100%)' }} />
             </>
           )}
           {/* Ambient glow */}
