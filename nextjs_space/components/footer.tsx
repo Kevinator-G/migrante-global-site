@@ -106,9 +106,13 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-white/25 text-sm">
           <p>&copy; {new Date().getFullYear()} Migrante Global. Todos los derechos reservados.</p>
-          <p className="text-xs text-center md:text-right">
-            No somos agencia de empleo, inmobiliaria ni asesoría legal. Ofrecemos orientación y acompañamiento.
-          </p>
+          <div className="flex flex-col md:flex-row items-center gap-3 text-xs text-center">
+            <p>No somos agencia de empleo, inmobiliaria ni asesoría legal.</p>
+            <div className="flex gap-4">
+              <Link href="/legal/privacidad" className="hover:text-white/50 transition">Privacidad</Link>
+              <Link href="/legal/cookies" className="hover:text-white/50 transition">Cookies</Link>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
