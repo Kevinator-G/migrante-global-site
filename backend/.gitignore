@@ -25,3 +25,30 @@ npm-debug.log*
 # OS
 .DS_Store
 Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claves y certificados — NUNCA subir
+*.pem
+*.key
+*.crt
+*.cert
+*.pfx
+secrets.json
+config.local.json
+
+# Bases de datos locales
+*.db
+*.sqlite
+*.sqlite3
+
+# Vercel
+.vercel/
+
+# Variables de entorno adicionales
+.env.*.local
+.env.test
