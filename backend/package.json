@@ -1,0 +1,31 @@
+{
+  "name": "migrante-global-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "prisma:push": "prisma db push",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@next-auth/prisma-adapter": "^1.0.7",
+    "@prisma/client": "^6.7.0",
+    "bcryptjs": "^2.4.3",
+    "next": "^14.2.28",
+    "next-auth": "^4.24.11",
+    "openai": "^4.77.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "stripe": "^17.7.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "prisma": "^6.7.0",
+    "typescript": "^5.2.2"
+  }
+}
