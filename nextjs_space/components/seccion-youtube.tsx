@@ -9,6 +9,7 @@ const videos = [
   { id: 'A0UGVonp9D8' },
   { id: 'xjJN_LYV9BE' },
   { id: 'asJkYKXl9fY' },
+  { id: 'ffrPGVJ99tA' },
 ];
 
 export function SeccionYoutube() {
