@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Home, Package2, Users, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Check, Home, Package2, Users, CheckCircle2, ArrowRight, ShieldCheck } from 'lucide-react';
 import { useCart } from '@/lib/cart-context';
 
 const GOLD = '#c9a96e';
@@ -248,13 +248,31 @@ export function SeccionPrecios() {
           })}
         </div>
 
+        {/* Garantía */}
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true, margin: '0px 0px -80px 0px' }}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="flex items-start gap-4 rounded-2xl px-6 py-5 mt-10 max-w-2xl mx-auto"
+          style={{ background: 'rgba(201,169,110,0.05)', border: '1px solid rgba(201,169,110,0.2)' }}
+        >
+          <ShieldCheck className="w-6 h-6 flex-shrink-0 mt-0.5" style={{ color: '#c9a96e' }} />
+          <div>
+            <div className="font-semibold text-white text-sm mb-1">Sin riesgo — Garantía de satisfacción</div>
+            <p className="text-white/50 text-sm leading-relaxed">
+              Si en tu primera sesión no ves valor claro y concreto para tu proceso, te devolvemos el dinero. Sin preguntas, sin formularios.
+            </p>
+          </div>
+        </motion.div>
+
         {/* Nota legal */}
         <motion.div
           initial={{ y: 10 }}
           whileInView={{ y: 0 }}
           viewport={{ once: true, margin: '0px 0px -80px 0px' }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-10 space-y-1"
+          className="text-center mt-6 space-y-1"
         >
           <p className="text-white/30 text-sm">
             * Precios en euros (€). Referencia en CHF orientativa (1 € ≈ 1,04 CHF). Pago coordinado personalmente · Cuotas disponibles en el Pack Completo.
