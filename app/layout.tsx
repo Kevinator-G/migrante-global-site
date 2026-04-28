@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import MigranteChat from "@/components/migranteChat";
+import { CookieBanner } from '@/components/cookie-banner';
 import { Providers } from './providers';
 import { Inter, Outfit } from 'next/font/google';
 
@@ -106,6 +107,7 @@ export default function RootLayout({
         </Providers>
 
         <MigranteChat />
+        <CookieBanner />
 
       </body>
     </html>

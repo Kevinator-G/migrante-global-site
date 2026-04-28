@@ -37,7 +37,7 @@ export function Footer() {
                 <Linkedin className="w-4 h-4" />
               </a>
               <a
-                href="https://wa.me/41000000000"
+                href="https://wa.me/41772337353"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp Migrante Global"
@@ -79,15 +79,15 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-start gap-3 text-white/45 text-sm">
                 <MapPin className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
-                <span>Servicios digitales para hispanohablantes en proceso de migración</span>
+                <span>Zúrich, Suiza · Servicios para hispanohablantes</span>
               </div>
               <div className="flex items-start gap-3 text-white/45 text-sm">
                 <Mail className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
                 <a
-                  href="mailto:hola@migranteglobal.com"
+                  href="mailto:hola@migranteglobal.ch"
                   className="hover:text-yellow-500 transition"
                 >
-                  hola@migranteglobal.com
+                  hola@migranteglobal.ch
                 </a>
               </div>
             </div>
@@ -106,9 +106,13 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-white/25 text-sm">
           <p>&copy; {new Date().getFullYear()} Migrante Global. Todos los derechos reservados.</p>
-          <p className="text-xs text-center md:text-right">
-            No somos agencia de empleo, inmobiliaria ni asesoría legal. Ofrecemos orientación y acompañamiento.
-          </p>
+          <div className="flex flex-col md:flex-row items-center gap-3 text-xs text-center">
+            <p>No somos agencia de empleo, inmobiliaria ni asesoría legal.</p>
+            <div className="flex gap-4">
+              <Link href="/legal/privacidad" className="hover:text-white/50 transition">Privacidad</Link>
+              <Link href="/legal/cookies" className="hover:text-white/50 transition">Cookies</Link>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

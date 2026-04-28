@@ -57,10 +57,10 @@ export default function RecogidaAeropuertoPage() {
         tagline="Llegada calmada, orientación real, primer paso con el pie derecho"
         icon={Plane}
         categoria="Bienvenida a Suiza"
-        precio={120}
-        moneda="CHF"
+        precio={97}
+        moneda="€"
         precioTipo="Por traslado · aeropuertos principales"
-        valorMercado="Servicios de recepción de migrantes: CHF 100–200"
+        valorMercado="Servicios de recepción de migrantes: €100–200"
         hideNavbar
         hideHero
         problema={{
@@ -94,6 +94,8 @@ export default function RecogidaAeropuertoPage() {
           'Familias con niños pequeños o personas mayores que necesitan apoyo',
           'Quienes llegan sin hablar alemán y temen no poder comunicarse',
         ]}
+        foto="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80"
+        fotoAlt="Aeropuerto internacional"
         planInfo={{
           inicio: 'Disponible como servicio adicional a precio estándar.',
           estrategia: 'Incluido con descuento del 50% dentro del Pack Completo.',

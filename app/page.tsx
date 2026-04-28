@@ -9,6 +9,8 @@ import { SeccionMetodo } from '@/components/seccion-metodo';
 import { SeccionPrecios } from '@/components/seccion-precios';
 import { SeccionTestimonios } from '@/components/seccion-testimonios';
 import { SeccionQuienSoy } from '@/components/seccion-quien-soy';
+import { SeccionYoutube } from '@/components/seccion-youtube';
+import { SeccionFaq } from '@/components/seccion-faq';
 
 export default function HomePage() {
   return (
@@ -21,7 +23,9 @@ export default function HomePage() {
         <SeccionCalculadoraModal />
         <SeccionMetodo />
         <SeccionQuienSoy />
+        <SeccionYoutube />
         <SeccionTestimonios />
+        <SeccionFaq />
         <SeccionPrecios />
         <FormularioContacto />
       </main>

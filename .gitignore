@@ -1,9 +1,59 @@
-# .gitignore
-.next/
+# Dependencias
 node_modules/
+
+# Variables de entorno — NUNCA subir al repo
 .env
 .env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+
+# Next.js
+.next/
+out/
+
+# Build
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude
 .claude/
+
+# Claves y certificados — NUNCA subir
+*.pem
+*.key
+*.crt
+*.cert
+*.pfx
+secrets.json
+config.local.json
+
+# Bases de datos locales
+*.db
+*.sqlite
+*.sqlite3
+
+# Vercel
+.vercel/
+
+# Prisma generated
+prisma/migrations/*.sql
 
 # Videos originales grandes (solo se sube el hero-video.mp4 optimizado)
 public/*.mp4

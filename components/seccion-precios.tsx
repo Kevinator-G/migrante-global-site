@@ -10,9 +10,9 @@ const planes = [
   {
     id: 'solo-alojamiento',
     nombre: 'Solo Alojamiento',
-    precio: 290,
-    precioEur: 305,
-    moneda: 'CHF',
+    precio: 149,
+    precioRef: '≈ 155 CHF',
+    moneda: '€',
     tipo: 'Pago único',
     descripcion: 'Servicio puntual',
     destacado: false,
@@ -28,9 +28,9 @@ const planes = [
   {
     id: 'pack-completo',
     nombre: 'Pack Completo',
-    precio: 590,
-    precioEur: 620,
-    moneda: 'CHF',
+    precio: 347,
+    precioRef: '3 cuotas de 116€',
+    moneda: '€',
     tipo: 'Pago único · cuotas disponibles',
     descripcion: 'Reubicación integral',
     destacado: true,
@@ -48,9 +48,9 @@ const planes = [
   {
     id: 'comunidad',
     nombre: 'Comunidad',
-    precio: 25,
-    precioEur: 26,
-    moneda: 'CHF/mes',
+    precio: 17,
+    precioRef: 'Sin permanencia',
+    moneda: '€/mes',
     tipo: 'Suscripción mensual',
     descripcion: 'Sin permanencia',
     destacado: false,
@@ -175,7 +175,7 @@ export function SeccionPrecios() {
                       <span className="text-white/35 text-sm mb-1">{plan.moneda}</span>
                     </div>
                     <div className="text-white/45 text-xs mt-1">
-                      ≈ {plan.precioEur} €{plan.moneda.includes('/mes') ? '/mes' : ''}
+                      {plan.precioRef}
                     </div>
                     <div className="text-white/30 text-xs mt-1">{plan.tipo}</div>
                   </div>
@@ -257,7 +257,7 @@ export function SeccionPrecios() {
           className="text-center mt-10 space-y-1"
         >
           <p className="text-white/30 text-sm">
-            * Precios en francos suizos (CHF). Equivalencia en euros aproximada (1 CHF ≈ 1,05 €). Pago coordinado personalmente · Cuotas disponibles en el Pack Completo.
+            * Precios en euros (€). Referencia en CHF orientativa (1 € ≈ 1,04 CHF). Pago coordinado personalmente · Cuotas disponibles en el Pack Completo.
           </p>
         </motion.div>
       </div>

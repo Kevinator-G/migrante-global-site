@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Briefcase,
   FileText,
@@ -35,12 +36,14 @@ const servicios = [
     titulo: 'Orientación Laboral',
     descripcion:
       'Estrategia personalizada para entrar al mercado laboral suizo: portales, networking, entrevistas y plan de acción.',
-    precio: 350,
-    moneda: 'CHF',
+    precio: 197,
+    moneda: '€',
     precioTipo: 'Pago único',
     tag: 'Empleo',
     tagColor: GOLD,
     destacado: true,
+    foto: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=700&q=80',
+    fotoAlt: 'Profesional en entrevista de trabajo',
   },
   {
     id: 'cv-formato-suizo',
@@ -50,12 +53,14 @@ const servicios = [
     titulo: 'CV Formato Suizo',
     descripcion:
       'Revisión y adaptación de tu CV al formato exacto que usan los empleadores suizos. Estructura, foto, longitud y contenido.',
-    precio: 290,
-    moneda: 'CHF',
+    precio: 97,
+    moneda: '€',
     precioTipo: 'Pago único',
     tag: 'Documentos',
     tagColor: '#ef4444',
     destacado: true,
+    foto: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=700&q=80',
+    fotoAlt: 'Persona revisando currículum profesional',
   },
   {
     id: 'sesiones-1-1',
@@ -65,12 +70,14 @@ const servicios = [
     titulo: 'Sesiones 1:1',
     descripcion:
       'Consultoría personalizada de 60 minutos para resolver tus dudas específicas. Plan de acción y grabación incluida.',
-    precio: 110,
-    moneda: 'CHF/sesión',
+    precio: 67,
+    moneda: '€/sesión',
     precioTipo: 'Por sesión',
     tag: 'Incluido en planes',
     tagColor: '#60a5fa',
     destacado: true,
+    foto: 'https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=700&q=80',
+    fotoAlt: 'Consulta personalizada por videollamada',
   },
   {
     id: 'solo-alojamiento',
@@ -80,28 +87,31 @@ const servicios = [
     titulo: 'Gestión de Alojamiento',
     descripcion:
       'Orientación completa para encontrar tu primer alojamiento en Suiza sin caer en trampas ni sobrepagar.',
-    precio: 290,
-    precioEur: 305,
-    moneda: 'CHF',
+    precio: 149,
+    moneda: '€',
     precioTipo: 'Pago único',
     tag: null,
     tagColor: '',
     destacado: false,
+    foto: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=200&q=80',
+    fotoAlt: 'Apartamento moderno en Suiza',
   },
   {
     id: 'clases-aleman',
     href: '/servicios/clases-aleman',
     icon: Languages,
     categoria: 'Idiomas',
-    titulo: 'Clases de Alemán',
+    titulo: 'Alemán para Migrantes',
     descripcion:
-      'Clases 1:1 personalizadas con enfoque práctico para vivir y trabajar en Suiza. Preparación para A1, A2 y B1.',
-    precio: 65,
-    moneda: 'CHF/hora',
-    precioTipo: 'Por hora',
+      'Te conectamos con profesores certificados especializados en hispanohablantes. Orientación gratuita sobre nivel, certificaciones y recursos.',
+    precio: 0,
+    moneda: '',
+    precioTipo: 'Orientación gratuita',
     tag: null,
     tagColor: '',
     destacado: false,
+    foto: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=200&q=80',
+    fotoAlt: 'Aprendizaje de idiomas',
   },
   {
     id: 'recogida-aeropuerto',
@@ -111,12 +121,14 @@ const servicios = [
     titulo: 'Recogida en Aeropuerto',
     descripcion:
       'Alguien que ya conoce Suiza te espera en el aeropuerto y te acompaña hasta tu alojamiento. Primer día sin estrés.',
-    precio: 120,
-    moneda: 'CHF',
+    precio: 97,
+    moneda: '€',
     precioTipo: 'Por traslado',
     tag: null,
     tagColor: '',
     destacado: false,
+    foto: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=200&q=80',
+    fotoAlt: 'Aeropuerto internacional',
   },
   {
     id: 'tramites-suiza',
@@ -126,12 +138,14 @@ const servicios = [
     titulo: 'Acompañamiento en Trámites',
     descripcion:
       'Guía completa del Anmeldung, seguros de salud, cuenta bancaria y demás trámites obligatorios. 45 días de soporte.',
-    precio: 320,
-    moneda: 'CHF',
+    precio: 147,
+    moneda: '€',
     precioTipo: 'Pago único',
     tag: null,
     tagColor: '',
     destacado: false,
+    foto: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=200&q=80',
+    fotoAlt: 'Documentos y trámites administrativos',
   },
   {
     id: 'comunidad',
@@ -141,13 +155,14 @@ const servicios = [
     titulo: 'Comunidad de Apoyo',
     descripcion:
       'Acceso mensual a nuestra red de migrantes latinos en Suiza. Networking, eventos y recursos actualizados.',
-    precio: 25,
-    precioEur: 26,
-    moneda: 'CHF/mes',
+    precio: 17,
+    moneda: '€/mes',
     precioTipo: 'Suscripción · cancela cuando quieras',
     tag: null,
     tagColor: '',
     destacado: false,
+    foto: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&q=80',
+    fotoAlt: 'Comunidad de personas reunidas',
   },
   {
     id: 'guia-turistica',
@@ -157,13 +172,14 @@ const servicios = [
     titulo: 'Guía Turística Local',
     descripcion:
       'Descubre Suiza con alguien que ya vive aquí. Rincones reales, anécdotas locales y los lugares donde van los suizos de verdad.',
-    precio: 150,
-    precioEur: 158,
-    moneda: 'CHF',
+    precio: 97,
+    moneda: '€',
     precioTipo: 'Por jornada · hasta 4 personas',
     tag: 'Nuevo',
     tagColor: '#10b981',
     destacado: false,
+    foto: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&q=80',
+    fotoAlt: 'Paisaje suizo con montañas',
   },
   {
     id: 'orientacion-otros-paises',
@@ -173,12 +189,14 @@ const servicios = [
     titulo: 'Orientación Otros Países',
     descripcion:
       'Análisis comparativo de Suiza vs Alemania, Austria, Países Bajos y Portugal según tu perfil. Incluye sesión 1:1.',
-    precio: 250,
-    moneda: 'CHF',
+    precio: 147,
+    moneda: '€',
     precioTipo: 'Pago único',
     tag: null,
     tagColor: '',
     destacado: false,
+    foto: 'https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=200&q=80',
+    fotoAlt: 'Mapa de Europa',
   },
   {
     id: 'generador-documentos',
@@ -194,6 +212,8 @@ const servicios = [
     tag: 'Gratis',
     tagColor: '#10b981',
     destacado: false,
+    foto: 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=200&q=80',
+    fotoAlt: 'Inteligencia artificial generando documentos',
   },
 ];
 
@@ -235,7 +255,7 @@ function ServiceCard({
         viewport={{ once: true, margin: '0px 0px -40px 0px' }}
         transition={{ duration: 0.4, delay: index * 0.06 }}
         data-light-card="true"
-        className="rounded-xl transition-all duration-300 hover:-translate-y-0.5"
+        className="rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-0.5"
         style={{
           background: 'var(--surface-card)',
           border: '1px solid rgba(255,255,255,0.06)',
@@ -243,11 +263,14 @@ function ServiceCard({
       >
         <Link href={servicio.href} className="block p-5">
           <div className="flex items-start gap-4">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}
-            >
-              <Icon className="w-4 h-4" style={{ color: GOLD }} />
+            <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 relative">
+              <Image
+                src={servicio.foto}
+                alt={servicio.fotoAlt}
+                fill
+                className="object-cover"
+                sizes="48px"
+              />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2 mb-1">
@@ -255,22 +278,15 @@ function ServiceCard({
                   {servicio.titulo}
                 </h3>
                 {servicio.precio > 0 && (
-                  <span
-                    className="text-xs font-bold flex-shrink-0"
-                    style={{ color: GOLD }}
-                  >
+                  <span className="text-xs font-bold flex-shrink-0" style={{ color: GOLD }}>
                     {servicio.precio.toLocaleString('es-CH')} {servicio.moneda}
                   </span>
                 )}
                 {servicio.precio === 0 && (
-                  <span className="text-xs font-semibold text-emerald-400">
-                    Gratis
-                  </span>
+                  <span className="text-xs font-semibold text-emerald-400">Gratis</span>
                 )}
               </div>
-              <p className="text-white/45 text-xs leading-relaxed">
-                {servicio.descripcion}
-              </p>
+              <p className="text-white/45 text-xs leading-relaxed">{servicio.descripcion}</p>
             </div>
           </div>
         </Link>
@@ -292,38 +308,33 @@ function ServiceCard({
         boxShadow: `0 0 0 1px rgba(201,169,110,0.08), 0 20px 40px rgba(0,0,0,0.35)`,
       }}
     >
-      {/* Tag */}
-      {servicio.tag && (
-        <div
-          className="px-4 py-2 text-center text-[10px] font-bold tracking-widest uppercase"
-          style={{
-            background: servicio.tagColor,
-            color: servicio.tagColor === GOLD ? '#111318' : '#ffffff',
-            letterSpacing: '2px',
-          }}
-        >
-          {servicio.tag}
+      {/* Foto header */}
+      <div className="h-44 relative overflow-hidden">
+        <Image
+          src={servicio.foto}
+          alt={servicio.fotoAlt}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 33vw"
+        />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.6) 100%)' }} />
+        {/* Tag sobre la foto */}
+        {servicio.tag && (
+          <span
+            className="absolute top-3 right-3 text-[9px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
+            style={{ color: servicio.tagColor === GOLD ? '#111318' : '#fff', background: servicio.tagColor }}
+          >
+            {servicio.tag}
+          </span>
+        )}
+        <div className="absolute bottom-3 left-4">
+          <div className="text-[10px] uppercase tracking-widest font-semibold text-white/50">{servicio.categoria}</div>
+          <div className="font-bold text-white text-base leading-tight">{servicio.titulo}</div>
         </div>
-      )}
+      </div>
 
       <div className="p-7 flex flex-col flex-1">
-        {/* Icon + categoria */}
-        <div className="flex items-center gap-3 mb-5">
-          <div
-            className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}
-          >
-            <Icon className="w-5 h-5" style={{ color: GOLD }} />
-          </div>
-          <div>
-            <div className="text-[10px] uppercase tracking-widest font-semibold text-white/30">
-              {servicio.categoria}
-            </div>
-            <div className="font-bold text-white text-base leading-tight">
-              {servicio.titulo}
-            </div>
-          </div>
-        </div>
+        {/* Quitamos el bloque de icon+titulo porque ya está en la foto */}
 
         <p className="text-white/55 text-sm leading-relaxed mb-6 flex-1">
           {servicio.descripcion}
@@ -538,7 +549,7 @@ export default function ServiciosPage() {
 
         <div style={{ padding: '24px 0' }}>
           <p className="text-white/20 text-xs text-center max-w-[800px] mx-auto px-6">
-            Todos los precios en CHF · Equivalencia en euros aproximada · Pago coordinado personalmente
+            Todos los precios en euros (€) · Referencia CHF orientativa · Pago coordinado personalmente
           </p>
         </div>
       </main>

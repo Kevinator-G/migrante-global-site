@@ -6,9 +6,9 @@ import Image from 'next/image';
 import { Users, Globe, Star } from 'lucide-react';
 
 const stats = [
-  { icon: Users, value: '150+', label: 'Personas orientadas' },
-  { icon: Globe, value: '10+', label: 'Países destino' },
-  { icon: Star, value: '3 años', label: 'De experiencia' },
+  { icon: Users, value: 'Proceso', label: 'Probado' },
+  { icon: Globe, value: 'Suiza', label: 'y Europa' },
+  { icon: Star, value: '10 años', label: 'En Europa' },
 ];
 
 export function Hero() {
@@ -55,9 +55,14 @@ export function Hero() {
             className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed"
             style={{ textShadow: '0 1px 12px rgba(0,0,0,0.7)' }}
           >
-            Acompañamiento real de alguien que ya vivió el proceso.
+            Acompañamiento real de alguien que ya vivió el proceso.{' '}
             <br className="hidden md:block" />
             Más de 10 años en Europa, 3 años viviendo y trabajando en Suiza.
+          </p>
+
+          {/* Bundling tagline */}
+          <p className="text-white/40 text-sm mb-8 tracking-wide">
+            Empleo · Alojamiento · Alemán · Trámites — todo en un solo lugar
           </p>
 
           {/* CTAs */}
