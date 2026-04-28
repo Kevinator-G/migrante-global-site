@@ -6,9 +6,9 @@ import Image from 'next/image';
 import { Users, Globe, Star } from 'lucide-react';
 
 const stats = [
-  { icon: Users, value: '150+', label: 'Personas orientadas' },
-  { icon: Globe, value: '10+', label: 'Países destino' },
-  { icon: Star, value: '3 años', label: 'De experiencia' },
+  { icon: Users, value: 'Proceso', label: 'Probado' },
+  { icon: Globe, value: 'Suiza', label: 'y Europa' },
+  { icon: Star, value: '10 años', label: 'En Europa' },
 ];
 
 export function Hero() {
