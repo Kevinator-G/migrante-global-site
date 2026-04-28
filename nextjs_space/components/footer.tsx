@@ -79,7 +79,7 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-start gap-3 text-white/45 text-sm">
                 <MapPin className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
-                <span>Servicios digitales para hispanohablantes en proceso de migración</span>
+                <span>Zúrich, Suiza · Servicios para hispanohablantes</span>
               </div>
               <div className="flex items-start gap-3 text-white/45 text-sm">
                 <Mail className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />

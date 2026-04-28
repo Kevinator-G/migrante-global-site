@@ -55,7 +55,7 @@ export function Hero() {
             className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed"
             style={{ textShadow: '0 1px 12px rgba(0,0,0,0.7)' }}
           >
-            Acompañamiento real de alguien que ya vivió el proceso.
+            Acompañamiento real de alguien que ya vivió el proceso.{' '}
             <br className="hidden md:block" />
             Más de 10 años en Europa, 3 años viviendo y trabajando en Suiza.
           </p>
