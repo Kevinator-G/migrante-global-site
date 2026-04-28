@@ -61,7 +61,7 @@ export function Hero() {
           </p>
 
           {/* Bundling tagline */}
-          <p className="text-white/40 text-sm mb-8 tracking-wide">
+          <p className="text-white/80 text-sm mb-8 tracking-wide" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.8)' }}>
             Empleo · Alojamiento · Alemán · Trámites — todo en un solo lugar
           </p>
 
