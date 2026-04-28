@@ -7,40 +7,39 @@ export default function ClasesAlemanPage() {
   return (
     <ServicioTemplate
       id="clases-aleman"
-      titulo="Clases de Alemán"
-      subtitulo="Aprende alemán con enfoque práctico para vivir y trabajar en Suiza"
-      tagline="No es solo un idioma — es tu pasaporte a mejores oportunidades laborales y sociales"
+      titulo="Alemán para Migrantes"
+      subtitulo="Te conectamos con profesores certificados de alemán especializados en hispanohablantes"
+      tagline="No es solo un idioma — es tu pasaporte a mejores oportunidades laborales y sociales en Suiza"
       icon={Languages}
       categoria="Idiomas e Integración"
-      precio={47}
-      moneda="€ / hora"
-      precioTipo="Por hora · paquetes mínimos de 5 horas recomendados"
-      valorMercado="Clases de alemán privadas en Suiza: €60–100/hora"
+      precio={0}
+      moneda=""
+      precioTipo="Consulta gratuita · te orientamos sin compromiso"
+      valorMercado="Clases de alemán privadas en Suiza: €40–100/hora"
       problema={{
         titulo: '¿Por qué el alemán define tu futuro en Suiza?',
         descripcion:
-          'Aunque hay regiones francófonas e italófonas, el alemán (Hochdeutsch) es clave para el mercado laboral suizo en la mayor parte del país. Sin un nivel básico funcional, accedes a empleos de menor calificación, te quedas fuera de networking real y la integración se vuelve aislante. Cuanto antes empieces, más se amplían tus opciones.',
+          'Aunque hay regiones francófonas e italófonas, el alemán (Hochdeutsch) es clave para el mercado laboral suizo en la mayor parte del país. Sin un nivel básico funcional, accedes a empleos de menor calificación, te quedas fuera de networking real y la integración se vuelve aislante. El problema es que no todos los profesores entienden el contexto de un hispanohablante que migra — nosotros sí sabemos a quién recomendarte.',
       }}
       beneficios={[
-        'Evaluación de tu nivel actual y diseño de plan de aprendizaje realista',
-        'Clases personalizadas 1:1 enfocadas en el alemán que se usa en la vida real',
-        'Vocabulario específico para tu sector profesional y situación diaria',
-        'Preparación estructurada para certificaciones A1, A2 y B1 si lo necesitas',
+        'Te conectamos con profesores certificados que entienden tu punto de partida como hispanohablante',
+        'Profesores especializados en alemán para la vida y el trabajo en Suiza',
+        'Orientación sobre qué nivel necesitas según tu sector profesional',
+        'Preparación estructurada hacia certificaciones A1, A2 y B1',
         'Horarios flexibles adaptados a tu zona horaria actual',
       ]}
       incluye={[
-        'Evaluación de nivel inicial (diagnóstico gratuito)',
-        'Clases personalizadas 1:1 online (Zoom / Google Meet)',
-        'Material didáctico digital incluido en el precio',
-        'Enfoque práctico: situaciones reales de vida en Suiza',
-        'Preparación estructurada para certificaciones (A1, A2, B1)',
-        'Flexibilidad horaria total — tú eliges cuándo',
+        'Diagnóstico gratuito de tu nivel actual y objetivos',
+        'Recomendación personalizada de profesor según tu perfil',
+        'Orientación sobre plataformas y recursos gratuitos para empezar',
+        'Guía de certificaciones necesarias según tu cantón y sector',
+        'Seguimiento de tu progreso durante los primeros 30 días',
       ]}
       noIncluye={[
+        'No damos clases directamente — somos intermediarios de confianza',
+        'El costo de las clases lo acuerdas directamente con el profesor',
         'No incluye el costo de certificaciones oficiales (exámenes Goethe, TELC)',
-        'No ofrecemos clases grupales — solo atención individual 1:1',
-        'No enseñamos suizo-alemán avanzado (Schweizerdeutsch dialect)',
-        'Paquetes mínimos de 5 horas recomendados para progreso real',
+        'No garantizamos plazas inmediatas — dependemos de disponibilidad',
       ]}
       paraQuien={[
         'Personas que quieren aprender alemán antes de mudarse a Suiza',
@@ -48,9 +47,9 @@ export default function ClasesAlemanPage() {
         'Profesionales que necesitan alemán para ascender o cambiar de sector',
       ]}
       planInfo={{
-        inicio: 'Disponible como servicio adicional con tarifa estándar.',
-        estrategia: 'Descuento del 15% en paquetes de clases para clientes del plan.',
-        comunidad: 'Descuento del 20% en paquetes de clases para miembros activos.',
+        inicio: 'Consulta gratuita — te orientamos y recomendamos el mejor profesor para tu caso.',
+        estrategia: 'Incluido como servicio de orientación dentro del Pack Completo.',
+        comunidad: 'Miembros de la comunidad tienen acceso a nuestra red de profesores con tarifas preferentes.',
       }}
     />
   );
