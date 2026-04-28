@@ -374,94 +374,49 @@ export function ServicioTemplate({
               </h2>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-5">
-              {/* Incluye */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '0px 0px -60px 0px' }}
-                transition={{ duration: 0.5 }}
-                className="rounded-2xl p-7"
-                data-light-card="true"
-                style={{
-                  background: 'var(--surface-card)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                }}
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{
-                      background: GOLD_BG,
-                      border: `1px solid ${GOLD_BORDER}`,
-                    }}
-                  >
-                    <Check className="w-4 h-4" style={{ color: GOLD }} />
-                  </div>
-                  <h3 className="font-bold text-white text-lg">Qué incluye</h3>
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+              transition={{ duration: 0.5 }}
+              className="rounded-2xl p-7"
+              data-light-card="true"
+              style={{
+                background: 'var(--surface-card)',
+                border: '1px solid rgba(255,255,255,0.07)',
+              }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{
+                    background: GOLD_BG,
+                    border: `1px solid ${GOLD_BORDER}`,
+                  }}
+                >
+                  <Check className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
-                <ul className="space-y-3">
-                  {incluye.map((item, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.06 }}
-                      className="flex items-start gap-3 text-sm"
-                    >
-                      <ChevronRight
-                        className="w-4 h-4 flex-shrink-0 mt-0.5"
-                        style={{ color: GOLD }}
-                      />
-                      <span className="text-white/70">{item}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </motion.div>
-
-              {/* No incluye */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '0px 0px -60px 0px' }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="rounded-2xl p-7"
-                data-light-card="true"
-                style={{
-                  background: 'var(--surface-card)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                }}
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{
-                      background: 'rgba(220,38,38,0.08)',
-                      border: '1px solid rgba(220,38,38,0.2)',
-                    }}
+                <h3 className="font-bold text-white text-lg">Qué incluye</h3>
+              </div>
+              <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
+                {incluye.map((item, i) => (
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-start gap-3 text-sm"
                   >
-                    <X className="w-4 h-4 text-red-400" />
-                  </div>
-                  <h3 className="font-bold text-white text-lg">Qué NO incluye</h3>
-                </div>
-                <ul className="space-y-3">
-                  {noIncluye.map((item, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.06 }}
-                      className="flex items-start gap-3 text-sm"
-                    >
-                      <X className="w-4 h-4 flex-shrink-0 mt-0.5 text-white/25" />
-                      <span className="text-white/45">{item}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </motion.div>
-            </div>
+                    <ChevronRight
+                      className="w-4 h-4 flex-shrink-0 mt-0.5"
+                      style={{ color: GOLD }}
+                    />
+                    <span className="text-white/70">{item}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
           </div>
         </section>
 
