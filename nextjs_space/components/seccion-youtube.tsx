@@ -4,18 +4,11 @@ import { motion } from 'framer-motion';
 import { Play, Youtube } from 'lucide-react';
 
 const videos = [
-  {
-    id: 'dQw4w9WgXcQ', // placeholder — reemplazar con IDs reales del canal
-    titulo: 'Cómo conseguir trabajo en Suiza sin hablar alemán',
-  },
-  {
-    id: 'dQw4w9WgXcQ',
-    titulo: 'Lo que nadie te dice antes de emigrar a Suiza',
-  },
-  {
-    id: 'dQw4w9WgXcQ',
-    titulo: 'Permiso de residencia en Suiza: guía completa 2026',
-  },
+  { id: 'LzF6O1HgsJg' },
+  { id: 'Cu2-t1DWEjI' },
+  { id: 'A0UGVonp9D8' },
+  { id: 'xjJN_LYV9BE' },
+  { id: 'asJkYKXl9fY' },
 ];
 
 export function SeccionYoutube() {
@@ -38,40 +31,33 @@ export function SeccionYoutube() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-5 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
           {videos.map((v, i) => (
             <motion.div
               key={i}
               initial={{ y: 15 }}
               whileInView={{ y: 0 }}
               viewport={{ once: true, margin: '0px 0px -60px 0px' }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
             >
               <a
                 href={`https://www.youtube.com/watch?v=${v.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block rounded-2xl overflow-hidden"
-                style={{ background: '#1b1d24', border: '1px solid rgba(255,255,255,0.07)' }}
+                className="group block rounded-xl overflow-hidden"
+                style={{ border: '1px solid rgba(255,255,255,0.07)' }}
               >
-                {/* Thumbnail */}
                 <div className="relative aspect-video overflow-hidden bg-black">
                   <img
                     src={`https://img.youtube.com/vi/${v.id}/mqdefault.jpg`}
-                    alt={v.titulo}
+                    alt="Video Migrante Global"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
-                      <Play className="w-5 h-5 text-white fill-white ml-0.5" />
+                  <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/10 transition-colors duration-200">
+                    <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
+                      <Play className="w-4 h-4 text-white fill-white ml-0.5" />
                     </div>
                   </div>
-                </div>
-                {/* Título */}
-                <div className="p-4">
-                  <p className="text-white/80 text-sm font-medium leading-snug group-hover:text-white transition-colors">
-                    {v.titulo}
-                  </p>
                 </div>
               </a>
             </motion.div>
