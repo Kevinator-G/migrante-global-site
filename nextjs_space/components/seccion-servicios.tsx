@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Briefcase,
   FileText,
@@ -28,11 +29,10 @@ const destacados = [
       'Estrategia personalizada para encontrar empleo en el mercado laboral suizo. CV, búsqueda, entrevistas.',
     link: '/servicios/orientacion-laboral',
     accentColor: '#f59e0b',
-    iconBg: 'rgba(245,158,11,0.12)',
     tag: 'Empleo',
     tagColor: '#f59e0b',
-    headerGradient: 'linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(245,158,11,0.04) 100%)',
-    headerEmoji: '💼',
+    foto: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&q=80',
+    fotoAlt: 'Profesional en entrevista de trabajo',
   },
   {
     icon: FileText,
@@ -41,11 +41,10 @@ const destacados = [
       'Adapta tu currículum a los estándares suizos. Aumenta tu tasa de respuesta con un CV que abre puertas.',
     link: '/servicios/cv-formato-suizo',
     accentColor: '#dc2626',
-    iconBg: 'rgba(220,38,38,0.12)',
     tag: 'Documentos',
     tagColor: '#ef4444',
-    headerGradient: 'linear-gradient(135deg, rgba(220,38,38,0.18) 0%, rgba(220,38,38,0.04) 100%)',
-    headerEmoji: '📄',
+    foto: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&q=80',
+    fotoAlt: 'Persona revisando documentos profesionales',
   },
   {
     icon: Video,
@@ -54,11 +53,10 @@ const destacados = [
       'Videollamadas personalizadas con orientadores que ya viven en Suiza. Tus dudas, resueltas en tiempo real.',
     link: '/servicios/sesiones-uno-a-uno',
     accentColor: '#3b82f6',
-    iconBg: 'rgba(59,130,246,0.12)',
     tag: 'Incluido en planes',
     tagColor: '#60a5fa',
-    headerGradient: 'linear-gradient(135deg, rgba(59,130,246,0.18) 0%, rgba(59,130,246,0.04) 100%)',
-    headerEmoji: '🎥',
+    foto: 'https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=600&q=80',
+    fotoAlt: 'Consulta personalizada por videollamada',
   },
 ];
 
@@ -120,22 +118,23 @@ export function SeccionServicios() {
                     (e.currentTarget as HTMLElement).style.boxShadow = 'none';
                   }}
                 >
-                  {/* Visual header */}
-                  <div
-                    className="h-28 flex items-center justify-center relative overflow-hidden"
-                    style={{ background: s.headerGradient }}
-                  >
-                    <span className="text-5xl select-none" style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}>
-                      {s.headerEmoji}
-                    </span>
+                  {/* Visual header — foto real */}
+                  <div className="h-44 relative overflow-hidden">
+                    <Image
+                      src={s.foto}
+                      alt={s.fotoAlt}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
                     <div
-                      className="absolute inset-0 pointer-events-none"
-                      style={{ background: `radial-gradient(circle at 50% 120%, ${s.accentColor}20 0%, transparent 70%)` }}
+                      className="absolute inset-0"
+                      style={{ background: `linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%)` }}
                     />
                     {/* Tag esquina */}
                     <span
                       className="absolute top-3 right-3 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                      style={{ color: s.tagColor, background: `${s.tagColor}15`, border: `1px solid ${s.tagColor}30` }}
+                      style={{ color: s.tagColor, background: 'rgba(0,0,0,0.6)', border: `1px solid ${s.tagColor}60` }}
                     >
                       {s.tag}
                     </span>

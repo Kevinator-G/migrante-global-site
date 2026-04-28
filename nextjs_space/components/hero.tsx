@@ -60,6 +60,11 @@ export function Hero() {
             Más de 10 años en Europa, 3 años viviendo y trabajando en Suiza.
           </p>
 
+          {/* Bundling tagline */}
+          <p className="text-white/40 text-sm mb-8 tracking-wide">
+            Empleo · Alojamiento · Alemán · Trámites — todo en un solo lugar
+          </p>
+
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-stretch mb-14">
             <Link
