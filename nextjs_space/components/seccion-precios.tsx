@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Home, Package2, Users, ShoppingCart, CheckCircle2 } from 'lucide-react';
+import { Check, Home, Package2, Users, CheckCircle2, ArrowRight } from 'lucide-react';
 import { useCart } from '@/lib/cart-context';
 
 const GOLD = '#c9a96e';
@@ -239,7 +239,7 @@ export function SeccionPrecios() {
                     {inCart ? (
                       <><CheckCircle2 className="w-4 h-4" /> En tu carrito · Ver</>
                     ) : (
-                      <><ShoppingCart className="w-4 h-4" /> Agregar al carrito</>
+                      <><ArrowRight className="w-4 h-4" /> Empezar con este plan</>
                     )}
                   </button>
                 </div>
