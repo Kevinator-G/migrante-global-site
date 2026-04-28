@@ -53,7 +53,7 @@ export function FormularioContacto() {
 
   return (
     <section id="contacto" className="section bg-black">
-      <div className="max-w-[800px] mx-auto px-6">
+      <div className="max-w-[700px] mx-auto px-6">
         <motion.div
           initial={{ y: 15 }}
           whileInView={{ y: 0 }}
@@ -65,9 +65,9 @@ export function FormularioContacto() {
             style={{ background: 'rgba(220,38,38,0.12)', border: '1px solid rgba(220,38,38,0.3)', color: '#ef4444' }}>
             Hablemos
           </span>
-          <h2 className="text-4xl font-bold mb-4 text-white">Contáctanos</h2>
+          <h2 className="text-4xl font-bold mb-4 text-white">¿Empezamos?</h2>
           <p className="text-white/60 text-lg">
-            ¿Tienes dudas o quieres empezar tu proceso? Escríbenos y te responderemos en menos de 48 horas.
+            Cuéntanos tu situación y te respondemos en menos de 48 horas con orientación real — sin compromiso.
           </p>
         </motion.div>
 
@@ -83,8 +83,8 @@ export function FormularioContacto() {
             href="https://wa.me/41772337353"
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-4 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-            style={{ background: 'rgba(37,211,102,0.06)', border: '1px solid rgba(37,211,102,0.18)', boxShadow: '0 4px 20px rgba(37,211,102,0.05)' }}
+            className="group flex items-center gap-4 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1"
+            style={{ background: 'rgba(37,211,102,0.06)', border: '1px solid rgba(37,211,102,0.18)' }}
           >
             <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
               style={{ background: 'rgba(37,211,102,0.12)', border: '1px solid rgba(37,211,102,0.2)' }}>
@@ -100,8 +100,8 @@ export function FormularioContacto() {
 
           <a
             href="mailto:hola@migranteglobal.ch"
-            className="group flex items-center gap-4 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-            style={{ background: 'rgba(201,169,110,0.06)', border: '1px solid rgba(201,169,110,0.18)', boxShadow: '0 4px 20px rgba(201,169,110,0.05)' }}
+            className="group flex items-center gap-4 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1"
+            style={{ background: 'rgba(201,169,110,0.06)', border: '1px solid rgba(201,169,110,0.18)' }}
           >
             <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
               style={{ background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(201,169,110,0.2)' }}>
@@ -113,8 +113,6 @@ export function FormularioContacto() {
             </div>
           </a>
         </motion.div>
-
-
 
         <motion.div
           initial={{ y: 15 }}
@@ -128,17 +126,14 @@ export function FormularioContacto() {
               <CheckCircle className="w-16 h-16 text-green mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-green mb-2">¡Mensaje enviado!</h3>
               <p className="text-bone/70 mb-6">
-                Gracias por contactarnos. Te responderemos pronto.
+                Gracias por escribirnos. Kevin te responderá en menos de 48 horas.
               </p>
-              <button
-                onClick={() => setStatus('idle')}
-                className="btn-primary"
-              >
+              <button onClick={() => setStatus('idle')} className="btn-primary">
                 Enviar otro mensaje
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-bone/80 mb-2 text-sm">Nombre *</label>
@@ -150,7 +145,6 @@ export function FormularioContacto() {
                     placeholder="Tu nombre completo"
                   />
                 </div>
-
                 <div>
                   <label className="block text-bone/80 mb-2 text-sm">Email *</label>
                   <input
@@ -163,36 +157,14 @@ export function FormularioContacto() {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-bone/80 mb-2 text-sm">Teléfono</label>
-                  <input
-                    type="tel"
-                    value={formData.telefono}
-                    onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                    placeholder="+41 123 456 789"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-bone/80 mb-2 text-sm">País de Origen</label>
-                  <input
-                    type="text"
-                    value={formData.pais}
-                    onChange={(e) => setFormData({ ...formData, pais: e.target.value })}
-                    placeholder="Tu país"
-                  />
-                </div>
-              </div>
-
               <div>
-                <label className="block text-bone/80 mb-2 text-sm">Mensaje *</label>
+                <label className="block text-bone/80 mb-2 text-sm">¿Cuál es tu situación? *</label>
                 <textarea
                   required
-                  rows={6}
+                  rows={5}
                   value={formData.mensaje}
                   onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
-                  placeholder="Cuéntanos sobre tu situación y cómo podemos ayudarte..."
+                  placeholder="Cuéntanos brevemente de dónde eres, en qué trabajas y qué te está frenando para migrar a Suiza..."
                   className="resize-none"
                 />
               </div>
@@ -203,12 +175,10 @@ export function FormularioContacto() {
                   id="consentimiento"
                   required
                   checked={formData.consentimiento}
-                  onChange={(e) =>
-                    setFormData({ ...formData, consentimiento: e.target.checked })
-                  }
+                  onChange={(e) => setFormData({ ...formData, consentimiento: e.target.checked })}
                   className="mt-1 w-5 h-5 cursor-pointer"
                 />
-                <label htmlFor="consentimiento" className="text-bone/70 text-sm cursor-pointer">
+                <label htmlFor="consentimiento" className="text-bone/60 text-sm cursor-pointer leading-relaxed">
                   Acepto que mis datos sean almacenados para poder contactarme. Migrante Global
                   respetará tu privacidad y no compartirá tu información con terceros.
                 </label>
@@ -234,7 +204,7 @@ export function FormularioContacto() {
                 ) : (
                   <>
                     <Send className="w-5 h-5" />
-                    Enviar Mensaje
+                    Enviar mensaje
                   </>
                 )}
               </button>
