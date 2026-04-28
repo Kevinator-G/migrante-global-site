@@ -47,6 +47,8 @@ export default function SesionesUnoAUnoPage() {
         'Quienes están en un momento clave de decisión (¿me voy? ¿cuándo? ¿cómo?)',
         'Profesionales que quieren una estrategia de migración a medida',
       ]}
+      foto="https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=1400&q=80"
+      fotoAlt="Consulta personalizada por videollamada"
       planInfo={{
         inicio: 'Disponible como servicio individual a 67€/sesión.',
         estrategia: '2 sesiones incluidas en el plan, adicionales con descuento del 20%.',

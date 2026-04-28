@@ -47,6 +47,8 @@ export default function ComunidadApoyoPage() {
         'Quienes buscan networking genuino en el entorno suizo',
         'Personas planificando migrar que quieren hacer contactos antes de llegar',
       ]}
+      foto="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&q=80"
+      fotoAlt="Comunidad de personas conectadas"
       planInfo={{
         inicio: 'Acceso de prueba durante 30 días incluido con el plan.',
         estrategia: 'Acceso durante 3 meses incluido dentro del Pack Completo.',

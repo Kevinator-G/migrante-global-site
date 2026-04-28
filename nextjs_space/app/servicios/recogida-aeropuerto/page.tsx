@@ -94,6 +94,8 @@ export default function RecogidaAeropuertoPage() {
           'Familias con niños pequeños o personas mayores que necesitan apoyo',
           'Quienes llegan sin hablar alemán y temen no poder comunicarse',
         ]}
+        foto="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1400&q=80"
+        fotoAlt="Aeropuerto internacional"
         planInfo={{
           inicio: 'Disponible como servicio adicional a precio estándar.',
           estrategia: 'Incluido con descuento del 50% dentro del Pack Completo.',

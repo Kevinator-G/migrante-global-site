@@ -46,6 +46,8 @@ export default function ClasesAlemanPage() {
         'Migrantes en Suiza que necesitan mejorar rápido para el trabajo',
         'Profesionales que necesitan alemán para ascender o cambiar de sector',
       ]}
+      foto="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=1400&q=80"
+      fotoAlt="Aprendizaje de idiomas alemán"
       planInfo={{
         inicio: 'Consulta gratuita — te orientamos y recomendamos el mejor profesor para tu caso.',
         estrategia: 'Incluido como servicio de orientación dentro del Pack Completo.',

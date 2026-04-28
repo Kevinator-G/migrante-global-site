@@ -47,6 +47,8 @@ export default function CVFormatoSuizoPage() {
         'Personas con experiencia sólida pero CV con formato inadecuado',
         'Quienes quieren maximizar sus posibilidades antes de aplicar masivamente',
       ]}
+      foto="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1400&q=80"
+      fotoAlt="Persona revisando currículum profesional"
       planInfo={{
         inicio: 'Disponible como servicio adicional al plan de alojamiento.',
         estrategia: 'Incluido con revisiones adicionales y seguimiento de 90 días.',

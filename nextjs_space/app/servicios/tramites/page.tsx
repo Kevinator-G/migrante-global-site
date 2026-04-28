@@ -47,6 +47,8 @@ export default function TramitesPage() {
         'Quienes necesitan entender qué trámites son obligatorios y en qué orden',
         'Migrantes que quieren evitar multas o complicaciones administrativas',
       ]}
+      foto="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1400&q=80"
+      fotoAlt="Documentos y trámites administrativos"
       planInfo={{
         inicio: 'Disponible como servicio adicional.',
         estrategia: 'Incluido con guía completa, checklist y soporte de 45 días.',

@@ -107,6 +107,8 @@ export default function GuiaTuristicaPage() {
           'Personas considerando migrar que quieren conocer el país antes de decidir',
           'Migrantes ya instalados que tienen visita y quieren mostrarles algo distinto',
         ]}
+        foto="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=80"
+        fotoAlt="Paisaje suizo con montañas y lago"
         planInfo={{
           inicio: 'Servicio independiente · ideal si vienes de visita por unos días.',
           estrategia: 'Descuento del 30% si lo combinas con el Pack Completo de migración.',

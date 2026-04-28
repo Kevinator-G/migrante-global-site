@@ -47,6 +47,8 @@ export default function AlojamientoPage() {
         'Quienes no hablan alemán/francés y necesitan apoyo para entender contratos',
         'Migrantes que quieren evitar estafas y sobrepagar por desconocimiento',
       ]}
+      foto="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1400&q=80"
+      fotoAlt="Apartamento moderno en Suiza"
       planInfo={{
         inicio: 'Este servicio es el núcleo del plan Solo Alojamiento (149€).',
         estrategia: 'Incluido dentro del Pack Completo con soporte extendido.',

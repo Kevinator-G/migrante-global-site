@@ -44,6 +44,8 @@ export interface ServicioTemplateProps {
   noIncluye: string[];
   paraQuien: string[];
   planInfo: PlanInfo;
+  foto?: string;
+  fotoAlt?: string;
   hideNavbar?: boolean;
   hideHero?: boolean;
 }
@@ -65,6 +67,8 @@ export function ServicioTemplate({
   noIncluye,
   paraQuien,
   planInfo,
+  foto,
+  fotoAlt,
   hideNavbar = false,
   hideHero = false,
 }: ServicioTemplateProps) {
@@ -96,6 +100,18 @@ export function ServicioTemplate({
           className="relative overflow-hidden"
           style={{ padding: '80px 0 70px' }}
         >
+          {/* Background photo */}
+          {foto && (
+            <>
+              <img
+                src={foto}
+                alt={fotoAlt ?? titulo}
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ opacity: 0.18 }}
+              />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,12,16,0.5) 0%, rgba(10,12,16,0.92) 100%)' }} />
+            </>
+          )}
           {/* Ambient glow */}
           <div
             className="absolute inset-0 pointer-events-none"
