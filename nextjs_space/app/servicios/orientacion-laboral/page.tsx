@@ -12,10 +12,10 @@ export default function OrientacionLaboralPage() {
       tagline="Más que información — una hoja de ruta adaptada a tu perfil y sector"
       icon={Briefcase}
       categoria="Empleo en Suiza"
-      precio={350}
-      moneda="CHF"
+      precio={197}
+      moneda="€"
       precioTipo="Pago único · 60 días de seguimiento"
-      valorMercado="Servicios equivalentes en el mercado: CHF 400–700"
+      valorMercado="Servicios equivalentes en el mercado: €400–700"
       problema={{
         titulo: '¿Por qué es tan difícil encontrar empleo en Suiza?',
         descripcion:

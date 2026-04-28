@@ -12,10 +12,10 @@ export default function SesionesUnoAUnoPage() {
       tagline="60 minutos de atención directa, sin guiones, sin respuestas genéricas"
       icon={Video}
       categoria="Consultoría Personal"
-      precio={110}
-      moneda="CHF / sesión"
+      precio={67}
+      moneda="€ / sesión"
       precioTipo="Por sesión de 60 minutos · agendamiento en 48h"
-      valorMercado="Consultoría de migración en Europa: CHF 120–250/sesión"
+      valorMercado="Consultoría de migración en Europa: €120–250/sesión"
       problema={{
         titulo: '¿Por qué necesitas orientación personalizada?',
         descripcion:
@@ -48,7 +48,7 @@ export default function SesionesUnoAUnoPage() {
         'Profesionales que quieren una estrategia de migración a medida',
       ]}
       planInfo={{
-        inicio: 'Disponible como servicio individual a CHF 110/sesión.',
+        inicio: 'Disponible como servicio individual a 67€/sesión.',
         estrategia: '2 sesiones incluidas en el plan, adicionales con descuento del 20%.',
         comunidad: 'Sesiones con descuento del 15% para miembros activos.',
       }}

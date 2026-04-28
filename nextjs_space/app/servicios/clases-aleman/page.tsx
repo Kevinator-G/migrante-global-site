@@ -12,10 +12,10 @@ export default function ClasesAlemanPage() {
       tagline="No es solo un idioma — es tu pasaporte a mejores oportunidades laborales y sociales"
       icon={Languages}
       categoria="Idiomas e Integración"
-      precio={65}
-      moneda="CHF / hora"
+      precio={47}
+      moneda="€ / hora"
       precioTipo="Por hora · paquetes mínimos de 5 horas recomendados"
-      valorMercado="Clases de alemán privadas en Suiza: CHF 60–100/hora"
+      valorMercado="Clases de alemán privadas en Suiza: €60–100/hora"
       problema={{
         titulo: '¿Por qué el alemán define tu futuro en Suiza?',
         descripcion:

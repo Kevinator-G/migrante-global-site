@@ -12,10 +12,10 @@ export default function ComunidadApoyoPage() {
       tagline="Migrar en red es más fácil, más rápido y mucho menos solitario"
       icon={Users}
       categoria="Red y Comunidad"
-      precio={80}
-      moneda="CHF / mes"
+      precio={17}
+      moneda="€ / mes"
       precioTipo="Suscripción mensual · cancela cuando quieras"
-      valorMercado="Membresías de comunidades para migrantes: CHF 60–150/mes"
+      valorMercado="Membresías de comunidades para migrantes: €60–150/mes"
       problema={{
         titulo: '¿Por qué la comunidad es el recurso más infravalorodo en migración?',
         descripcion:
@@ -50,7 +50,7 @@ export default function ComunidadApoyoPage() {
       planInfo={{
         inicio: 'Acceso de prueba durante 30 días incluido con el plan.',
         estrategia: 'Acceso durante 3 meses incluido dentro del Pack Completo.',
-        comunidad: 'Este servicio es el núcleo del plan Comunidad (80 CHF/mes).',
+        comunidad: 'Este servicio es el núcleo del plan Comunidad (17€/mes).',
       }}
     />
   );

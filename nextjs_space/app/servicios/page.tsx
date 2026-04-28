@@ -35,8 +35,8 @@ const servicios = [
     titulo: 'Orientación Laboral',
     descripcion:
       'Estrategia personalizada para entrar al mercado laboral suizo: portales, networking, entrevistas y plan de acción.',
-    precio: 350,
-    moneda: 'CHF',
+    precio: 197,
+    moneda: '€',
     precioTipo: 'Pago único',
     tag: 'Empleo',
     tagColor: GOLD,
@@ -50,8 +50,8 @@ const servicios = [
     titulo: 'CV Formato Suizo',
     descripcion:
       'Revisión y adaptación de tu CV al formato exacto que usan los empleadores suizos. Estructura, foto, longitud y contenido.',
-    precio: 290,
-    moneda: 'CHF',
+    precio: 97,
+    moneda: '€',
     precioTipo: 'Pago único',
     tag: 'Documentos',
     tagColor: '#ef4444',
@@ -65,8 +65,8 @@ const servicios = [
     titulo: 'Sesiones 1:1',
     descripcion:
       'Consultoría personalizada de 60 minutos para resolver tus dudas específicas. Plan de acción y grabación incluida.',
-    precio: 110,
-    moneda: 'CHF/sesión',
+    precio: 67,
+    moneda: '€/sesión',
     precioTipo: 'Por sesión',
     tag: 'Incluido en planes',
     tagColor: '#60a5fa',
@@ -80,9 +80,8 @@ const servicios = [
     titulo: 'Gestión de Alojamiento',
     descripcion:
       'Orientación completa para encontrar tu primer alojamiento en Suiza sin caer en trampas ni sobrepagar.',
-    precio: 290,
-    precioEur: 305,
-    moneda: 'CHF',
+    precio: 149,
+    moneda: '€',
     precioTipo: 'Pago único',
     tag: null,
     tagColor: '',
@@ -96,8 +95,8 @@ const servicios = [
     titulo: 'Clases de Alemán',
     descripcion:
       'Clases 1:1 personalizadas con enfoque práctico para vivir y trabajar en Suiza. Preparación para A1, A2 y B1.',
-    precio: 65,
-    moneda: 'CHF/hora',
+    precio: 47,
+    moneda: '€/hora',
     precioTipo: 'Por hora',
     tag: null,
     tagColor: '',
@@ -111,8 +110,8 @@ const servicios = [
     titulo: 'Recogida en Aeropuerto',
     descripcion:
       'Alguien que ya conoce Suiza te espera en el aeropuerto y te acompaña hasta tu alojamiento. Primer día sin estrés.',
-    precio: 120,
-    moneda: 'CHF',
+    precio: 97,
+    moneda: '€',
     precioTipo: 'Por traslado',
     tag: null,
     tagColor: '',
@@ -126,8 +125,8 @@ const servicios = [
     titulo: 'Acompañamiento en Trámites',
     descripcion:
       'Guía completa del Anmeldung, seguros de salud, cuenta bancaria y demás trámites obligatorios. 45 días de soporte.',
-    precio: 320,
-    moneda: 'CHF',
+    precio: 147,
+    moneda: '€',
     precioTipo: 'Pago único',
     tag: null,
     tagColor: '',
@@ -141,9 +140,8 @@ const servicios = [
     titulo: 'Comunidad de Apoyo',
     descripcion:
       'Acceso mensual a nuestra red de migrantes latinos en Suiza. Networking, eventos y recursos actualizados.',
-    precio: 25,
-    precioEur: 26,
-    moneda: 'CHF/mes',
+    precio: 17,
+    moneda: '€/mes',
     precioTipo: 'Suscripción · cancela cuando quieras',
     tag: null,
     tagColor: '',
@@ -157,9 +155,8 @@ const servicios = [
     titulo: 'Guía Turística Local',
     descripcion:
       'Descubre Suiza con alguien que ya vive aquí. Rincones reales, anécdotas locales y los lugares donde van los suizos de verdad.',
-    precio: 150,
-    precioEur: 158,
-    moneda: 'CHF',
+    precio: 97,
+    moneda: '€',
     precioTipo: 'Por jornada · hasta 4 personas',
     tag: 'Nuevo',
     tagColor: '#10b981',
@@ -173,8 +170,8 @@ const servicios = [
     titulo: 'Orientación Otros Países',
     descripcion:
       'Análisis comparativo de Suiza vs Alemania, Austria, Países Bajos y Portugal según tu perfil. Incluye sesión 1:1.',
-    precio: 250,
-    moneda: 'CHF',
+    precio: 147,
+    moneda: '€',
     precioTipo: 'Pago único',
     tag: null,
     tagColor: '',
@@ -538,7 +535,7 @@ export default function ServiciosPage() {
 
         <div style={{ padding: '24px 0' }}>
           <p className="text-white/20 text-xs text-center max-w-[800px] mx-auto px-6">
-            Todos los precios en CHF · Equivalencia en euros aproximada · Pago coordinado personalmente
+            Todos los precios en euros (€) · Referencia CHF orientativa · Pago coordinado personalmente
           </p>
         </div>
       </main>

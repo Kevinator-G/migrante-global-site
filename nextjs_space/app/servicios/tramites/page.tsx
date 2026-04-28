@@ -12,10 +12,10 @@ export default function TramitesPage() {
       tagline="Cada cantón tiene sus propias reglas — conocerlas de antemano vale oro"
       icon={FileCheck}
       categoria="Trámites Administrativos"
-      precio={320}
-      moneda="CHF"
+      precio={147}
+      moneda="€"
       precioTipo="Pago único · 45 días de soporte activo"
-      valorMercado="Servicios de orientación administrativa para migrantes: CHF 300–600"
+      valorMercado="Servicios de orientación administrativa para migrantes: €300–600"
       problema={{
         titulo: '¿Por qué los trámites en Suiza pueden hundirte?',
         descripcion:

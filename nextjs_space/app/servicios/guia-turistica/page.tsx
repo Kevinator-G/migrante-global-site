@@ -68,10 +68,10 @@ export default function GuiaTuristicaPage() {
         tagline="Rincones reales, anécdotas locales y los lugares donde van los suizos de verdad"
         icon={Map}
         categoria="Experiencias en Suiza"
-        precio={150}
-        moneda="CHF"
+        precio={97}
+        moneda="€"
         precioTipo="Por jornada · grupos hasta 4 personas"
-        valorMercado="Tours guiados privados en Suiza: CHF 200–400/día"
+        valorMercado="Tours guiados privados en Suiza: €200–400/día"
         hideNavbar
         hideHero
         problema={{
