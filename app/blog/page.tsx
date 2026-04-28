@@ -6,14 +6,31 @@ import { Calendar, Tag, ArrowRight, Sparkles } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: 'Blog sobre Suiza | Migrante Global',
+  description: 'Guías, noticias y recursos actualizados cada día sobre trabajo, alojamiento, trámites y vida en Suiza para hispanohablantes.',
+  openGraph: {
+    title: 'Blog sobre Suiza — Migrante Global',
+    description: 'Contenido diario sobre cómo vivir y trabajar en Suiza. Actualizado con IA cada mañana.',
+    url: 'https://migranteglobal.ch/blog',
+    siteName: 'Migrante Global',
+    images: [{ url: 'https://migranteglobal.ch/og-image.png', width: 1200, height: 630 }],
+    locale: 'es_ES',
+    type: 'website',
+  },
+};
+
 const categoryLabels: Record<string, string> = {
   noticias: 'Noticias',
   trabajo: 'Trabajo',
   vivienda: 'Vivienda',
   tramites: 'Trámites',
-  'vida-en-suiza': 'Vida en Suiza',
+  'vida-en-suiza': 'Conocer Suiza',
   finanzas: 'Finanzas',
   'alemán': 'Alemán',
+  medicina: 'Medicina',
+  'reglas-normas': 'Reglas y Normas',
+  herramientas: 'Herramientas',
 };
 
 const categoryColors: Record<string, string> = {
@@ -24,6 +41,9 @@ const categoryColors: Record<string, string> = {
   'vida-en-suiza': 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
   finanzas: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
   'alemán': 'bg-red-500/20 text-red-300 border-red-500/30',
+  medicina: 'bg-pink-500/20 text-pink-300 border-pink-500/30',
+  'reglas-normas': 'bg-slate-500/20 text-slate-300 border-slate-500/30',
+  herramientas: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
 };
 
 export default async function BlogPage() {

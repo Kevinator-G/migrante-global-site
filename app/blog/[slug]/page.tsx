@@ -7,12 +7,34 @@ import { Calendar, ArrowLeft, Tag, Sparkles, ExternalLink } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const post = await prisma.blogPost.findUnique({
+    where: { slug: params.slug, published: true },
+    select: { title: true, excerpt: true, slug: true },
+  });
+  if (!post) return {};
+  return {
+    title: `${post.title} | Migrante Global`,
+    description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `https://migranteglobal.ch/blog/${post.slug}`,
+      siteName: 'Migrante Global',
+      images: [{ url: 'https://migranteglobal.ch/og-image.png', width: 1200, height: 630 }],
+      locale: 'es_ES',
+      type: 'article',
+    },
+    twitter: { card: 'summary_large_image', title: post.title, description: post.excerpt },
+  };
+}
+
 const categoryLabels: Record<string, string> = {
   noticias: 'Noticias',
   trabajo: 'Trabajo',
   vivienda: 'Vivienda',
   tramites: 'Trámites',
-  'vida-en-suiza': 'Vida en Suiza',
+  'vida-en-suiza': 'Conocer Suiza',
   finanzas: 'Finanzas',
   'alemán': 'Alemán',
 };
