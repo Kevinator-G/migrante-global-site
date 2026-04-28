@@ -37,7 +37,7 @@ export function Footer() {
                 <Linkedin className="w-4 h-4" />
               </a>
               <a
-                href="https://wa.me/41000000000"
+                href="https://wa.me/41772337353"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp Migrante Global"
