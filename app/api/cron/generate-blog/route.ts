@@ -225,7 +225,6 @@ export async function POST(req: NextRequest) {
           category: categoryName,
           tags: tags ?? [],
           published: true,
-          publishedAt: new Date(),
           readTime: Math.ceil(content.split(' ').length / 200),
         },
       })
