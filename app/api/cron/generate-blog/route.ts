@@ -225,6 +225,9 @@ export async function POST(req: NextRequest) {
           category: categoryName,
           tags: tags ?? [],
           published: true,
+          aiGenerated: true,
+          sourceUrl: news?.url ?? null,
+          sourceTitle: news?.source ?? null,
         },
       })
 
