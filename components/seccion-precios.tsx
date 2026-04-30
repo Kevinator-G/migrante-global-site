@@ -48,9 +48,9 @@ const planes = [
     id: 'pack-completo',
     nombre: 'Pack Completo',
     precio: 397,
-    precioRef: '3 cuotas de 132€',
+    precioRef: '≈ 413 CHF',
     moneda: '€',
-    tipo: 'Pago único · cuotas disponibles',
+    tipo: 'Pago único',
     descripcion: 'Reubicación integral',
     destacado: true,
     icon: Package2,
@@ -320,7 +320,7 @@ export function SeccionPrecios() {
           className="text-center mt-6 space-y-1"
         >
           <p className="text-white/30 text-sm">
-            * Precios en euros (€). Referencia en CHF orientativa (1 € ≈ 1,04 CHF). Pago coordinado personalmente · Cuotas disponibles en el Pack Completo.
+            * Precios en euros (€). Referencia en CHF orientativa (1 € ≈ 1,04 CHF). Pago coordinado personalmente.
           </p>
         </motion.div>
       </div>

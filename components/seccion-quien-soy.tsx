@@ -170,42 +170,80 @@ export function SeccionQuienSoy() {
               ))}
             </div>
 
-            {/* YouTube */}
-            <a
-              href="https://www.youtube.com/@migranteglobal"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-4 rounded-xl p-4 mb-6 transition-all duration-300 hover:-translate-y-0.5"
-              style={{
-                background: 'rgba(220,38,38,0.07)',
-                border: '1px solid rgba(220,38,38,0.2)',
-              }}
-            >
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-                style={{ background: 'rgba(220,38,38,0.15)' }}
+            {/* Redes sociales */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              {/* YouTube */}
+              <a
+                href="https://www.youtube.com/@migranteglobal"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-2 rounded-xl p-3 transition-all duration-300 hover:-translate-y-0.5"
+                style={{ background: 'rgba(220,38,38,0.07)', border: '1px solid rgba(220,38,38,0.2)' }}
               >
-                <Youtube className="w-5 h-5 text-red-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="font-bold text-sm text-white">Migrante Global · YouTube</div>
-                <p className="text-xs leading-snug mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Vídeos sobre la vida real en Suiza, trabajo, trámites y lo que nadie te cuenta.{' '}
-                  <span className="text-red-400 font-semibold">@migranteglobal</span>
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 flex-shrink-0 text-red-500/40 group-hover:text-red-400 group-hover:translate-x-1 transition-all duration-200" />
-            </a>
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                  style={{ background: 'rgba(220,38,38,0.15)' }}>
+                  <Youtube className="w-4 h-4 text-red-500" />
+                </div>
+                <div className="text-center">
+                  <div className="font-bold text-xs text-white">YouTube</div>
+                  <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>@migranteglobal</div>
+                </div>
+              </a>
 
-            {/* CTA */}
-            <Link
-              href="/#contacto"
-              className="inline-flex items-center gap-2 font-semibold text-sm px-5 py-3 rounded-xl transition-all duration-200 group"
-              style={{ background: GOLD, color: '#111318' }}
-            >
-              Hablemos directamente
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/migranteglobal"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-2 rounded-xl p-3 transition-all duration-300 hover:-translate-y-0.5"
+                style={{ background: 'rgba(225,48,108,0.07)', border: '1px solid rgba(225,48,108,0.2)' }}
+              >
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                  style={{ background: 'rgba(225,48,108,0.15)' }}>
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="rgb(225,48,108)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <circle cx="12" cy="12" r="4"/>
+                    <circle cx="17.5" cy="6.5" r="0.5" fill="rgb(225,48,108)"/>
+                  </svg>
+                </div>
+                <div className="text-center">
+                  <div className="font-bold text-xs text-white">Instagram</div>
+                  <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>@migranteglobal</div>
+                </div>
+              </a>
+
+              {/* TikTok */}
+              <a
+                href="https://www.tiktok.com/@migranteglobal"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-2 rounded-xl p-3 transition-all duration-300 hover:-translate-y-0.5"
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
+              >
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                  style={{ background: 'rgba(255,255,255,0.08)' }}>
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="white">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.19 8.19 0 0 0 4.78 1.52V6.74a4.85 4.85 0 0 1-1.01-.05z"/>
+                  </svg>
+                </div>
+                <div className="text-center">
+                  <div className="font-bold text-xs text-white">TikTok</div>
+                  <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>@migranteglobal</div>
+                </div>
+              </a>
+            </div>
+
+            {/* CTA centrado */}
+            <div className="flex justify-center">
+              <Link
+                href="/#contacto"
+                className="inline-flex items-center gap-2 font-semibold text-sm px-6 py-3.5 rounded-xl transition-all duration-200 group hover:opacity-90"
+                style={{ background: GOLD, color: '#111318' }}
+              >
+                Hablemos directamente
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
         </motion.div>
       </div>

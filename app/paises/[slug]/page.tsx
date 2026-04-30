@@ -184,6 +184,24 @@ const COUNTRIES: Record<string, CountryInfo> = {
       'Alta calidad de vida y ambiente multicultural',
     ],
   },
+  irlanda: {
+    name: 'Irlanda',
+    emoji: '🇮🇪',
+    heroImage: 'https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?w=1920&q=85&auto=format&fit=crop',
+    tipoAcceso: 'Libre circulación UE para comunitarios · Visa Critical Skills para no-comunitarios',
+    permisoInicial: 'Irish Residence Permit (IRP) — tarjeta de residencia anual renovable',
+    idiomaPrincipal: 'Inglés (gran ventaja para personas con nivel B2+)',
+    dificultad: 'Media',
+    puntosClave: [
+      'Hub tecnológico europeo: sede de Google, Meta, Apple, Microsoft y LinkedIn',
+      'Salario mínimo: 12,70 €/hora (2024)',
+      'Visa Critical Skills: vía rápida para perfiles IT, ingeniería y sanidad',
+      'Permiso de trabajo en 8–12 semanas con oferta de empleo en mano',
+      'Sin barrera de idioma para quienes tienen inglés B2+',
+      'Acceso directo al mercado laboral del Reino Unido (zona CTA)',
+    ],
+    advertencia: 'El coste de vivienda en Dublín es muy alto. Planifica al menos 3–4 meses de ahorro previo.',
+  },
   suecia: {
     name: 'Suecia',
     emoji: '🇸🇪',
@@ -506,6 +524,7 @@ export default function PaisPage({ params }: { params: { slug: string } }) {
               { slug: 'espana', name: '🇪🇸 España' },
               { slug: 'italia', name: '🇮🇹 Italia' },
               { slug: 'luxemburgo', name: '🇱🇺 Luxemburgo' },
+              { slug: 'irlanda', name: '🇮🇪 Irlanda' },
               { slug: 'suecia', name: '🇸🇪 Suecia' },
               { slug: 'dinamarca', name: '🇩🇰 Dinamarca' },
             ]
