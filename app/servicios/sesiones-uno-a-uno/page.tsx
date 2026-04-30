@@ -12,10 +12,10 @@ export default function SesionesUnoAUnoPage() {
       tagline="60 minutos de atención directa, sin guiones, sin respuestas genéricas"
       icon={Video}
       categoria="Consultoría Personal"
-      precio={67}
+      precio={120}
       moneda="€ / sesión"
       precioTipo="Por sesión de 60 minutos · agendamiento en 48h"
-      valorMercado="Consultoría de migración en Europa: €120–250/sesión"
+      valorMercado="Consultoría de migración en Europa: €200–350/sesión"
       problema={{
         titulo: '¿Por qué necesitas orientación personalizada?',
         descripcion:
@@ -50,7 +50,7 @@ export default function SesionesUnoAUnoPage() {
       foto="https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=1400&q=80"
       fotoAlt="Consulta personalizada por videollamada"
       planInfo={{
-        inicio: 'Disponible como servicio individual a 67€/sesión.',
+        inicio: 'Disponible como servicio individual a 120€/sesión.',
         estrategia: '2 sesiones incluidas en el plan, adicionales con descuento del 20%.',
         comunidad: 'Sesiones con descuento del 15% para miembros activos.',
       }}

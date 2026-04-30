@@ -70,7 +70,7 @@ const servicios = [
     titulo: 'Sesiones 1:1',
     descripcion:
       'Consultoría personalizada de 60 minutos para resolver tus dudas específicas. Plan de acción y grabación incluida.',
-    precio: 67,
+    precio: 120,
     moneda: '€/sesión',
     precioTipo: 'Por sesión',
     tag: 'Incluido en planes',
@@ -87,7 +87,7 @@ const servicios = [
     titulo: 'Gestión de Alojamiento',
     descripcion:
       'Orientación completa para encontrar tu primer alojamiento en Suiza sin caer en trampas ni sobrepagar.',
-    precio: 149,
+    precio: 189,
     moneda: '€',
     precioTipo: 'Pago único',
     tag: null,

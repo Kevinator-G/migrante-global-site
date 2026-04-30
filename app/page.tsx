@@ -18,28 +18,28 @@ export default function HomePage() {
     <>
       <Navbar />
       <main>
-        {/* 1. Hero — captura atención */}
+        {/* 1. Hero — captura atención y define la promesa */}
         <Hero />
-        {/* 2. Servicios — qué ofrecemos */}
-        <SeccionServicios />
-        {/* 3. Por qué elegirnos — refuerza lo que acaban de ver */}
+        {/* 2. Validación — prueba social inmediata (150+ personas, 3 años) */}
         <SeccionValidacion />
-        {/* 4. Calculadora — enganche emocional con datos reales */}
-        <SeccionCalculadoraModal />
-        {/* 5. Cómo trabajamos — elimina dudas del proceso */}
-        <SeccionMetodo />
-        {/* 6. Quién soy — humaniza la marca */}
+        {/* 3. Quién soy — humaniza la marca antes de vender */}
         <SeccionQuienSoy />
-        {/* 7. YouTube — prueba social en video */}
-        <SeccionYoutube />
-        {/* 8. Testimonios — prueba social de clientes */}
+        {/* 4. Calculadora — enganche emocional: muestra el gap salarial */}
+        <SeccionCalculadoraModal />
+        {/* 5. Método — elimina el miedo al proceso */}
+        <SeccionMetodo />
+        {/* 6. Servicios — qué ofrezco, con contexto y confianza ya construidos */}
+        <SeccionServicios />
+        {/* 7. Testimonios — prueba social de clientes reales */}
         <SeccionTestimonios />
-        {/* 9. Lead magnet — captura emails antes de precios */}
-        <SeccionLeadMagnet />
-        {/* 10. FAQ — elimina objeciones */}
-        <SeccionFaq />
-        {/* 11. Precios — conversión con contexto y garantía */}
+        {/* 8. YouTube — prueba social en video */}
+        <SeccionYoutube />
+        {/* 9. Precios — inversión, después de haber construido valor */}
         <SeccionPrecios />
+        {/* 10. FAQ — elimina objeciones antes del cierre */}
+        <SeccionFaq />
+        {/* 11. Lead magnet — captura emails de los que no están listos aún */}
+        <SeccionLeadMagnet />
         {/* 12. Contacto — acción final */}
         <FormularioContacto />
       </main>
