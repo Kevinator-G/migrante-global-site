@@ -1,17 +1,35 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Home, Package2, Users, CheckCircle2, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Check, Home, Package2, Users, CheckCircle2, ArrowRight, ShieldCheck, Video, BookOpen } from 'lucide-react';
 import { useCart } from '@/lib/cart-context';
 
 const GOLD = '#c9a96e';
 
 const planes = [
   {
+    id: 'consultoria-1a1',
+    nombre: 'Consultoría 1:1',
+    precio: 90,
+    precioRef: 'Sesión de 30 min',
+    moneda: '€',
+    tipo: 'Videollamada · Pago único',
+    descripcion: 'Primera orientación',
+    destacado: false,
+    icon: Video,
+    caracteristicas: [
+      'Videollamada de 30 minutos',
+      'Análisis de tu situación actual',
+      'Hoja de ruta personalizada',
+      'Recomendaciones concretas',
+      'Resumen por escrito incluido',
+    ],
+  },
+  {
     id: 'solo-alojamiento',
     nombre: 'Solo Alojamiento',
-    precio: 149,
-    precioRef: '≈ 155 CHF',
+    precio: 147,
+    precioRef: '≈ 153 CHF',
     moneda: '€',
     tipo: 'Pago único',
     descripcion: 'Servicio puntual',
@@ -23,13 +41,14 @@ const planes = [
       'Revisión de contratos de alquiler',
       'Orientación sobre zonas y costos',
       'Soporte durante 30 días',
+      'Dossier de candidato incluido',
     ],
   },
   {
     id: 'pack-completo',
     nombre: 'Pack Completo',
-    precio: 347,
-    precioRef: '3 cuotas de 116€',
+    precio: 397,
+    precioRef: '3 cuotas de 132€',
     moneda: '€',
     tipo: 'Pago único · cuotas disponibles',
     descripcion: 'Reubicación integral',
@@ -76,7 +95,7 @@ export function SeccionPrecios() {
       precio: plan.precio,
       moneda: plan.moneda,
       tipo: plan.tipo,
-      emoji: plan.id === 'solo-alojamiento' ? '🏠' : plan.id === 'pack-completo' ? '📦' : '🤝',
+      emoji: plan.id === 'solo-alojamiento' ? '🏠' : plan.id === 'pack-completo' ? '📦' : plan.id === 'consultoria-1a1' ? '🎯' : '🤝',
     });
   };
 
@@ -101,8 +120,34 @@ export function SeccionPrecios() {
           </p>
         </motion.div>
 
+        {/* Banner PDF gratuito */}
+        <motion.a
+          href="#guia-gratuita"
+          initial={{ y: 10, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-between gap-4 rounded-xl px-5 py-3.5 mb-8 cursor-pointer group transition-all duration-200 hover:-translate-y-0.5"
+          style={{ background: 'rgba(201,169,110,0.07)', border: '1px solid rgba(201,169,110,0.25)' }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ background: 'rgba(201,169,110,0.15)', border: '1px solid rgba(201,169,110,0.3)' }}>
+              <BookOpen className="w-4 h-4" style={{ color: GOLD }} />
+            </div>
+            <div>
+              <span className="text-white text-sm font-semibold">¿Aún no estás seguro? </span>
+              <span className="text-white/55 text-sm">Descarga gratis «Los 7 errores al migrar a Suiza» antes de elegir plan.</span>
+            </div>
+          </div>
+          <span className="text-xs font-bold px-3 py-1 rounded-full flex-shrink-0 group-hover:opacity-90 transition-opacity"
+            style={{ background: GOLD, color: '#111318' }}>
+            Gratis
+          </span>
+        </motion.a>
+
         {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-5 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 items-stretch">
           {planes.map((plan, index) => {
             const inCart = isInCart(plan.id);
             const Icon = plan.icon;
@@ -115,7 +160,7 @@ export function SeccionPrecios() {
                 viewport={{ once: true, margin: '0px 0px -80px 0px' }}
                 transition={{ duration: 0.5, delay: index * 0.12 }}
                 data-light-card="true"
-                className={`relative rounded-2xl flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 ${
+                className={`relative rounded-2xl flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 h-full ${
                   plan.destacado ? 'md:-translate-y-2' : ''
                 }`}
                 style={{

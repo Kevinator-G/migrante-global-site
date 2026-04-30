@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { nombre, email, telefono, pais, mensaje, consentimiento } = body;
 
-    if (!nombre || !email || !mensaje) {
+    if (!email || !mensaje) {
       return NextResponse.json(
         { error: "Faltan campos obligatorios." },
         { status: 400 }

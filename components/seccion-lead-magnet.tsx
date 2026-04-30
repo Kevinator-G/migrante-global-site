@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Send, CheckCircle, ArrowRight, ShieldCheck } from 'lucide-react';
+import { FileText, Send, CheckCircle, ArrowRight, ShieldCheck, BookOpen } from 'lucide-react';
 
 const GOLD = '#c9a96e';
 
@@ -15,6 +15,7 @@ const puntos = [
 ];
 
 export function SeccionLeadMagnet() {
+  const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
@@ -29,7 +30,7 @@ export function SeccionLeadMagnet() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          nombre: '',
+          nombre: nombre.trim() || 'Sin nombre',
           telefono: '',
           pais: '',
           mensaje: 'Solicitud guía gratuita: Los 7 errores al migrar a Suiza',
@@ -45,6 +46,7 @@ export function SeccionLeadMagnet() {
 
   return (
     <section
+      id="guia-gratuita"
       className="relative overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #0d1117 0%, #111318 100%)', padding: '80px 0' }}
     >
@@ -112,11 +114,25 @@ export function SeccionLeadMagnet() {
               }}
             >
               {status === 'success' ? (
-                <div className="text-center py-8">
+                <div className="text-center py-6">
                   <CheckCircle className="w-14 h-14 mx-auto mb-4" style={{ color: GOLD }} />
-                  <h3 className="text-xl font-bold text-white mb-2">¡Guía enviada!</h3>
-                  <p className="text-white/50 text-sm">
-                    Revisa tu email. Si no la ves, mira en spam.
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {nombre ? `¡Listo, ${nombre.split(' ')[0]}!` : '¡Listo!'}
+                  </h3>
+                  <p className="text-white/50 text-sm mb-6">
+                    Tu guía está lista. Haz clic para descargarla ahora.
+                  </p>
+                  <a
+                    href="/7 errores al llegar a suiza.pdf"
+                    download="Guia-Migrante-Global-7-Errores.pdf"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 active:scale-95"
+                    style={{ background: GOLD, color: '#111318' }}
+                  >
+                    <FileText className="w-4 h-4" />
+                    Descargar guía gratis
+                  </a>
+                  <p className="text-white/25 text-xs mt-4">
+                    La descarga comenzará automáticamente.
                   </p>
                 </div>
               ) : (
@@ -126,12 +142,25 @@ export function SeccionLeadMagnet() {
                     className="rounded-xl p-5 mb-6 text-center"
                     style={{ background: 'rgba(201,169,110,0.06)', border: `1px solid rgba(201,169,110,0.15)` }}
                   >
-                    <div className="text-4xl mb-2">📋</div>
+                    <div className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center"
+                      style={{ background: 'linear-gradient(135deg, rgba(201,169,110,0.25) 0%, rgba(201,169,110,0.08) 100%)', border: `1px solid rgba(201,169,110,0.35)` }}>
+                      <BookOpen className="w-7 h-7" style={{ color: GOLD }} />
+                    </div>
                     <div className="font-bold text-white text-sm">Guía Migrante Global</div>
                     <div className="text-white/40 text-xs mt-0.5">PDF · Gratis · Descarga inmediata</div>
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <label className="block text-white/70 text-sm mb-2">Tu nombre <span className="text-white/30">(opcional)</span></label>
+                      <input
+                        type="text"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        placeholder="¿Cómo te llamas?"
+                        className="w-full"
+                      />
+                    </div>
                     <div>
                       <label className="block text-white/70 text-sm mb-2">Tu email</label>
                       <input

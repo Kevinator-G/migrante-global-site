@@ -24,18 +24,15 @@ async function fetchUnsplashImage(query: string): Promise<string | null> {
 }
 
 function makeSlug(title: string): string {
-  return (
-    title
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '')
-      .replace(/[^a-z0-9\s-]/g, '')
-      .trim()
-      .replace(/\s+/g, '-')
-      .slice(0, 80) +
-    '-' +
-    Date.now()
-  )
+  // Deterministic slug (no Date.now) — running the seed twice won't create duplicates
+  return title
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .slice(0, 80)
 }
 
 const ARTICLES = [
@@ -525,8 +522,10 @@ export async function GET(req: NextRequest) {
       const imageUrl = await fetchUnsplashImage(article.imageQuery)
       const slug = makeSlug(article.title)
 
-      await prisma.blogPost.create({
-        data: {
+      await prisma.blogPost.upsert({
+        where: { slug },
+        update: { imageUrl: imageUrl ?? null }, // refresh image if re-seeded
+        create: {
           title: article.title,
           slug,
           excerpt: article.excerpt,

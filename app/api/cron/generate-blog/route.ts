@@ -5,6 +5,22 @@ import OpenAI from 'openai'
 const prisma = new PrismaClient()
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
+// ── Auth helper ────────────────────────────────────────────────────────────
+function isAuthorized(req: NextRequest): boolean {
+  const secret = process.env.CRON_SECRET
+  if (!secret) return false
+  // Vercel cron sends: Authorization: Bearer <CRON_SECRET>
+  const authHeader = req.headers.get('authorization')
+  if (authHeader === `Bearer ${secret}`) return true
+  // Manual call via query param: ?secret=<CRON_SECRET>
+  const querySecret = req.nextUrl.searchParams.get('secret')
+  if (querySecret === secret) return true
+  // Legacy: x-cron-secret header
+  const headerSecret = req.headers.get('x-cron-secret')
+  if (headerSecret === secret) return true
+  return false
+}
+
 // ── GNews ──────────────────────────────────────────────────────────────────
 async function fetchTrendingNews(query: string): Promise<{
   title: string
@@ -67,7 +83,7 @@ const CATEGORIES: Record<
   { searchQuery: string; fallbackTopic: string; imageQuery: string }
 > = {
   'Visas y permisos': {
-    searchQuery: 'permiso residencia Suiza inmigrante 2024',
+    searchQuery: 'permiso residencia Suiza inmigrante 2025',
     fallbackTopic: 'Los nuevos cambios en el sistema de permisos B y C en Suiza para 2025',
     imageQuery: 'visa permit document Switzerland',
   },
@@ -97,7 +113,7 @@ const CATEGORIES: Record<
     imageQuery: 'Switzerland apartment housing city',
   },
   'Noticias Suiza': {
-    searchQuery: 'noticias Suiza latinos hispanos comunidad',
+    searchQuery: 'noticias Suiza latinos hispanos comunidad 2025',
     fallbackTopic: 'Lo que está pasando en Suiza que afecta directamente a los inmigrantes latinos',
     imageQuery: 'Switzerland news city landscape',
   },
@@ -119,11 +135,7 @@ const CATEGORIES: Record<
 }
 
 // ── Prompt (Kevin's voice) ─────────────────────────────────────────────────
-function buildPrompt(
-  category: string,
-  topic: string,
-  newsContext: string
-): string {
+function buildPrompt(category: string, topic: string, newsContext: string): string {
   return `Eres Kevin García, consultor de inmigración en Suiza con 10 años de experiencia ayudando a latinos a migrar de forma segura y ordenada. Escribes de forma directa, cercana y honesta — sin corporativismo ni jerga burocrática. Usas "tú", párrafos cortos, y abres cada artículo con un gancho que para al lector en seco.
 
 CATEGORÍA: ${category}
@@ -150,12 +162,11 @@ REGLAS DE VOZ:
 Devuelve SOLO el JSON. Sin markdown extra, sin explicaciones fuera del JSON.`
 }
 
-// ── GET handler (Vercel Cron calls GET with Authorization: Bearer CRON_SECRET)
-export async function GET(req: NextRequest) {
-  const auth = req.headers.get('authorization')
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+// ── Core generation logic ──────────────────────────────────────────────────
+async function generatePosts() {
+  // Start of today (UTC) — skip categories that already have a post today
+  const todayStart = new Date()
+  todayStart.setUTCHours(0, 0, 0, 0)
 
   const categoryNames = Object.keys(CATEGORIES)
   const results: Array<{
@@ -163,11 +174,23 @@ export async function GET(req: NextRequest) {
     title?: string
     hasTrend: boolean
     hasImage: boolean
+    skipped?: boolean
     error?: string
   }> = []
 
   for (const categoryName of categoryNames) {
     try {
+      // Skip if a post for this category was already generated today
+      const existingToday = await prisma.blogPost.findFirst({
+        where: { category: categoryName, createdAt: { gte: todayStart } },
+        select: { id: true, title: true },
+      })
+
+      if (existingToday) {
+        results.push({ category: categoryName, title: existingToday.title, hasTrend: false, hasImage: false, skipped: true })
+        continue
+      }
+
       const config = CATEGORIES[categoryName]
 
       // 1. Try to get trending news
@@ -191,8 +214,8 @@ export async function GET(req: NextRequest) {
       })
 
       const raw = completion.choices[0].message.content ?? '{}'
-      const parsed = JSON.parse(raw)
-
+      const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
+      const parsed = JSON.parse(cleaned)
       const { title, excerpt, content, imageQuery, tags } = parsed
 
       // 3. Fetch real image from Unsplash
@@ -200,22 +223,28 @@ export async function GET(req: NextRequest) {
       const imageUrl = await fetchUnsplashImage(imageSearchQuery)
       const hasImage = !!imageUrl
 
-      // 4. Create slug
-      const slug =
-        title
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[̀-ͯ]/g, '')
-          .replace(/[^a-z0-9\s-]/g, '')
-          .trim()
-          .replace(/\s+/g, '-')
-          .slice(0, 80) +
-        '-' +
-        Date.now()
+      // 4. Create unique slug (category slug + date, not Date.now())
+      const dateStr = new Date().toISOString().slice(0, 10) // YYYY-MM-DD
+      const categorySlug = categoryName
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+      const titleSlug = title
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .slice(0, 60)
+      const slug = `${titleSlug}-${dateStr}`
 
-      // 5. Save to database
-      await prisma.blogPost.create({
-        data: {
+      // 5. Save to database (skip if slug already exists)
+      await prisma.blogPost.upsert({
+        where: { slug },
+        update: {},
+        create: {
           title,
           slug,
           excerpt,
@@ -241,9 +270,42 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  return results
+}
+
+// ── GET — called by Vercel Cron or manually ────────────────────────────────
+export async function GET(req: NextRequest) {
+  if (!isAuthorized(req)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const results = await generatePosts()
+
   return NextResponse.json({
     success: true,
-    generated: results.filter((r) => !r.error).length,
+    generated: results.filter((r) => !r.error && !r.skipped).length,
+    skipped: results.filter((r) => r.skipped).length,
+    failed: results.filter((r) => r.error).length,
+    results,
+  })
+}
+
+// ── POST — kept for backwards compatibility ────────────────────────────────
+export async function POST(req: NextRequest) {
+  const secret = req.headers.get('x-cron-secret')
+  const authHeader = req.headers.get('authorization')
+  const cronSecret = process.env.CRON_SECRET
+
+  if (secret !== cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const results = await generatePosts()
+
+  return NextResponse.json({
+    success: true,
+    generated: results.filter((r) => !r.error && !r.skipped).length,
+    skipped: results.filter((r) => r.skipped).length,
     failed: results.filter((r) => r.error).length,
     results,
   })

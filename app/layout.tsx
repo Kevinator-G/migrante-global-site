@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import Script from 'next/script';
 import MigranteChat from "@/components/migranteChat";
 import { WhatsappFlotante } from '@/components/whatsapp-flotante';
 import { CookieBanner } from '@/components/cookie-banner';
 import { Providers } from './providers';
 import { Inter, Outfit } from 'next/font/google';
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 const inter = Inter({
   subsets: ['latin'],
@@ -191,6 +194,25 @@ export default function RootLayout({
         <MigranteChat />
         <CookieBanner />
         <WhatsappFlotante />
+        {/* Google Analytics 4 — solo carga si NEXT_PUBLIC_GA_ID está definido */}
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${GA_ID}', { page_path: window.location.pathname });
+                `,
+              }}
+            />
+          </>
+        )}
       </body>
     </html>
   );

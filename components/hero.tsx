@@ -3,12 +3,12 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Users, Globe, Star } from 'lucide-react';
+import { Users, MapPin, Clock, ArrowRight } from 'lucide-react';
 
 const stats = [
-  { icon: Users, value: '150+', label: 'Personas acompañadas' },
-  { icon: Star, value: '10 años', label: 'Experiencia en Europa' },
-  { icon: Globe, value: '48 h', label: 'Tiempo de respuesta' },
+  { icon: Users,  value: '150+',    label: 'Personas acompañadas' },
+  { icon: MapPin, value: '3+ años', label: 'Viviendo en Suiza'     },
+  { icon: Clock,  value: '48 h',    label: 'Tiempo de respuesta'   },
 ];
 
 export function Hero() {
@@ -66,18 +66,18 @@ export function Hero() {
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-stretch mb-14">
+          <div className="flex flex-col items-center gap-3 mb-14">
             <Link
               href="/#contacto"
-              className="btn-primary text-base font-semibold px-8 py-4 min-w-[200px] text-center"
+              className="btn-primary text-base font-semibold px-10 py-4 min-w-[260px] text-center"
             >
-              Agenda tu consulta
+              Agenda tu consulta gratuita
             </Link>
             <Link
               href="/#planes"
-              className="btn-secondary text-base font-semibold px-8 py-4 min-w-[200px] text-center"
+              className="flex items-center gap-1.5 text-white/50 hover:text-yellow-400 transition-colors duration-200 text-sm font-medium"
             >
-              Ver Planes
+              Ver planes y precios <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 

@@ -20,10 +20,10 @@ export default function HomePage() {
       <main>
         {/* 1. Hero — captura atención */}
         <Hero />
-        {/* 2. Por qué elegirnos — construye confianza inmediata */}
-        <SeccionValidacion />
-        {/* 3. Servicios — qué ofrecemos */}
+        {/* 2. Servicios — qué ofrecemos */}
         <SeccionServicios />
+        {/* 3. Por qué elegirnos — refuerza lo que acaban de ver */}
+        <SeccionValidacion />
         {/* 4. Calculadora — enganche emocional con datos reales */}
         <SeccionCalculadoraModal />
         {/* 5. Cómo trabajamos — elimina dudas del proceso */}
