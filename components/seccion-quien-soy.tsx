@@ -192,7 +192,7 @@ export function SeccionQuienSoy() {
 
               {/* Instagram */}
               <a
-                href="https://www.instagram.com/migranteglobal"
+                href="https://www.instagram.com/kevin.migranteglobal/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex flex-col items-center gap-2 rounded-xl p-3 transition-all duration-300 hover:-translate-y-0.5"
@@ -208,7 +208,7 @@ export function SeccionQuienSoy() {
                 </div>
                 <div className="text-center">
                   <div className="font-bold text-xs text-white">Instagram</div>
-                  <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>@migranteglobal</div>
+                  <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>@kevin.migranteglobal</div>
                 </div>
               </a>
 
@@ -233,19 +233,20 @@ export function SeccionQuienSoy() {
               </a>
             </div>
 
-            {/* CTA centrado */}
-            <div className="flex justify-center">
-              <Link
-                href="/#contacto"
-                className="inline-flex items-center gap-2 font-semibold text-sm px-6 py-3.5 rounded-xl transition-all duration-200 group hover:opacity-90"
-                style={{ background: GOLD, color: '#111318' }}
-              >
-                Hablemos directamente
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
           </div>
         </motion.div>
+
+        {/* CTA centrado — fuera del grid para centrado real */}
+        <div className="flex justify-center mt-8">
+          <Link
+            href="/#contacto"
+            className="inline-flex items-center gap-2 font-semibold text-sm px-8 py-4 rounded-xl transition-all duration-200 group hover:opacity-90"
+            style={{ background: GOLD, color: '#111318' }}
+          >
+            Hablemos directamente
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
       </div>
     </section>
   );
