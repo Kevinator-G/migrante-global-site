@@ -237,11 +237,15 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
                             <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #13151b 0%, transparent 50%)' }} />
                           </div>
                         ) : (
-                          <div
-                            className="w-full h-44 flex-shrink-0 flex items-center justify-center"
-                            style={{ background: 'linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%)' }}
-                          >
-                            <span className="text-4xl opacity-20">🇨🇭</span>
+                          <div className="relative w-full h-44 flex-shrink-0">
+                            <Image
+                              src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=70"
+                              alt="Suiza"
+                              fill
+                              className="object-cover opacity-60"
+                              sizes="(max-width: 768px) 100vw, 400px"
+                            />
+                            <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #13151b 0%, transparent 50%)' }} />
                           </div>
                         )}
 

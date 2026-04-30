@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
   ArrowLeft,
+  ArrowRight,
   Check,
   X,
   Users,
-  ShoppingCart,
   CheckCircle2,
   Star,
   ChevronRight,
@@ -250,12 +250,12 @@ export function ServicioTemplate({
                   {inCart ? (
                     <>
                       <CheckCircle2 className="w-4 h-4" />
-                      En tu carrito · Ver
+                      Reservado · Ver resumen
                     </>
                   ) : (
                     <>
-                      <ShoppingCart className="w-4 h-4" />
-                      Agregar al carrito
+                      <ArrowRight className="w-4 h-4" />
+                      Quiero este servicio
                     </>
                   )}
                 </button>
