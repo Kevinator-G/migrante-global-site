@@ -22,45 +22,83 @@ export const metadata = {
 };
 
 const categoryColors: Record<string, string> = {
-  'Visas y permisos':      'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  'Mercado laboral':       'bg-green-500/20 text-green-300 border-green-500/30',
-  'Finanzas y vivienda':   'bg-purple-500/20 text-purple-300 border-purple-500/30',
+  'Visas y permisos':       'bg-blue-500/20 text-blue-300 border-blue-500/30',
+  'Mercado laboral':        'bg-green-500/20 text-green-300 border-green-500/30',
+  'Finanzas y vivienda':    'bg-purple-500/20 text-purple-300 border-purple-500/30',
   'Homologación de títulos':'bg-orange-500/20 text-orange-300 border-orange-500/30',
-  'Bienestar y salud':     'bg-pink-500/20 text-pink-300 border-pink-500/30',
-  'Educación y familia':   'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
-  'Noticias Suiza':        'bg-red-500/20 text-red-300 border-red-500/30',
-  'Cultura y adaptación':  'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
-  'Emprendimiento':        'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-  'Impuestos':             'bg-slate-500/20 text-slate-300 border-slate-500/30',
+  'Bienestar y salud':      'bg-pink-500/20 text-pink-300 border-pink-500/30',
+  'Educación y familia':    'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+  'Noticias Suiza':         'bg-red-500/20 text-red-300 border-red-500/30',
+  'Cultura y adaptación':   'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+  'Emprendimiento':         'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+  'Impuestos':              'bg-slate-500/20 text-slate-300 border-slate-500/30',
   // legacy slugs
-  noticias:                'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  trabajo:                 'bg-green-500/20 text-green-300 border-green-500/30',
-  vivienda:                'bg-purple-500/20 text-purple-300 border-purple-500/30',
+  noticias:  'bg-blue-500/20 text-blue-300 border-blue-500/30',
+  trabajo:   'bg-green-500/20 text-green-300 border-green-500/30',
+  vivienda:  'bg-purple-500/20 text-purple-300 border-purple-500/30',
+  tramites:  'bg-orange-500/20 text-orange-300 border-orange-500/30',
+  medicina:  'bg-pink-500/20 text-pink-300 border-pink-500/30',
+  finanzas:  'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+  'alemán':  'bg-red-500/20 text-red-300 border-red-500/30',
+  'vida-en-suiza': 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+  'reglas-normas': 'bg-slate-500/20 text-slate-300 border-slate-500/30',
+  herramientas: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+};
+
+const categoryActiveColors: Record<string, string> = {
+  'Visas y permisos':       'bg-blue-500 text-white border-blue-500',
+  'Mercado laboral':        'bg-green-500 text-white border-green-500',
+  'Finanzas y vivienda':    'bg-purple-500 text-white border-purple-500',
+  'Homologación de títulos':'bg-orange-500 text-white border-orange-500',
+  'Bienestar y salud':      'bg-pink-500 text-white border-pink-500',
+  'Educación y familia':    'bg-yellow-500 text-black border-yellow-500',
+  'Noticias Suiza':         'bg-red-500 text-white border-red-500',
+  'Cultura y adaptación':   'bg-cyan-500 text-white border-cyan-500',
+  'Emprendimiento':         'bg-emerald-500 text-white border-emerald-500',
+  'Impuestos':              'bg-slate-500 text-white border-slate-500',
 };
 
 function categoryColor(cat: string) {
   return categoryColors[cat] ?? 'bg-white/10 text-white/60 border-white/10';
 }
 
-export default async function BlogPage() {
-  const posts = await prisma.blogPost.findMany({
-    where: { published: true },
-    orderBy: { createdAt: 'desc' },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      excerpt: true,
-      category: true,
-      tags: true,
-      imageUrl: true,
-      aiGenerated: true,
-      createdAt: true,
-    },
-  });
+function categoryActiveColor(cat: string) {
+  return categoryActiveColors[cat] ?? 'bg-yellow-500 text-black border-yellow-500';
+}
 
-  const featured = posts[0];
-  const rest = posts.slice(1);
+export default async function BlogPage({ searchParams }: { searchParams: { categoria?: string } }) {
+  const activeCategory = searchParams.categoria ?? null;
+
+  const [posts, allCategories] = await Promise.all([
+    prisma.blogPost.findMany({
+      where: {
+        published: true,
+        ...(activeCategory ? { category: activeCategory } : {}),
+      },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        category: true,
+        tags: true,
+        imageUrl: true,
+        aiGenerated: true,
+        createdAt: true,
+      },
+    }),
+    prisma.blogPost.findMany({
+      where: { published: true },
+      select: { category: true },
+      distinct: ['category'],
+      orderBy: { category: 'asc' },
+    }),
+  ]);
+
+  const categories = allCategories.map(c => c.category);
+  const featured = !activeCategory ? posts[0] : null;
+  const grid = !activeCategory ? posts.slice(1) : posts;
 
   return (
     <>
@@ -78,22 +116,61 @@ export default async function BlogPage() {
           </p>
         </section>
 
+        {/* Category filter tabs */}
+        {categories.length > 0 && (
+          <div className="max-w-[1200px] mx-auto px-6 mb-10">
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/blog"
+                className={`text-sm font-medium px-4 py-2 rounded-full border transition-all ${
+                  !activeCategory
+                    ? 'bg-yellow-500 text-black border-yellow-500'
+                    : 'bg-white/5 text-white/60 border-white/10 hover:border-white/25 hover:text-white'
+                }`}
+              >
+                Todos
+              </Link>
+              {categories.map(cat => (
+                <Link
+                  key={cat}
+                  href={`/blog?categoria=${encodeURIComponent(cat)}`}
+                  className={`text-sm font-medium px-4 py-2 rounded-full border transition-all ${
+                    activeCategory === cat
+                      ? categoryActiveColor(cat)
+                      : 'bg-white/5 text-white/60 border-white/10 hover:border-white/25 hover:text-white'
+                  }`}
+                >
+                  {cat}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="max-w-[1200px] mx-auto px-6 pb-20">
           {posts.length === 0 ? (
             <div className="text-center py-20">
               <Sparkles className="w-12 h-12 text-yellow-500/40 mx-auto mb-4" />
-              <p className="text-white/40 text-lg">El primer artículo se publicará mañana a las 8:00.</p>
+              <p className="text-white/40 text-lg">
+                {activeCategory
+                  ? `Aún no hay artículos en esta categoría.`
+                  : 'El primer artículo se publicará mañana a las 8:00.'}
+              </p>
+              {activeCategory && (
+                <Link href="/blog" className="mt-4 inline-block text-yellow-500 hover:text-yellow-400 text-sm transition">
+                  Ver todos los artículos →
+                </Link>
+              )}
             </div>
           ) : (
             <>
-              {/* ── Post destacado ── */}
+              {/* ── Post destacado (solo vista "Todos") ── */}
               {featured && (
                 <Link href={`/blog/${featured.slug}`} className="block mb-12 group">
                   <div
                     className="rounded-2xl overflow-hidden transition-all group-hover:border-yellow-500/40"
                     style={{ background: '#13151b', border: '1px solid rgba(255,255,255,0.07)' }}
                   >
-                    {/* Imagen destacada */}
                     {featured.imageUrl && (
                       <div className="relative w-full h-72 md:h-96">
                         <Image
@@ -140,15 +217,14 @@ export default async function BlogPage() {
               )}
 
               {/* ── Grid de posts ── */}
-              {rest.length > 0 && (
+              {grid.length > 0 && (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {rest.map(post => (
+                  {grid.map(post => (
                     <Link key={post.id} href={`/blog/${post.slug}`} className="group">
                       <div
                         className="rounded-xl overflow-hidden h-full flex flex-col transition-all group-hover:border-yellow-500/30"
                         style={{ background: '#13151b', border: '1px solid rgba(255,255,255,0.06)' }}
                       >
-                        {/* Imagen de tarjeta */}
                         {post.imageUrl ? (
                           <div className="relative w-full h-44 flex-shrink-0">
                             <Image
@@ -161,7 +237,6 @@ export default async function BlogPage() {
                             <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #13151b 0%, transparent 50%)' }} />
                           </div>
                         ) : (
-                          /* Placeholder cuando no hay imagen */
                           <div
                             className="w-full h-44 flex-shrink-0 flex items-center justify-center"
                             style={{ background: 'linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%)' }}
