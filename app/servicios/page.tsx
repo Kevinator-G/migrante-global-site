@@ -53,7 +53,7 @@ const servicios = [
     titulo: 'CV Formato Suizo',
     descripcion:
       'Revisión y adaptación de tu CV al formato exacto que usan los empleadores suizos. Estructura, foto, longitud y contenido.',
-    precio: 97,
+    precio: 147,
     moneda: '€',
     precioTipo: 'Pago único',
     tag: 'Documentos',
@@ -121,9 +121,9 @@ const servicios = [
     titulo: 'Recogida en Aeropuerto',
     descripcion:
       'Alguien que ya conoce Suiza te espera en el aeropuerto y te acompaña hasta tu alojamiento. Primer día sin estrés.',
-    precio: 97,
+    precio: 177,
     moneda: '€',
-    precioTipo: 'Por traslado',
+    precioTipo: 'Por traslado · hasta 4h de orientación',
     tag: null,
     tagColor: '',
     destacado: false,
@@ -138,7 +138,7 @@ const servicios = [
     titulo: 'Acompañamiento en Trámites',
     descripcion:
       'Guía completa del Anmeldung, seguros de salud, cuenta bancaria y demás trámites obligatorios. 45 días de soporte.',
-    precio: 147,
+    precio: 197,
     moneda: '€',
     precioTipo: 'Pago único',
     tag: null,
@@ -155,7 +155,7 @@ const servicios = [
     titulo: 'Comunidad de Apoyo',
     descripcion:
       'Acceso mensual a nuestra red de migrantes latinos en Suiza. Networking, eventos y recursos actualizados.',
-    precio: 17,
+    precio: 27,
     moneda: '€/mes',
     precioTipo: 'Suscripción · cancela cuando quieras',
     tag: null,
@@ -172,9 +172,9 @@ const servicios = [
     titulo: 'Guía Turística Local',
     descripcion:
       'Descubre Suiza con alguien que ya vive aquí. Rincones reales, anécdotas locales y los lugares donde van los suizos de verdad.',
-    precio: 97,
+    precio: 149,
     moneda: '€',
-    precioTipo: 'Por jornada · hasta 4 personas',
+    precioTipo: 'Jornada completa (8h) · hasta 4 personas',
     tag: 'Nuevo',
     tagColor: '#10b981',
     destacado: false,

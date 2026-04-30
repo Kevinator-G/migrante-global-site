@@ -57,10 +57,10 @@ export default function RecogidaAeropuertoPage() {
         tagline="Llegada calmada, orientación real, primer paso con el pie derecho"
         icon={Plane}
         categoria="Bienvenida a Suiza"
-        precio={97}
+        precio={177}
         moneda="€"
-        precioTipo="Por traslado · aeropuertos principales"
-        valorMercado="Servicios de recepción de migrantes: €100–200"
+        precioTipo="Por traslado · hasta 4h de orientación · aeropuertos principales"
+        valorMercado="Servicios de recepción y orientación en Suiza: €200–450"
         hideNavbar
         hideHero
         problema={{

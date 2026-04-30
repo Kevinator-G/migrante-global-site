@@ -12,6 +12,7 @@ import { SeccionQuienSoy } from '@/components/seccion-quien-soy';
 import { SeccionYoutube } from '@/components/seccion-youtube';
 import { SeccionFaq } from '@/components/seccion-faq';
 import { SeccionLeadMagnet } from '@/components/seccion-lead-magnet';
+import { SeccionGeneradorPreview } from '@/components/seccion-generador-preview';
 
 export default function HomePage() {
   return (
@@ -38,9 +39,11 @@ export default function HomePage() {
         <SeccionPrecios />
         {/* 10. FAQ — elimina objeciones antes del cierre */}
         <SeccionFaq />
-        {/* 11. Lead magnet — captura emails de los que no están listos aún */}
+        {/* 11. Generador — herramienta gratuita que engancha y captura leads */}
+        <SeccionGeneradorPreview />
+        {/* 12. Lead magnet — captura emails de los que no están listos aún */}
         <SeccionLeadMagnet />
-        {/* 12. Contacto — acción final */}
+        {/* 13. Contacto — acción final */}
         <FormularioContacto />
       </main>
       <Footer />

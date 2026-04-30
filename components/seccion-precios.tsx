@@ -67,7 +67,7 @@ const planes = [
   {
     id: 'comunidad',
     nombre: 'Comunidad',
-    precio: 17,
+    precio: 27,
     precioRef: 'Sin permanencia',
     moneda: '€/mes',
     tipo: 'Suscripción mensual',

@@ -12,7 +12,7 @@ export default function CVFormatoSuizoPage() {
       tagline="Un CV mal formateado descarta tu candidatura antes de que lean la primera línea"
       icon={FileText}
       categoria="Empleo en Suiza"
-      precio={97}
+      precio={147}
       moneda="€"
       precioTipo="Pago único · incluye 1 revisión adicional"
       valorMercado="Servicios de CV profesional en Europa: €250–500"
