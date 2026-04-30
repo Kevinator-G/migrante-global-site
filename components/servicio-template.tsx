@@ -12,6 +12,7 @@ import {
   Star,
   ChevronRight,
   MessageCircle,
+  ShoppingCart,
 } from 'lucide-react';
 import { Navbar } from './navbar';
 import { Footer } from './footer';

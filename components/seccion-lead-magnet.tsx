@@ -122,15 +122,16 @@ export function SeccionLeadMagnet() {
                   <p className="text-white/50 text-sm mb-6">
                     Tu guía está lista. Haz clic para descargarla ahora.
                   </p>
-                  <a
-                    href="/7 errores al llegar a suiza.pdf"
-                    download="Guia-Migrante-Global-7-Errores.pdf"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 active:scale-95"
-                    style={{ background: GOLD, color: '#111318' }}
-                  >
-                    <FileText className="w-4 h-4" />
-                    Descargar guía gratis
-                  </a>
+                <a 
+  href="/guia-7-errores.pdf" 
+  download="Guia-Migrante-Global-7-Errores.pdf"
+  className="..."
+  // ... resto del estilo
+>
+  <FileText className="w-4 h-4" />
+  Descargar guía gratis
+</a>
+
                   <p className="text-white/25 text-xs mt-4">
                     La descarga comenzará automáticamente.
                   </p>
