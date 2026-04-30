@@ -150,11 +150,10 @@ REGLAS DE VOZ:
 Devuelve SOLO el JSON. Sin markdown extra, sin explicaciones fuera del JSON.`
 }
 
-// ── POST handler ───────────────────────────────────────────────────────────
-export async function POST(req: NextRequest) {
-  // Authorize cron calls
-  const secret = req.headers.get('x-cron-secret')
-  if (secret !== process.env.CRON_SECRET) {
+// ── GET handler (Vercel Cron calls GET with Authorization: Bearer CRON_SECRET)
+export async function GET(req: NextRequest) {
+  const auth = req.headers.get('authorization')
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
