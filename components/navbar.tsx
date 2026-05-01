@@ -13,10 +13,18 @@ const paisesUE = [
   'Países Bajos', 'Polonia', 'Portugal', 'República Checa', 'Rumanía', 'Suecia',
 ];
 
+function toSlug(str: string) {
+  return str.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
+}
+
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isPaisesOpen, setIsPaisesOpen] = useState(false);
   const { itemCount, openCart } = useCart();
 
   useEffect(() => {
@@ -62,18 +70,19 @@ export function Navbar() {
             <Link href="/servicios" className="text-white/80 hover:text-yellow-500 transition text-sm font-medium">
               Servicios
             </Link>
+            <Link href="/blog" className="text-white/80 hover:text-yellow-500 transition text-sm font-medium">
+              Blog
+            </Link>
             <Link href="/#metodo" className="text-white/80 hover:text-yellow-500 transition text-sm font-medium">
               Método
             </Link>
-            <Link href="/#planes" className="text-white/80 hover:text-yellow-500 transition text-sm font-medium">
-              Planes
-            </Link>
-
             {/* Dropdown países */}
-            <div className="relative">
+            <div
+              className="relative"
+              onMouseEnter={() => setIsDropdownOpen(true)}
+              onMouseLeave={() => setIsDropdownOpen(false)}
+            >
               <button
-                onMouseEnter={() => setIsDropdownOpen(true)}
-                onMouseLeave={() => setIsDropdownOpen(false)}
                 className="flex items-center gap-1.5 text-white/80 hover:text-yellow-500 transition text-sm font-medium"
               >
                 <MapPin className="w-3.5 h-3.5" />
@@ -82,29 +91,30 @@ export function Navbar() {
               </button>
 
               {isDropdownOpen && (
+                /* pt-2 = puente invisible que cubre el gap entre botón y panel */
+                <div className="absolute top-full right-0 w-64 pt-2">
                 <div
-                  onMouseEnter={() => setIsDropdownOpen(true)}
-                  onMouseLeave={() => setIsDropdownOpen(false)}
-                  className="absolute top-full right-0 mt-2 w-64 rounded-xl shadow-xl p-4 max-h-96 overflow-y-auto"
+                  className="rounded-xl shadow-xl p-4 max-h-96 overflow-y-auto"
                   style={{ background: '#1b1d24', border: '1px solid rgba(255,255,255,0.08)' }}
                 >
                   <div className="mb-3">
-                    <div className="text-yellow-500 font-semibold mb-1 flex items-center gap-2 text-sm">
+                    <Link href="/paises/suiza" className="text-yellow-500 font-semibold mb-1 flex items-center gap-2 text-sm hover:text-yellow-400 transition-colors">
                       <span style={{ fontWeight: 800, fontSize: 10, padding: '1px 5px', border: '1px solid currentColor', borderRadius: 3, opacity: 0.8 }}>CH</span>
                       Suiza (Principal)
-                    </div>
+                    </Link>
                     <div className="text-white/50 text-xs">Nuestro enfoque principal</div>
                   </div>
                   <div className="border-t border-white/10 pt-3">
                     <div className="text-white/40 text-xs font-semibold mb-2 tracking-wider">PAÍSES UE</div>
                     <div className="grid grid-cols-2 gap-1.5">
                       {paisesUE.map(pais => (
-                        <div key={pais} className="text-white/60 text-xs hover:text-yellow-500 cursor-pointer transition py-0.5">
+                        <Link key={pais} href={`/paises/${toSlug(pais)}`} className="text-white/60 text-xs hover:text-yellow-500 cursor-pointer transition py-0.5 block">
                           {pais}
-                        </div>
+                        </Link>
                       ))}
                     </div>
                   </div>
+                </div>
                 </div>
               )}
             </div>
@@ -160,8 +170,8 @@ export function Navbar() {
           >
             {[
               { href: '/servicios', label: 'Servicios' },
+              { href: '/blog', label: 'Blog' },
               { href: '/#metodo', label: 'Método' },
-              { href: '/#planes', label: 'Planes' },
             ].map(link => (
               <Link
                 key={link.href}
@@ -172,6 +182,29 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+            {/* Países acordeón */}
+            <div className="border-b border-white/5">
+              <button
+                onClick={() => setIsPaisesOpen(!isPaisesOpen)}
+                className="w-full flex items-center justify-between text-white/80 hover:text-yellow-500 transition py-2 text-sm font-medium"
+              >
+                <span className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> Países</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isPaisesOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isPaisesOpen && (
+                <div className="pb-3">
+                  <Link href="/paises/suiza" className="text-yellow-500 text-xs font-semibold mb-2 block hover:text-yellow-400 transition-colors">🇨🇭 Suiza (Principal)</Link>
+                  <div className="grid grid-cols-2 gap-1">
+                    {paisesUE.map(pais => (
+                      <Link key={pais} href={`/paises/${toSlug(pais)}`} className="text-white/60 text-xs py-0.5 hover:text-yellow-500 transition-colors block" onClick={() => setIsMenuOpen(false)}>
+                        {pais}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <Link
               href="/#contacto"
               className="block btn-primary text-center mt-2"

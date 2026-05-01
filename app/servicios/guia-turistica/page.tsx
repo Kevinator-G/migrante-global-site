@@ -12,21 +12,14 @@ export default function GuiaTuristicaPage() {
 
       {/* Hero */}
       <section className="relative h-[55vh] min-h-[380px] flex items-end overflow-hidden">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(135deg, #0d1117 0%, #1a2332 50%, #0d1117 100%)',
-          }}
+        {/* Foto real de Suiza */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://images.unsplash.com/photo-1512478252596-e0ab42d20088?w=1920&q=85&auto=format&fit=crop"
+          alt="Lucerna, Suiza"
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        <div
-          className="absolute inset-0 opacity-30"
-          style={{
-            background:
-              'radial-gradient(ellipse 70% 50% at 30% 70%, rgba(201,169,110,0.25) 0%, transparent 70%)',
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c10] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c10] via-black/50 to-black/20" />
 
         <div className="relative z-10 w-full max-w-[960px] mx-auto px-6 pb-14">
           <motion.div
@@ -68,10 +61,10 @@ export default function GuiaTuristicaPage() {
         tagline="Rincones reales, anécdotas locales y los lugares donde van los suizos de verdad"
         icon={Map}
         categoria="Experiencias en Suiza"
-        precio={150}
-        moneda="CHF"
-        precioTipo="Por jornada · grupos hasta 4 personas"
-        valorMercado="Tours guiados privados en Suiza: CHF 200–400/día"
+        precio={149}
+        moneda="€"
+        precioTipo="Jornada completa (hasta 8h) · grupos de 1 a 4 personas · Zúrich, Lucerna, Berna o Interlaken"
+        valorMercado="Tours guiados privados en Suiza: €200–400/día"
         hideNavbar
         hideHero
         problema={{
@@ -107,6 +100,8 @@ export default function GuiaTuristicaPage() {
           'Personas considerando migrar que quieren conocer el país antes de decidir',
           'Migrantes ya instalados que tienen visita y quieren mostrarles algo distinto',
         ]}
+        foto="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=80"
+        fotoAlt="Paisaje suizo con montañas y lago"
         planInfo={{
           inicio: 'Servicio independiente · ideal si vienes de visita por unos días.',
           estrategia: 'Descuento del 30% si lo combinas con el Pack Completo de migración.',

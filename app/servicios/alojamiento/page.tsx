@@ -12,10 +12,10 @@ export default function AlojamientoPage() {
       tagline="El mercado inmobiliario suizo es el más competitivo de Europa — no entres solo"
       icon={Home}
       categoria="Vivienda en Suiza"
-      precio={780}
-      moneda="CHF"
+      precio={189}
+      moneda="€"
       precioTipo="Pago único · 30 días de soporte activo"
-      valorMercado="Servicios de relocalización residencial en Suiza: CHF 800–2.000"
+      valorMercado="Servicios de relocalización residencial en Suiza: €800–2.000"
       problema={{
         titulo: '¿Por qué encontrar alojamiento en Suiza es tan difícil?',
         descripcion:
@@ -47,8 +47,10 @@ export default function AlojamientoPage() {
         'Quienes no hablan alemán/francés y necesitan apoyo para entender contratos',
         'Migrantes que quieren evitar estafas y sobrepagar por desconocimiento',
       ]}
+      foto="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1400&q=80"
+      fotoAlt="Apartamento moderno en Suiza"
       planInfo={{
-        inicio: 'Este servicio es el núcleo del plan Solo Alojamiento (780 CHF).',
+        inicio: 'Este servicio es el núcleo del plan Solo Alojamiento (189€).',
         estrategia: 'Incluido dentro del Pack Completo con soporte extendido.',
         comunidad: 'Acceso a recursos de vivienda compartidos dentro de la comunidad.',
       }}

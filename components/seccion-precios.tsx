@@ -1,18 +1,36 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Home, Package2, Users, ShoppingCart, CheckCircle2 } from 'lucide-react';
+import { Check, Home, Package2, Users, CheckCircle2, ArrowRight, ShieldCheck, Video, BookOpen } from 'lucide-react';
 import { useCart } from '@/lib/cart-context';
 
 const GOLD = '#c9a96e';
 
 const planes = [
   {
+    id: 'consultoria-1a1',
+    nombre: 'Consultoría 1:1',
+    precio: 120,
+    precioRef: 'Sesión de 60 min',
+    moneda: '€',
+    tipo: 'Videollamada · Pago único',
+    descripcion: 'Primera orientación',
+    destacado: false,
+    icon: Video,
+    caracteristicas: [
+      'Videollamada de 60 minutos',
+      'Análisis de tu situación actual',
+      'Hoja de ruta personalizada',
+      'Recomendaciones concretas',
+      'Resumen por escrito incluido',
+    ],
+  },
+  {
     id: 'solo-alojamiento',
     nombre: 'Solo Alojamiento',
-    precio: 290,
-    precioEur: 305,
-    moneda: 'CHF',
+    precio: 189,
+    precioRef: '≈ 196 CHF',
+    moneda: '€',
     tipo: 'Pago único',
     descripcion: 'Servicio puntual',
     destacado: false,
@@ -23,15 +41,16 @@ const planes = [
       'Revisión de contratos de alquiler',
       'Orientación sobre zonas y costos',
       'Soporte durante 30 días',
+      'Dossier de candidato incluido',
     ],
   },
   {
     id: 'pack-completo',
     nombre: 'Pack Completo',
-    precio: 590,
-    precioEur: 620,
-    moneda: 'CHF',
-    tipo: 'Pago único · cuotas disponibles',
+    precio: 397,
+    precioRef: '≈ 413 CHF',
+    moneda: '€',
+    tipo: 'Pago único',
     descripcion: 'Reubicación integral',
     destacado: true,
     icon: Package2,
@@ -48,9 +67,9 @@ const planes = [
   {
     id: 'comunidad',
     nombre: 'Comunidad',
-    precio: 25,
-    precioEur: 26,
-    moneda: 'CHF/mes',
+    precio: 27,
+    precioRef: 'Sin permanencia',
+    moneda: '€/mes',
     tipo: 'Suscripción mensual',
     descripcion: 'Sin permanencia',
     destacado: false,
@@ -76,7 +95,7 @@ export function SeccionPrecios() {
       precio: plan.precio,
       moneda: plan.moneda,
       tipo: plan.tipo,
-      emoji: plan.id === 'solo-alojamiento' ? '🏠' : plan.id === 'pack-completo' ? '📦' : '🤝',
+      emoji: plan.id === 'solo-alojamiento' ? '🏠' : plan.id === 'pack-completo' ? '📦' : plan.id === 'consultoria-1a1' ? '🎯' : '🤝',
     });
   };
 
@@ -101,8 +120,34 @@ export function SeccionPrecios() {
           </p>
         </motion.div>
 
+        {/* Banner PDF gratuito */}
+        <motion.a
+          href="#guia-gratuita"
+          initial={{ y: 10, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-between gap-4 rounded-xl px-5 py-3.5 mb-8 cursor-pointer group transition-all duration-200 hover:-translate-y-0.5"
+          style={{ background: 'rgba(201,169,110,0.07)', border: '1px solid rgba(201,169,110,0.25)' }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ background: 'rgba(201,169,110,0.15)', border: '1px solid rgba(201,169,110,0.3)' }}>
+              <BookOpen className="w-4 h-4" style={{ color: GOLD }} />
+            </div>
+            <div>
+              <span className="text-white text-sm font-semibold">¿Aún no estás seguro? </span>
+              <span className="text-white/55 text-sm">Descarga gratis «Los 7 errores al migrar a Suiza» antes de elegir plan.</span>
+            </div>
+          </div>
+          <span className="text-xs font-bold px-3 py-1 rounded-full flex-shrink-0 group-hover:opacity-90 transition-opacity"
+            style={{ background: GOLD, color: '#111318' }}>
+            Gratis
+          </span>
+        </motion.a>
+
         {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-5 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 items-stretch">
           {planes.map((plan, index) => {
             const inCart = isInCart(plan.id);
             const Icon = plan.icon;
@@ -115,7 +160,7 @@ export function SeccionPrecios() {
                 viewport={{ once: true, margin: '0px 0px -80px 0px' }}
                 transition={{ duration: 0.5, delay: index * 0.12 }}
                 data-light-card="true"
-                className={`relative rounded-2xl flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 ${
+                className={`relative rounded-2xl flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 h-full ${
                   plan.destacado ? 'md:-translate-y-2' : ''
                 }`}
                 style={{
@@ -175,7 +220,7 @@ export function SeccionPrecios() {
                       <span className="text-white/35 text-sm mb-1">{plan.moneda}</span>
                     </div>
                     <div className="text-white/45 text-xs mt-1">
-                      ≈ {plan.precioEur} €{plan.moneda.includes('/mes') ? '/mes' : ''}
+                      {plan.precioRef}
                     </div>
                     <div className="text-white/30 text-xs mt-1">{plan.tipo}</div>
                   </div>
@@ -239,7 +284,7 @@ export function SeccionPrecios() {
                     {inCart ? (
                       <><CheckCircle2 className="w-4 h-4" /> En tu carrito · Ver</>
                     ) : (
-                      <><ShoppingCart className="w-4 h-4" /> Agregar al carrito</>
+                      <><ArrowRight className="w-4 h-4" /> Empezar con este plan</>
                     )}
                   </button>
                 </div>
@@ -248,16 +293,34 @@ export function SeccionPrecios() {
           })}
         </div>
 
+        {/* Garantía */}
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true, margin: '0px 0px -80px 0px' }}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="flex items-start gap-4 rounded-2xl px-6 py-5 mt-10 max-w-2xl mx-auto"
+          style={{ background: 'rgba(201,169,110,0.05)', border: '1px solid rgba(201,169,110,0.2)' }}
+        >
+          <ShieldCheck className="w-6 h-6 flex-shrink-0 mt-0.5" style={{ color: '#c9a96e' }} />
+          <div>
+            <div className="font-semibold text-white text-sm mb-1">Sin riesgo — Garantía de satisfacción</div>
+            <p className="text-white/50 text-sm leading-relaxed">
+              Si en tu primera sesión no ves valor claro y concreto para tu proceso, te devolvemos el dinero. Sin preguntas, sin formularios.
+            </p>
+          </div>
+        </motion.div>
+
         {/* Nota legal */}
         <motion.div
           initial={{ y: 10 }}
           whileInView={{ y: 0 }}
           viewport={{ once: true, margin: '0px 0px -80px 0px' }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-10 space-y-1"
+          className="text-center mt-6 space-y-1"
         >
           <p className="text-white/30 text-sm">
-            * Precios en francos suizos (CHF). Equivalencia en euros aproximada (1 CHF ≈ 1,05 €). Pago coordinado personalmente · Cuotas disponibles en el Pack Completo.
+            * Precios en euros (€). Referencia en CHF orientativa (1 € ≈ 1,04 CHF). Pago coordinado personalmente.
           </p>
         </motion.div>
       </div>

@@ -12,10 +12,10 @@ export default function TramitesPage() {
       tagline="Cada cantón tiene sus propias reglas — conocerlas de antemano vale oro"
       icon={FileCheck}
       categoria="Trámites Administrativos"
-      precio={320}
-      moneda="CHF"
+      precio={197}
+      moneda="€"
       precioTipo="Pago único · 45 días de soporte activo"
-      valorMercado="Servicios de orientación administrativa para migrantes: CHF 300–600"
+      valorMercado="Servicios de orientación administrativa para migrantes: €300–600"
       problema={{
         titulo: '¿Por qué los trámites en Suiza pueden hundirte?',
         descripcion:
@@ -47,6 +47,8 @@ export default function TramitesPage() {
         'Quienes necesitan entender qué trámites son obligatorios y en qué orden',
         'Migrantes que quieren evitar multas o complicaciones administrativas',
       ]}
+      foto="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1400&q=80"
+      fotoAlt="Documentos y trámites administrativos"
       planInfo={{
         inicio: 'Disponible como servicio adicional.',
         estrategia: 'Incluido con guía completa, checklist y soporte de 45 días.',

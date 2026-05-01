@@ -12,8 +12,8 @@ export default function OrientacionOtrosPaisesPage() {
       tagline="Alemania, Austria, Países Bajos, Portugal — cada país tiene su propio camino"
       icon={Globe}
       categoria="Migración Europea"
-      precio={250}
-      moneda="CHF"
+      precio={147}
+      moneda="€"
       precioTipo="Pago único · incluye 1 sesión de consultoría"
       valorMercado="Consultoría de migración comparativa en Europa: €200–400"
       problema={{
@@ -47,6 +47,8 @@ export default function OrientacionOtrosPaisesPage() {
         'Quienes no califican para Suiza pero sí podrían calificar para otros países UE',
         'Profesionales buscando el país europeo que mejor se adapta a su sector',
       ]}
+      foto="https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=1400&q=80"
+      fotoAlt="Mapa de Europa desde el aire"
       planInfo={{
         inicio: 'Disponible como servicio adicional (actualmente en desarrollo para más países).',
         estrategia: 'Consulta comparativa incluida con análisis de alternativas a Suiza.',

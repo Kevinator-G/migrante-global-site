@@ -12,10 +12,10 @@ export default function OrientacionLaboralPage() {
       tagline="Más que información — una hoja de ruta adaptada a tu perfil y sector"
       icon={Briefcase}
       categoria="Empleo en Suiza"
-      precio={350}
-      moneda="CHF"
+      precio={197}
+      moneda="€"
       precioTipo="Pago único · 60 días de seguimiento"
-      valorMercado="Servicios equivalentes en el mercado: CHF 400–700"
+      valorMercado="Servicios equivalentes en el mercado: €400–700"
       problema={{
         titulo: '¿Por qué es tan difícil encontrar empleo en Suiza?',
         descripcion:
@@ -47,6 +47,8 @@ export default function OrientacionLaboralPage() {
         'Personas que ya están en Suiza pero no logran entrar al mercado laboral',
         'Quienes han enviado CVs sin respuesta y quieren saber qué está fallando',
       ]}
+      foto="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80"
+      fotoAlt="Profesionales en entrevista de trabajo"
       planInfo={{
         inicio: 'Disponible como servicio adicional al plan de alojamiento.',
         estrategia: 'Incluido completamente con seguimiento extendido de 60 días.',

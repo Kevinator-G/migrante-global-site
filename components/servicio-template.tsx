@@ -4,14 +4,15 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
   ArrowLeft,
+  ArrowRight,
   Check,
   X,
   Users,
-  ShoppingCart,
   CheckCircle2,
   Star,
   ChevronRight,
   MessageCircle,
+  ShoppingCart,
 } from 'lucide-react';
 import { Navbar } from './navbar';
 import { Footer } from './footer';
@@ -44,6 +45,8 @@ export interface ServicioTemplateProps {
   noIncluye: string[];
   paraQuien: string[];
   planInfo: PlanInfo;
+  foto?: string;
+  fotoAlt?: string;
   hideNavbar?: boolean;
   hideHero?: boolean;
 }
@@ -65,6 +68,8 @@ export function ServicioTemplate({
   noIncluye,
   paraQuien,
   planInfo,
+  foto,
+  fotoAlt,
   hideNavbar = false,
   hideHero = false,
 }: ServicioTemplateProps) {
@@ -96,6 +101,18 @@ export function ServicioTemplate({
           className="relative overflow-hidden"
           style={{ padding: '80px 0 70px' }}
         >
+          {/* Background photo */}
+          {foto && (
+            <>
+              <img
+                src={foto}
+                alt={fotoAlt ?? titulo}
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ opacity: 0.35 }}
+              />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,12,16,0.3) 0%, rgba(10,12,16,0.80) 100%)' }} />
+            </>
+          )}
           {/* Ambient glow */}
           <div
             className="absolute inset-0 pointer-events-none"
@@ -234,12 +251,12 @@ export function ServicioTemplate({
                   {inCart ? (
                     <>
                       <CheckCircle2 className="w-4 h-4" />
-                      En tu carrito · Ver
+                      Reservado · Ver resumen
                     </>
                   ) : (
                     <>
-                      <ShoppingCart className="w-4 h-4" />
-                      Agregar al carrito
+                      <ArrowRight className="w-4 h-4" />
+                      Quiero este servicio
                     </>
                   )}
                 </button>
@@ -358,94 +375,49 @@ export function ServicioTemplate({
               </h2>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-5">
-              {/* Incluye */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '0px 0px -60px 0px' }}
-                transition={{ duration: 0.5 }}
-                className="rounded-2xl p-7"
-                data-light-card="true"
-                style={{
-                  background: 'var(--surface-card)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                }}
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{
-                      background: GOLD_BG,
-                      border: `1px solid ${GOLD_BORDER}`,
-                    }}
-                  >
-                    <Check className="w-4 h-4" style={{ color: GOLD }} />
-                  </div>
-                  <h3 className="font-bold text-white text-lg">Qué incluye</h3>
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '0px 0px -60px 0px' }}
+              transition={{ duration: 0.5 }}
+              className="rounded-2xl p-7"
+              data-light-card="true"
+              style={{
+                background: 'var(--surface-card)',
+                border: '1px solid rgba(255,255,255,0.07)',
+              }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{
+                    background: GOLD_BG,
+                    border: `1px solid ${GOLD_BORDER}`,
+                  }}
+                >
+                  <Check className="w-4 h-4" style={{ color: GOLD }} />
                 </div>
-                <ul className="space-y-3">
-                  {incluye.map((item, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.06 }}
-                      className="flex items-start gap-3 text-sm"
-                    >
-                      <ChevronRight
-                        className="w-4 h-4 flex-shrink-0 mt-0.5"
-                        style={{ color: GOLD }}
-                      />
-                      <span className="text-white/70">{item}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </motion.div>
-
-              {/* No incluye */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '0px 0px -60px 0px' }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="rounded-2xl p-7"
-                data-light-card="true"
-                style={{
-                  background: 'var(--surface-card)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                }}
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{
-                      background: 'rgba(220,38,38,0.08)',
-                      border: '1px solid rgba(220,38,38,0.2)',
-                    }}
+                <h3 className="font-bold text-white text-lg">Qué incluye</h3>
+              </div>
+              <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
+                {incluye.map((item, i) => (
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-start gap-3 text-sm"
                   >
-                    <X className="w-4 h-4 text-red-400" />
-                  </div>
-                  <h3 className="font-bold text-white text-lg">Qué NO incluye</h3>
-                </div>
-                <ul className="space-y-3">
-                  {noIncluye.map((item, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.06 }}
-                      className="flex items-start gap-3 text-sm"
-                    >
-                      <X className="w-4 h-4 flex-shrink-0 mt-0.5 text-white/25" />
-                      <span className="text-white/45">{item}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </motion.div>
-            </div>
+                    <ChevronRight
+                      className="w-4 h-4 flex-shrink-0 mt-0.5"
+                      style={{ color: GOLD }}
+                    />
+                    <span className="text-white/70">{item}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
           </div>
         </section>
 
@@ -592,9 +564,9 @@ export function ServicioTemplate({
                 </p>
                 <div className="space-y-3.5">
                   {[
-                    { plan: 'Solo Alojamiento — 780 CHF', info: planInfo.inicio },
-                    { plan: 'Pack Completo — 1.280 CHF', info: planInfo.estrategia },
-                    { plan: 'Comunidad — 80 CHF/mes', info: planInfo.comunidad },
+                    { plan: 'Solo Alojamiento — 149 €', info: planInfo.inicio },
+                    { plan: 'Pack Completo — 347 €', info: planInfo.estrategia },
+                    { plan: 'Comunidad — 17 €/mes', info: planInfo.comunidad },
                   ].map((p, i) => (
                     <div key={i} className="flex items-start gap-3 text-sm">
                       <ChevronRight
@@ -671,7 +643,7 @@ export function ServicioTemplate({
             <p className="text-white/18 text-xs leading-relaxed">
               Migrante Global no es agencia de empleo, inmobiliaria ni asesoría legal.
               Ofrecemos orientación y acompañamiento. No garantizamos empleo, residencia
-              ni aprobación de trámites. Todos los precios indicativos en CHF.
+              ni aprobación de trámites. Todos los precios en euros (€).
             </p>
           </div>
         </div>

@@ -1,110 +1,79 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Star, Quote } from 'lucide-react';
+import { Star, MessageCircle } from 'lucide-react';
 
-const testimonios = [
-  {
-    nombre: 'Andrés M.',
-    pais: '🇨🇴 Colombia → 🇨🇭 Suiza',
-    texto:
-      'Llegué a Zúrich sin conocer a nadie. Migrante Global me ayudó a entender el sistema, adaptar mi CV y encontrar las primeras ofertas laborales. En 4 meses ya tenía empleo.',
-    servicio: 'Pack Completo',
-    estrellas: 5,
-  },
-  {
-    nombre: 'Valeria R.',
-    pais: '🇲🇽 México → 🇨🇭 Suiza',
-    texto:
-      'Lo que más valoro es que me explicaron exactamente cómo funciona el mercado suizo, los sectores donde hay más oportunidades y cómo presentarme. Esa claridad fue lo que me dio confianza para dar el paso.',
-    servicio: 'Sesiones 1:1',
-    estrellas: 5,
-  },
-  {
-    nombre: 'Diego F.',
-    pais: '🇦🇷 Argentina → 🇨🇭 Suiza',
-    texto:
-      'La calculadora de salarios y la orientación laboral me abrieron los ojos. Sabía exactamente cuánto pedir y en qué sectores enfocarme. Un antes y un después en mi proceso.',
-    servicio: 'Orientación Laboral',
-    estrellas: 5,
-  },
-  {
-    nombre: 'Carolina T.',
-    pais: '🇻🇪 Venezuela → 🇨🇭 Suiza',
-    texto:
-      'La comunidad de apoyo fue fundamental. Poder hablar con personas que ya habían pasado por lo mismo fue invaluable. No me sentí sola en ningún momento del proceso.',
-    servicio: 'Comunidad',
-    estrellas: 5,
-  },
-];
+const GOLD = '#c9a96e';
+
+// Agregar testimonios reales aquí cuando estén disponibles
+const testimonios: {
+  nombre: string;
+  pais: string;
+  texto: string;
+  servicio: string;
+  estrellas: number;
+}[] = [];
 
 export function SeccionTestimonios() {
+  if (testimonios.length > 0) {
+    return null; // activar renderizado completo cuando haya datos reales
+  }
+
   return (
     <section className="section bg-[#0e1014]">
-      <div className="max-w-[1200px] mx-auto px-6">
+      <div className="max-w-[720px] mx-auto px-6 text-center">
+
         <motion.div
           initial={{ y: 15 }}
           whileInView={{ y: 0 }}
-          viewport={{ once: true, margin: "0px 0px -80px 0px" }}
+          viewport={{ once: true, margin: '0px 0px -80px 0px' }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="mb-10"
         >
-          <span className="section-tag">Testimonios reales</span>
+          <span className="section-tag">Testimonios</span>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Personas que ya <span className="text-yellow-500">dieron el paso</span>
+            150+ personas ya <span className="text-yellow-500">dieron el paso</span>
           </h2>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            Historias reales de migrantes hispanohablantes que trabajaron con nosotros.
+          <p className="text-white/55 text-lg max-w-xl mx-auto">
+            Estamos recopilando historias reales. Si pasaste por el proceso con Kevin,
+            tu experiencia puede ayudar a alguien más a decidirse.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {testimonios.map((t, i) => (
-            <motion.div
-              key={i}
-              initial={{ y: 15 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-              transition={{ duration: 0.6, delay: i * 0.15 }}
-              className="card border border-white/5 relative overflow-hidden group hover:border-yellow-500/30 transition-colors duration-300"
-            >
-              {/* Quote icon */}
-              <Quote className="absolute top-4 right-4 w-8 h-8 text-yellow-500/10 group-hover:text-yellow-500/20 transition-colors" />
-
-              {/* Stars */}
-              <div className="flex gap-1 mb-4">
-                {Array.from({ length: t.estrellas }).map((_, s) => (
-                  <Star key={s} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                ))}
-              </div>
-
-              <p className="text-white/80 text-[15px] leading-relaxed mb-6 italic">
-                &ldquo;{t.texto}&rdquo;
-              </p>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-semibold text-white">{t.nombre}</div>
-                  <div className="text-sm text-white/50 mt-0.5">{t.pais}</div>
-                </div>
-                <span className="text-xs bg-red-600/15 text-red-400 border border-red-600/20 px-3 py-1 rounded-full font-medium">
-                  {t.servicio}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Trust note */}
-        <motion.p
-          initial={{ y: 5 }}
+        <motion.div
+          initial={{ y: 15 }}
           whileInView={{ y: 0 }}
-          viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center text-white/30 text-sm mt-10"
+          viewport={{ once: true, margin: '0px 0px -80px 0px' }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="inline-flex flex-col items-center gap-5 rounded-2xl px-10 py-8"
+          style={{
+            background: 'rgba(201,169,110,0.05)',
+            border: '1px solid rgba(201,169,110,0.18)',
+          }}
         >
-          * Nombres abreviados por privacidad. Casos reales de clientes de Migrante Global.
-        </motion.p>
+          <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map((s) => (
+              <Star key={s} className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+            ))}
+          </div>
+          <p className="text-white/60 text-sm leading-relaxed max-w-sm">
+            ¿Trabajaste con nosotros? Comparte tu historia —
+            nos encantaría publicarla aquí.
+          </p>
+          <a
+            href="mailto:hola@migranteglobal.ch?subject=Mi experiencia con Migrante Global"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-200"
+            style={{
+              background: 'rgba(201,169,110,0.1)',
+              border: '1px solid rgba(201,169,110,0.3)',
+              color: GOLD,
+            }}
+          >
+            <MessageCircle className="w-4 h-4" />
+            Compartir mi historia
+          </a>
+        </motion.div>
+
       </div>
     </section>
   );

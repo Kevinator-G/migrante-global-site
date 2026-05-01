@@ -12,8 +12,8 @@ export default function CVFormatoSuizoPage() {
       tagline="Un CV mal formateado descarta tu candidatura antes de que lean la primera línea"
       icon={FileText}
       categoria="Empleo en Suiza"
-      precio={290}
-      moneda="CHF"
+      precio={147}
+      moneda="€"
       precioTipo="Pago único · incluye 1 revisión adicional"
       valorMercado="Servicios de CV profesional en Europa: €250–500"
       problema={{
@@ -40,13 +40,15 @@ export default function CVFormatoSuizoPage() {
         'No escribimos tu CV desde cero — necesitas tener uno base',
         'No garantizamos entrevistas ni respuestas de empleadores',
         'No traducimos el CV completo a alemán/francés (solo orientamos)',
-        'La carta de presentación se cotiza aparte (CHF 120)',
+        'La carta de presentación se cotiza aparte (47€)',
       ]}
       paraQuien={[
         'Profesionales que aplican a empleos suizos sin obtener respuesta',
         'Personas con experiencia sólida pero CV con formato inadecuado',
         'Quienes quieren maximizar sus posibilidades antes de aplicar masivamente',
       ]}
+      foto="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1400&q=80"
+      fotoAlt="Persona revisando currículum profesional"
       planInfo={{
         inicio: 'Disponible como servicio adicional al plan de alojamiento.',
         estrategia: 'Incluido con revisiones adicionales y seguimiento de 90 días.',
