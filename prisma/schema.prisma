@@ -89,18 +89,39 @@ model Lead {
 }
 
 model BlogPost {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  excerpt     String   @db.Text
-  content     String   @db.Text
-  category    String   @default("noticias")
-  tags        String[]
-  imageUrl    String?
-  published   Boolean  @default(false)
-  aiGenerated Boolean  @default(true)
-  sourceUrl   String?
-  sourceTitle String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String       @id @default(cuid())
+  title        String
+  slug         String       @unique
+  excerpt      String       @db.Text
+  content      String       @db.Text
+  category     String       @default("noticias")
+  tags         String[]
+  imageUrl     String?
+  published    Boolean      @default(false)
+  aiGenerated  Boolean      @default(true)
+  sourceUrl    String?
+  sourceTitle  String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  socialPosts  SocialPost[]
+}
+
+model SocialPost {
+  id          String    @id @default(cuid())
+  blogPostId  String
+  platform    String    // 'instagram' | 'tiktok' | 'youtube'
+  status      String    // 'published' | 'pending_script' | 'failed' | 'skipped'
+  caption     String?   @db.Text
+  script      String?   @db.Text
+  hashtags    String[]
+  platformId  String?   // ID returned by the platform after publishing
+  platformUrl String?   // URL of the published post
+  error       String?   @db.Text
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  blogPost    BlogPost  @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
+
+  @@index([platform, status])
+  @@index([blogPostId])
 }

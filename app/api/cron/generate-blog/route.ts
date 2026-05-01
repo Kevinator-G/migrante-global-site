@@ -283,6 +283,20 @@ async function generatePosts() {
     })
 
     results.push({ category: categoryName, title, hasTrend, hasImage })
+
+    // Trigger social media distribution asynchronously (fire-and-forget)
+    const savedPost = await prisma.blogPost.findUnique({ where: { slug }, select: { id: true } })
+    if (savedPost) {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+      fetch(`${baseUrl}/api/cron/distribute-content`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${process.env.CRON_SECRET ?? ''}`,
+        },
+        body: JSON.stringify({ blogPostId: savedPost.id }),
+      }).catch(() => {}) // non-blocking
+    }
   } catch (err) {
     results.push({
       category: categoryName,
