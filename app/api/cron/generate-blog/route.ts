@@ -9,27 +9,24 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 function isAuthorized(req: NextRequest): boolean {
   const secret = process.env.CRON_SECRET
   if (!secret) return false
-  // Vercel cron sends: Authorization: Bearer <CRON_SECRET>
   const authHeader = req.headers.get('authorization')
   if (authHeader === `Bearer ${secret}`) return true
-  // Manual call via query param: ?secret=<CRON_SECRET>
   const querySecret = req.nextUrl.searchParams.get('secret')
   if (querySecret === secret) return true
-  // Legacy: x-cron-secret header
   const headerSecret = req.headers.get('x-cron-secret')
   if (headerSecret === secret) return true
   return false
 }
 
-// ── GNews ──────────────────────────────────────────────────────────────────
-async function fetchTrendingNews(query: string): Promise<{
+// ── GNews — returns up to 5 candidates ────────────────────────────────────
+async function fetchNewsArticles(query: string): Promise<Array<{
   title: string
   description: string
   url: string
   source: string
-} | null> {
+}>> {
   const apiKey = process.env.GNEWS_API_KEY
-  if (!apiKey) return null
+  if (!apiKey) return []
 
   try {
     const params = new URLSearchParams({
@@ -40,18 +37,17 @@ async function fetchTrendingNews(query: string): Promise<{
       apikey: apiKey,
     })
     const res = await fetch(`https://gnews.io/api/v4/search?${params}`)
-    if (!res.ok) return null
+    if (!res.ok) return []
     const data = await res.json()
-    if (!data.articles?.length) return null
-    const article = data.articles[0]
-    return {
-      title: article.title,
-      description: article.description ?? '',
-      url: article.url,
-      source: article.source?.name ?? '',
-    }
+    if (!data.articles?.length) return []
+    return data.articles.map((a: { title: string; description?: string; url: string; source?: { name?: string } }) => ({
+      title: a.title,
+      description: a.description ?? '',
+      url: a.url,
+      source: a.source?.name ?? '',
+    }))
   } catch {
-    return null
+    return []
   }
 }
 
@@ -135,13 +131,21 @@ const CATEGORIES: Record<
 }
 
 // ── Prompt (Kevin's voice) ─────────────────────────────────────────────────
-function buildPrompt(category: string, topic: string, newsContext: string): string {
+function buildPrompt(
+  category: string,
+  topic: string,
+  newsContext: string,
+  recentTitles: string[],
+): string {
+  const avoidSection = recentTitles.length
+    ? `\nTEMAS YA PUBLICADOS — NO repitas estos ángulos, escribe desde una perspectiva diferente:\n${recentTitles.map((t) => `- ${t}`).join('\n')}\n`
+    : ''
+
   return `Eres Kevin García, consultor de inmigración en Suiza con 10 años de experiencia ayudando a latinos a migrar de forma segura y ordenada. Escribes de forma directa, cercana y honesta — sin corporativismo ni jerga burocrática. Usas "tú", párrafos cortos, y abres cada artículo con un gancho que para al lector en seco.
 
 CATEGORÍA: ${category}
 TEMA: ${topic}
-${newsContext ? `CONTEXTO DE ACTUALIDAD:\n${newsContext}\n` : ''}
-
+${newsContext ? `CONTEXTO DE ACTUALIDAD:\n${newsContext}\n` : ''}${avoidSection}
 Escribe un artículo de blog en español (mínimo 600 palabras) con esta estructura JSON exacta:
 
 {
@@ -162,13 +166,23 @@ REGLAS DE VOZ:
 Devuelve SOLO el JSON. Sin markdown extra, sin explicaciones fuera del JSON.`
 }
 
+// ── Selección diaria de categoría ─────────────────────────────────────────
+// Determinista: misma categoría si el cron corre varias veces el mismo día.
+function pickCategoryForToday(): string {
+  const categoryNames = Object.keys(CATEGORIES)
+  const now = new Date()
+  const start = new Date(now.getUTCFullYear(), 0, 0)
+  const dayOfYear = Math.floor((now.getTime() - start.getTime()) / 86_400_000)
+  return categoryNames[dayOfYear % categoryNames.length]
+}
+
 // ── Core generation logic ──────────────────────────────────────────────────
 async function generatePosts() {
-  // Start of today (UTC) — skip categories that already have a post today
   const todayStart = new Date()
   todayStart.setUTCHours(0, 0, 0, 0)
 
-  const categoryNames = Object.keys(CATEGORIES)
+  const categoryName = pickCategoryForToday()
+
   const results: Array<{
     category: string
     title?: string
@@ -178,96 +192,104 @@ async function generatePosts() {
     error?: string
   }> = []
 
-  for (const categoryName of categoryNames) {
-    try {
-      // Skip if a post for this category was already generated today
-      const existingToday = await prisma.blogPost.findFirst({
-        where: { category: categoryName, createdAt: { gte: todayStart } },
-        select: { id: true, title: true },
-      })
+  try {
+    // Skip if a post for this category was already generated today
+    const existingToday = await prisma.blogPost.findFirst({
+      where: { category: categoryName, createdAt: { gte: todayStart } },
+      select: { id: true, title: true },
+    })
 
-      if (existingToday) {
-        results.push({ category: categoryName, title: existingToday.title, hasTrend: false, hasImage: false, skipped: true })
-        continue
-      }
-
-      const config = CATEGORIES[categoryName]
-
-      // 1. Try to get trending news
-      const news = await fetchTrendingNews(config.searchQuery)
-      const hasTrend = !!news
-
-      const topic = hasTrend
-        ? `${news!.title} — ${news!.description}`
-        : config.fallbackTopic
-
-      const newsContext = hasTrend
-        ? `Fuente: ${news!.source}\nURL: ${news!.url}\nTítulo: ${news!.title}\nDescripción: ${news!.description}`
-        : ''
-
-      // 2. Generate content with GPT-4o
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [{ role: 'user', content: buildPrompt(categoryName, topic, newsContext) }],
-        temperature: 0.75,
-        max_tokens: 2000,
-      })
-
-      const raw = completion.choices[0].message.content ?? '{}'
-      const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
-      const parsed = JSON.parse(cleaned)
-      const { title, excerpt, content, imageQuery, tags } = parsed
-
-      // 3. Fetch real image from Unsplash
-      const imageSearchQuery = imageQuery || config.imageQuery
-      const imageUrl = await fetchUnsplashImage(imageSearchQuery)
-      const hasImage = !!imageUrl
-
-      // 4. Create unique slug (category slug + date, not Date.now())
-      const dateStr = new Date().toISOString().slice(0, 10) // YYYY-MM-DD
-      const categorySlug = categoryName
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[̀-ͯ]/g, '')
-        .replace(/[^a-z0-9]+/g, '-')
-      const titleSlug = title
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[̀-ͯ]/g, '')
-        .replace(/[^a-z0-9\s-]/g, '')
-        .trim()
-        .replace(/\s+/g, '-')
-        .slice(0, 60)
-      const slug = `${titleSlug}-${dateStr}`
-
-      // 5. Save to database (skip if slug already exists)
-      await prisma.blogPost.upsert({
-        where: { slug },
-        update: {},
-        create: {
-          title,
-          slug,
-          excerpt,
-          content,
-          imageUrl: imageUrl ?? null,
-          category: categoryName,
-          tags: tags ?? [],
-          published: true,
-          aiGenerated: true,
-          sourceUrl: news?.url ?? null,
-          sourceTitle: news?.source ?? null,
-        },
-      })
-
-      results.push({ category: categoryName, title, hasTrend, hasImage })
-    } catch (err) {
-      results.push({
-        category: categoryName,
-        hasTrend: false,
-        hasImage: false,
-        error: err instanceof Error ? err.message : 'Unknown error',
-      })
+    if (existingToday) {
+      results.push({ category: categoryName, title: existingToday.title, hasTrend: false, hasImage: false, skipped: true })
+      return results
     }
+
+    // Load recent posts for deduplication (last 60 days, up to 30)
+    const recentPosts = await prisma.blogPost.findMany({
+      where: {
+        category: categoryName,
+        createdAt: { gte: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) },
+      },
+      select: { title: true, sourceUrl: true },
+      orderBy: { createdAt: 'desc' },
+      take: 30,
+    })
+
+    const usedSourceUrls = new Set(recentPosts.map((p) => p.sourceUrl).filter(Boolean) as string[])
+    const recentTitles = recentPosts.map((p) => p.title)
+
+    const config = CATEGORIES[categoryName]
+
+    // Fetch news candidates and pick the first unused article
+    const articles = await fetchNewsArticles(config.searchQuery)
+    const freshArticle = articles.find((a) => !usedSourceUrls.has(a.url)) ?? null
+    const hasTrend = !!freshArticle
+
+    const topic = hasTrend
+      ? `${freshArticle!.title} — ${freshArticle!.description}`
+      : config.fallbackTopic
+
+    const newsContext = hasTrend
+      ? `Fuente: ${freshArticle!.source}\nURL: ${freshArticle!.url}\nTítulo: ${freshArticle!.title}\nDescripción: ${freshArticle!.description}`
+      : ''
+
+    // Generate content with GPT-4o
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [{ role: 'user', content: buildPrompt(categoryName, topic, newsContext, recentTitles) }],
+      temperature: 0.75,
+      max_tokens: 2000,
+    })
+
+    const raw = completion.choices[0].message.content ?? '{}'
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
+    const parsed = JSON.parse(cleaned)
+    const { title, excerpt, content, imageQuery, tags } = parsed
+
+    // Fetch real image from Unsplash
+    const imageSearchQuery = imageQuery || config.imageQuery
+    const imageUrl = await fetchUnsplashImage(imageSearchQuery)
+    const hasImage = !!imageUrl
+
+    // Create unique slug from title + date
+    const dateStr = new Date().toISOString().slice(0, 10)
+    const titleSlug = title
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .slice(0, 60)
+    const slug = `${titleSlug}-${dateStr}`
+
+    // Save to database (skip if slug already exists)
+    await prisma.blogPost.upsert({
+      where: { slug },
+      update: {},
+      create: {
+        title,
+        slug,
+        excerpt,
+        content,
+        imageUrl: imageUrl ?? null,
+        category: categoryName,
+        tags: tags ?? [],
+        published: true,
+        aiGenerated: true,
+        sourceUrl: freshArticle?.url ?? null,
+        sourceTitle: freshArticle?.source ?? null,
+      },
+    })
+
+    results.push({ category: categoryName, title, hasTrend, hasImage })
+  } catch (err) {
+    results.push({
+      category: categoryName,
+      hasTrend: false,
+      hasImage: false,
+      error: err instanceof Error ? err.message : 'Unknown error',
+    })
   }
 
   return results
@@ -296,7 +318,7 @@ export async function POST(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
 
-  if (secret !== cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || (secret !== cronSecret && authHeader !== `Bearer ${cronSecret}`)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

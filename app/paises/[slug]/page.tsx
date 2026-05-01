@@ -58,7 +58,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   austria: {
     name: 'Austria',
     emoji: '🇦🇹',
-    heroImage: 'https://images.unsplash.com/photo-1529655683826-aba9b3e77383?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-ZkQNOEezi6k?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE · Sistema de puntos (Rot-Weiß-Rot) para no-comunitarios',
     permisoInicial: 'Rot-Weiß-Rot Karte (Tarjeta Rojo-Blanco-Rojo)',
     idiomaPrincipal: 'Alemán',
@@ -172,7 +172,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   luxemburgo: {
     name: 'Luxemburgo',
     emoji: '🇱🇺',
-    heroImage: 'https://images.unsplash.com/photo-1587974928442-77dc3e0dba72?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-4jiHZ8UtjPg?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE · Autorización de trabajo para no-comunitarios',
     permisoInicial: 'Autorisation de séjour',
     idiomaPrincipal: 'Luxemburgués · Francés · Alemán',
@@ -187,7 +187,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   irlanda: {
     name: 'Irlanda',
     emoji: '🇮🇪',
-    heroImage: 'https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-tiKp0cJn-MI?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Visa Critical Skills para no-comunitarios',
     permisoInicial: 'Irish Residence Permit (IRP) — tarjeta de residencia anual renovable',
     idiomaPrincipal: 'Inglés (gran ventaja para personas con nivel B2+)',
@@ -302,7 +302,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   hungria: {
     name: 'Hungría',
     emoji: '🇭🇺',
-    heroImage: 'https://images.unsplash.com/photo-1541956064527-f54898a5e3e8?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-slBcItWoECY?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de trabajo para no-comunitarios',
     permisoInicial: 'Tartózkodási engedély (Permiso de residencia)',
     idiomaPrincipal: 'Húngaro · Inglés en Budapest y multinacionales',
@@ -319,7 +319,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   lituania: {
     name: 'Lituania',
     emoji: '🇱🇹',
-    heroImage: 'https://images.unsplash.com/photo-1592396437994-10b7c2abb4a6?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-34DRz7uAM6k?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de trabajo para no-comunitarios',
     permisoInicial: 'Leidimas gyventi (Permiso de residencia)',
     idiomaPrincipal: 'Lituano · Inglés en empresas internacionales y Vilnius',
@@ -385,7 +385,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   bulgaria: {
     name: 'Bulgaria',
     emoji: '🇧🇬',
-    heroImage: 'https://images.unsplash.com/photo-1578615437406-511b09e9db9c?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-dvCijIxS8aY?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de trabajo para no-comunitarios',
     permisoInicial: 'Разрешение за пребиваване (Permiso de residencia)',
     idiomaPrincipal: 'Búlgaro · Inglés en Sofía y empresas internacionales',
@@ -402,7 +402,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   eslovaquia: {
     name: 'Eslovaquia',
     emoji: '🇸🇰',
-    heroImage: 'https://images.unsplash.com/photo-1592598419690-7c07b8de3c98?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-Oq-nJ_hT9rI?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de trabajo para no-comunitarios',
     permisoInicial: 'Povolenie na pobyt (Permiso de residencia)',
     idiomaPrincipal: 'Eslovaco · Inglés en Bratislava y empresas',
@@ -418,7 +418,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   croacia: {
     name: 'Croacia',
     emoji: '🇭🇷',
-    heroImage: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-C2-XJaEpeKY?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de trabajo para no-comunitarios',
     permisoInicial: 'Dozvola za boravak (Permiso de residencia)',
     idiomaPrincipal: 'Croata · Inglés en zonas turísticas y Zagreb',
@@ -452,7 +452,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   letonia: {
     name: 'Letonia',
     emoji: '🇱🇻',
-    heroImage: 'https://images.unsplash.com/photo-1564594985645-4427056e22e2?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-OvVYncYZYg4?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de residencia para no-comunitarios',
     permisoInicial: 'Uzturēšanās atļauja (Permiso de residencia)',
     idiomaPrincipal: 'Letón · Inglés extendido · Ruso hablado por muchos',
@@ -468,7 +468,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   rumania: {
     name: 'Rumanía',
     emoji: '🇷🇴',
-    heroImage: 'https://images.unsplash.com/photo-1555785020-d7a4e2b8cce8?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-8A496IhZ47A?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de trabajo para no-comunitarios',
     permisoInicial: 'Permis de ședere (Permiso de residencia)',
     idiomaPrincipal: 'Rumano (lengua romance — comprensible para hispanohablantes) · Inglés en ciudades',

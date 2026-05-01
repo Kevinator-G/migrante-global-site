@@ -16,19 +16,12 @@ const nextConfig = {
   async headers() {
     const csp = [
       "default-src 'self'",
-      // Scripts: propio + GA4/GTM + Stripe
       "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com",
-      // Estilos: propio + inline (Tailwind, Framer Motion)
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      // Fuentes
       "font-src 'self' https://fonts.gstatic.com",
-      // Imágenes: propio + Unsplash + GA + data URIs
-      "img-src 'self' data: blob: https://images.unsplash.com https://www.google-analytics.com https://www.googletagmanager.com",
-      // Conexiones: propio + GA4 + OpenAI (API calls son server-side, pero por si acaso)
+      "img-src 'self' data: blob: https://images.unsplash.com https://img.youtube.com https://i.ytimg.com https://www.google-analytics.com https://www.googletagmanager.com",
       "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com",
-      // Iframes: YouTube + Stripe
       "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://js.stripe.com https://hooks.stripe.com",
-      // Medios
       "media-src 'self'",
     ].join('; ');
 
