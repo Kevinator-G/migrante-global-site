@@ -46,6 +46,7 @@ export async function POST(req: Request) {
       cancel_url: `${appUrl}/?cart=1`,
       locale: "es",
       billing_address_collection: "auto",
+      phone_number_collection: { enabled: true },
       allow_promotion_codes: true,
       metadata: {
         items: JSON.stringify(

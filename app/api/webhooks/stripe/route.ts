@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { sendWelcomeMessage } from "@/lib/whatsapp";
 
 export async function POST(req: Request) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -47,6 +48,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   const email =
     session.customer_details?.email || session.customer_email || null;
   const name = session.customer_details?.name || null;
+  const phone = session.customer_details?.phone || null;
   const stripeCustomerId =
     typeof session.customer === "string" ? session.customer : null;
   const stripePaymentIntentId =
@@ -81,6 +83,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
       data: {
         email,
         name: name || email.split("@")[0],
+        phone: phone ?? undefined,
         password: hashedPassword,
         autoCreated: true,
         stripeCustomerId,
@@ -91,8 +94,10 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   } else if (stripeCustomerId && !user.stripeCustomerId) {
     await prisma.user.update({
       where: { id: user.id },
-      data: { stripeCustomerId },
+      data: { stripeCustomerId, ...(phone && !user.phone ? { phone } : {}) },
     });
+  } else if (phone && !user.phone) {
+    await prisma.user.update({ where: { id: user.id }, data: { phone } });
   }
 
   // ── Create subscription record ───────────────────────────────────────
@@ -115,5 +120,14 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     });
 
     console.log(`Subscription created for ${email} — total: ${total} CHF`);
+
+    // Send WhatsApp welcome message (fire-and-forget)
+    const userPhone = phone || user.phone;
+    if (userPhone && items.length > 0) {
+      const serviceName = items.map((i: { nombre: string }) => i.nombre).join(' + ');
+      sendWelcomeMessage(userPhone, user.name ?? 'cliente', serviceName, user.id)
+        .then((r) => { if (!r.success) console.warn('WhatsApp send failed:', r.error); })
+        .catch(() => {});
+    }
   }
 }

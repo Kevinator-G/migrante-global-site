@@ -13,6 +13,7 @@ model User {
   id               String         @id @default(cuid())
   name             String?
   email            String         @unique
+  phone            String?
   password         String
   emailVerified    DateTime?
   image            String?
@@ -24,6 +25,25 @@ model User {
   accounts         Account[]
   sessions         Session[]
   subscriptions    Subscription[]
+  whatsappLogs     WhatsappLog[]
+}
+
+model WhatsappLog {
+  id           String    @id @default(cuid())
+  userId       String?
+  phone        String
+  direction    String    // 'outbound' | 'inbound'
+  type         String    // 'template' | 'text'
+  templateName String?
+  body         String    @db.Text
+  status       String    @default("sent") // 'sent' | 'delivered' | 'read' | 'failed'
+  waMessageId  String?
+  error        String?
+  createdAt    DateTime  @default(now())
+  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([phone])
+  @@index([userId])
 }
 
 model Subscription {
