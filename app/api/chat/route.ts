@@ -100,33 +100,40 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { message } = await req.json();
+    const body = await req.json();
 
-    if (!message || typeof message !== "string") {
-      return NextResponse.json(
-        { reply: "Mensaje no válido." },
-        { status: 400 }
-      );
-    }
+    // Acepta tanto { messages: [...] } (nuevo) como { message: "..." } (legacy)
+    let conversationMessages: { role: "user" | "assistant"; content: string }[];
 
-    if (message.length > MAX_MESSAGE_LENGTH) {
-      return NextResponse.json(
-        { reply: "El mensaje es demasiado largo. Por favor, resúmelo." },
-        { status: 400 }
-      );
+    if (Array.isArray(body.messages)) {
+      conversationMessages = body.messages.slice(-10); // máx 10 turnos
+      if (conversationMessages.length === 0) {
+        return NextResponse.json({ reply: "Mensaje no válido." }, { status: 400 });
+      }
+      const lastMsg = conversationMessages[conversationMessages.length - 1];
+      if (!lastMsg?.content || lastMsg.content.length > MAX_MESSAGE_LENGTH) {
+        return NextResponse.json(
+          { reply: "El mensaje es demasiado largo. Por favor, resúmelo." },
+          { status: 400 }
+        );
+      }
+    } else if (typeof body.message === "string" && body.message.trim()) {
+      if (body.message.length > MAX_MESSAGE_LENGTH) {
+        return NextResponse.json(
+          { reply: "El mensaje es demasiado largo. Por favor, resúmelo." },
+          { status: 400 }
+        );
+      }
+      conversationMessages = [{ role: "user", content: body.message }];
+    } else {
+      return NextResponse.json({ reply: "Mensaje no válido." }, { status: 400 });
     }
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        {
-          role: "system",
-          content: SYSTEM_PROMPT,
-        },
-        {
-          role: "user",
-          content: message,
-        },
+        { role: "system", content: SYSTEM_PROMPT },
+        ...conversationMessages,
       ],
       max_tokens: 500,
       temperature: 0.7,

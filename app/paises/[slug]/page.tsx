@@ -532,7 +532,19 @@ export async function generateMetadata({
     description: `Requisitos, permisos y consejos reales para emigrar a ${info.name}. Orientación honesta para hispanohablantes de la mano de Kevin García, experto en migración europea.`,
     alternates: { canonical: `https://migranteglobal.ch/paises/${params.slug}` },
     openGraph: {
-      images: [{ url: info.heroImage, width: 1920, height: 1080 }],
+      title: `Emigrar a ${info.name} | Migrante Global`,
+      description: `Guía honesta para hispanohablantes sobre cómo emigrar a ${info.name}: permisos, acceso, idioma y consejos prácticos.`,
+      url: `https://migranteglobal.ch/paises/${params.slug}`,
+      siteName: 'Migrante Global',
+      locale: 'es_ES',
+      type: 'website',
+      images: [{ url: 'https://migranteglobal.ch/og-image.png', width: 1200, height: 630, alt: `Emigrar a ${info.name} — Migrante Global` }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `Emigrar a ${info.name} | Migrante Global`,
+      description: `Guía honesta para hispanohablantes sobre cómo emigrar a ${info.name}.`,
+      images: ['https://migranteglobal.ch/og-image.png'],
     },
   };
 }

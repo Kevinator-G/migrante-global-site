@@ -91,8 +91,42 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     select: { id: true, title: true, slug: true, excerpt: true, imageUrl: true, category: true, createdAt: true },
   });
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    image: heroImage,
+    datePublished: post.createdAt.toISOString(),
+    dateModified: post.updatedAt.toISOString(),
+    url: `https://migranteglobal.ch/blog/${post.slug}`,
+    author: {
+      '@type': 'Person',
+      name: 'Kevin García',
+      url: 'https://migranteglobal.ch',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Migrante Global',
+      logo: { '@type': 'ImageObject', url: 'https://migranteglobal.ch/favicon.svg' },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://migranteglobal.ch/blog/${post.slug}`,
+    },
+    keywords: post.tags?.join(', ') ?? post.category,
+    articleSection: post.category,
+    inLanguage: 'es',
+  };
+
   return (
     <>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        />
+      </head>
       <Navbar />
       <main className="min-h-screen" style={{ background: '#0d1117' }}>
 

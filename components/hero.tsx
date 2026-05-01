@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Users, MapPin, Clock, ArrowRight } from 'lucide-react';
+import { trackEvent } from '@/lib/gtag';
 
 const stats = [
   { icon: Users,  value: '150+',    label: 'Personas acompañadas' },
@@ -70,6 +71,7 @@ export function Hero() {
             <Link
               href="/#contacto"
               className="btn-primary text-base font-semibold px-10 py-4 min-w-[260px] text-center"
+              onClick={() => trackEvent('cta_click', { cta_name: 'hero_consulta_gratuita', location: 'hero' })}
             >
               Agenda tu consulta gratuita
             </Link>

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Script from 'next/script';
 import MigranteChat from "@/components/migranteChat";
 import { WhatsappFlotante } from '@/components/whatsapp-flotante';
 import { CookieBanner } from '@/components/cookie-banner';
+import { GaScript } from '@/components/ga-script';
 import { Providers } from './providers';
 import { Inter, Outfit } from 'next/font/google';
 
@@ -82,32 +82,32 @@ const faqs = [
   {
     pregunta: '¿Necesito hablar alemán para trabajar en Suiza?',
     respuesta:
-      'Depende del sector. En hostelería, construcción, logística y algunos trabajos técnicos puedes empezar sin alemán. Para oficina, salud o educación necesitas mínimo A2-B1.',
+      'Depende del sector. En hostelería, construcción, logística y algunos trabajos técnicos puedes empezar sin alemán. Para oficina, salud o educación necesitas mínimo A2-B1. Lo primero que hacemos contigo es identificar tu sector y qué nivel real necesitas.',
   },
   {
     pregunta: '¿Cuánto tiempo tarda conseguir trabajo desde fuera de Suiza?',
     respuesta:
-      'El proceso realista es 2–6 meses desde que empiezas a buscar en serio. Factores clave: tu profesión, nivel de alemán y si tienes el CV adaptado al formato suizo.',
+      'El proceso realista es 2–6 meses desde que empiezas a buscar en serio. Factores clave: tu profesión, nivel de alemán, red de contactos y si tienes el CV adaptado al formato suizo. Con orientación correcta se acorta bastante.',
   },
   {
     pregunta: '¿Qué permiso de residencia necesito para trabajar en Suiza?',
     respuesta:
-      'Los ciudadanos de la UE/AELC tienen acceso simplificado. Con contrato de trabajo, el permiso B se tramita en la oficina de migración de tu cantón. Para no comunitarios el proceso es más complejo.',
+      'Los ciudadanos de la UE/AELC tienen acceso simplificado mediante el Acuerdo de Libre Circulación. Si tienes contrato de trabajo, el permiso B (residencia temporal) se tramita en la oficina de migración de tu cantón. Para no comunitarios el proceso es más complejo.',
   },
   {
     pregunta: '¿Cuánto cuesta vivir en Suiza?',
     respuesta:
-      'Un soltero en Zúrich necesita entre 2.500 y 3.500 CHF/mes para vivir cómodamente. El salario mínimo sectorial suele superar los 3.500–4.500 CHF.',
+      'Un soltero en Zúrich necesita entre 2.500 y 3.500 CHF/mes para vivir cómodamente (alquiler, comida, transporte, seguros). El salario mínimo sectorial suele superar los 3.500–4.500 CHF, así que la ecuación funciona si tienes trabajo.',
   },
   {
     pregunta: '¿Puedo contratar vuestros servicios desde Latinoamérica?',
     respuesta:
-      'Sí, todos nuestros servicios son 100% remotos. Trabajamos con personas desde España, México, Colombia, Argentina y el resto de Latinoamérica.',
+      'Sí, todos nuestros servicios son 100% remotos. Trabajamos con personas desde España, México, Colombia, Argentina y el resto de Latinoamérica. Las sesiones son por videollamada y los documentos se revisan online.',
   },
   {
     pregunta: '¿Qué diferencia a Migrante Global de otras asesorías?',
     respuesta:
-      'No somos una agencia — soy Kevin, una persona real que vivió el proceso. Llevo más de 10 años en Europa y 3 en Suiza. Te doy orientación honesta, incluyendo cuándo Suiza no es la mejor opción para tu caso.',
+      'No somos una agencia — soy Kevin, una persona real que vivió el proceso. Llevo más de 10 años en Europa y 3 en Suiza. No te vendo un sueño: te doy orientación honesta, incluyendo cuándo Suiza no es la mejor opción para tu caso.',
   },
 ];
 
@@ -194,25 +194,8 @@ export default function RootLayout({
         <MigranteChat />
         <CookieBanner />
         <WhatsappFlotante />
-        {/* Google Analytics 4 — solo carga si NEXT_PUBLIC_GA_ID está definido */}
-        {GA_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga4-init" strategy="afterInteractive"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${GA_ID}', { page_path: window.location.pathname });
-                `,
-              }}
-            />
-          </>
-        )}
+        {/* GA4 — solo carga tras consentimiento explícito del usuario */}
+        {GA_ID && <GaScript gaId={GA_ID} />}
       </body>
     </html>
   );

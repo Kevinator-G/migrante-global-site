@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Check, Home, Package2, Users, CheckCircle2, ArrowRight, ShieldCheck, Video, BookOpen } from 'lucide-react';
 import { useCart } from '@/lib/cart-context';
+import { trackEvent } from '@/lib/gtag';
 
 const GOLD = '#c9a96e';
 
@@ -96,6 +97,12 @@ export function SeccionPrecios() {
       moneda: plan.moneda,
       tipo: plan.tipo,
       emoji: plan.id === 'solo-alojamiento' ? '🏠' : plan.id === 'pack-completo' ? '📦' : plan.id === 'consultoria-1a1' ? '🎯' : '🤝',
+    });
+    trackEvent('add_to_cart', {
+      item_id: plan.id,
+      item_name: plan.nombre,
+      value: plan.precio,
+      currency: 'EUR',
     });
   };
 

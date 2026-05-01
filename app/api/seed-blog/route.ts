@@ -510,8 +510,9 @@ El dinero no lo ves hasta la jubilación (o en casos especiales: compra de vivie
 ]
 
 export async function GET(req: NextRequest) {
+  const cronSecret = process.env.CRON_SECRET
   const secret = req.nextUrl.searchParams.get('secret')
-  if (secret !== process.env.CRON_SECRET) {
+  if (!cronSecret || secret !== cronSecret) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

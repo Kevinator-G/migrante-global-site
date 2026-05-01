@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Send, CheckCircle, AlertCircle, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { trackEvent } from '@/lib/gtag';
 
 export function FormularioContacto() {
   const [formData, setFormData] = useState({
@@ -35,6 +36,7 @@ export function FormularioContacto() {
       }
 
       setStatus('success');
+      trackEvent('form_submit', { form_name: 'contacto', method: 'web' });
       setFormData({
         nombre: '',
         email: '',

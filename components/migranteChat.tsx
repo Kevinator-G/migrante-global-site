@@ -55,10 +55,14 @@ export default function MigranteChat() {
     setUserMessageCount(nextCount);
 
     try {
+      // Envía el historial completo (máx. últimos 10 mensajes para controlar tokens)
+      const history = [...messages, { role: "user" as const, content: userMessage }]
+        .slice(-10);
+
       const res = await fetch(`/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({ messages: history }),
       });
 
       if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);

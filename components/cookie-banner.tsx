@@ -20,6 +20,7 @@ export function CookieBanner() {
   const save = (state: ConsentState, analyticsVal = false) => {
     localStorage.setItem('cookie-consent', state);
     localStorage.setItem('cookie-analytics', String(analyticsVal));
+    window.dispatchEvent(new Event('cookie-consent-updated'));
     setVisible(false);
   };
 
