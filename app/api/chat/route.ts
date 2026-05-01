@@ -1,5 +1,8 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const SYSTEM_PROMPT = `
 Eres Mentor Migrante Global.
@@ -87,7 +90,15 @@ Migrante Global no solo informa: ayuda a las personas a tomar decisiones migrato
 const MAX_MESSAGE_LENGTH = 1000;
 
 export async function POST(req: Request) {
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const ip = req.headers.get('x-forwarded-for') ?? 'anonymous';
+  const { allowed } = rateLimit(ip, 15, 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { reply: 'Demasiadas solicitudes. Espera un momento antes de continuar.' },
+      { status: 429 }
+    );
+  }
+
   try {
     const { message } = await req.json();
 
@@ -105,7 +116,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const response = await client.chat.completions.create({
+    const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {

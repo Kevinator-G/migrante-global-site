@@ -66,16 +66,23 @@ function categoryActiveColor(cat: string) {
   return categoryActiveColors[cat] ?? 'bg-yellow-500 text-black border-yellow-500';
 }
 
-export default async function BlogPage({ searchParams }: { searchParams: { categoria?: string } }) {
-  const activeCategory = searchParams.categoria ?? null;
+const PAGE_SIZE = 12;
 
-  const [posts, allCategories] = await Promise.all([
+export default async function BlogPage({ searchParams }: { searchParams: { categoria?: string; pagina?: string } }) {
+  const activeCategory = searchParams.categoria ?? null;
+  const currentPage = Math.max(1, Number(searchParams.pagina ?? 1));
+
+  const where = {
+    published: true,
+    ...(activeCategory ? { category: activeCategory } : {}),
+  };
+
+  const [posts, totalCount, allCategories] = await Promise.all([
     prisma.blogPost.findMany({
-      where: {
-        published: true,
-        ...(activeCategory ? { category: activeCategory } : {}),
-      },
+      where,
       orderBy: { createdAt: 'desc' },
+      take: PAGE_SIZE,
+      skip: (currentPage - 1) * PAGE_SIZE,
       select: {
         id: true,
         title: true,
@@ -88,6 +95,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
         createdAt: true,
       },
     }),
+    prisma.blogPost.count({ where }),
     prisma.blogPost.findMany({
       where: { published: true },
       select: { category: true },
@@ -96,9 +104,10 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
     }),
   ]);
 
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   const categories = allCategories.map(c => c.category);
-  const featured = !activeCategory ? posts[0] : null;
-  const grid = !activeCategory ? posts.slice(1) : posts;
+  const featured = !activeCategory && currentPage === 1 ? posts[0] : null;
+  const grid = featured ? posts.slice(1) : posts;
 
   return (
     <>
@@ -274,6 +283,32 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
               )}
             </>
           )}
+        {/* ── Paginación ── */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 pb-12">
+            {currentPage > 1 && (
+              <Link
+                href={`/blog?${activeCategory ? `categoria=${encodeURIComponent(activeCategory)}&` : ''}pagina=${currentPage - 1}`}
+                className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                style={{ background: '#13151b', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.6)' }}
+              >
+                ← Anterior
+              </Link>
+            )}
+            <span className="text-white/35 text-sm px-3">
+              Página {currentPage} de {totalPages}
+            </span>
+            {currentPage < totalPages && (
+              <Link
+                href={`/blog?${activeCategory ? `categoria=${encodeURIComponent(activeCategory)}&` : ''}pagina=${currentPage + 1}`}
+                className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                style={{ background: '#13151b', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.6)' }}
+              >
+                Siguiente →
+              </Link>
+            )}
+          </div>
+        )}
         </div>
       </main>
       <Footer />

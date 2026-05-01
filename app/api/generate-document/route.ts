@@ -1,9 +1,19 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { rateLimit } from "@/lib/rate-limit";
 
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(req: Request) {
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const ip = req.headers.get('x-forwarded-for') ?? 'anonymous';
+  const { allowed } = rateLimit(ip, 5, 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Demasiadas solicitudes. Espera un momento antes de generar otro documento.' },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await req.json();
 

@@ -515,6 +515,11 @@ const difficultyColor: Record<string, string> = {
   'Muy alta': 'bg-red-500/20 text-red-400 border-red-500/30',
 };
 
+// ── Static params — pre-genera las 28 páginas en build ────────────────────
+export function generateStaticParams() {
+  return Object.keys(COUNTRIES).map((slug) => ({ slug }));
+}
+
 // ── Metadata ───────────────────────────────────────────────────────────────
 export async function generateMetadata({
   params,
