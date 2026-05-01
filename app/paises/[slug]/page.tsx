@@ -172,7 +172,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   luxemburgo: {
     name: 'Luxemburgo',
     emoji: '🇱🇺',
-    heroImage: 'https://images.unsplash.com/photo-4jiHZ8UtjPg?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-KH_9b5YywzQ?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE · Autorización de trabajo para no-comunitarios',
     permisoInicial: 'Autorisation de séjour',
     idiomaPrincipal: 'Luxemburgués · Francés · Alemán',
@@ -302,7 +302,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   hungria: {
     name: 'Hungría',
     emoji: '🇭🇺',
-    heroImage: 'https://images.unsplash.com/photo-slBcItWoECY?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-iqYem-sPPpM?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de trabajo para no-comunitarios',
     permisoInicial: 'Tartózkodási engedély (Permiso de residencia)',
     idiomaPrincipal: 'Húngaro · Inglés en Budapest y multinacionales',
@@ -385,7 +385,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   bulgaria: {
     name: 'Bulgaria',
     emoji: '🇧🇬',
-    heroImage: 'https://images.unsplash.com/photo-dvCijIxS8aY?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-Kxq47tC2Avg?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de trabajo para no-comunitarios',
     permisoInicial: 'Разрешение за пребиваване (Permiso de residencia)',
     idiomaPrincipal: 'Búlgaro · Inglés en Sofía y empresas internacionales',
@@ -402,7 +402,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   eslovaquia: {
     name: 'Eslovaquia',
     emoji: '🇸🇰',
-    heroImage: 'https://images.unsplash.com/photo-Oq-nJ_hT9rI?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-rD3sf0LHX90?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de trabajo para no-comunitarios',
     permisoInicial: 'Povolenie na pobyt (Permiso de residencia)',
     idiomaPrincipal: 'Eslovaco · Inglés en Bratislava y empresas',
@@ -452,7 +452,7 @@ const COUNTRIES: Record<string, CountryInfo> = {
   letonia: {
     name: 'Letonia',
     emoji: '🇱🇻',
-    heroImage: 'https://images.unsplash.com/photo-OvVYncYZYg4?w=1920&q=85&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-Z4PxYDvIJDw?w=1920&q=85&auto=format&fit=crop',
     tipoAcceso: 'Libre circulación UE para comunitarios · Permiso de residencia para no-comunitarios',
     permisoInicial: 'Uzturēšanās atļauja (Permiso de residencia)',
     idiomaPrincipal: 'Letón · Inglés extendido · Ruso hablado por muchos',
