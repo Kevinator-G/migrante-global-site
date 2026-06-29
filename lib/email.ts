@@ -2,7 +2,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "kagm94@gmail.com";
-const FROM_EMAIL = process.env.FROM_EMAIL || "Migrante Global <noreply@migranteglobal.com>";
+const FROM_EMAIL = process.env.FROM_EMAIL || "Migrante Global <noreply@migranteglobal.ch>";
 
 // ── Lead notification ────────────────────────────────────────────────────────
 

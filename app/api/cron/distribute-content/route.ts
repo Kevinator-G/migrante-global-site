@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 import { adaptContentForSocials } from '@/lib/social/content-adapter'
 import { publishToInstagram } from '@/lib/social/instagram'
+import { publishToFacebook } from '@/lib/social/facebook'
 
 const prisma = new PrismaClient()
 
@@ -96,6 +97,45 @@ export async function POST(req: NextRequest) {
     })
 
     results.instagram = { status: igStatus, url: igPlatformUrl, error: igError }
+  }
+
+  // ── Facebook ───────────────────────────────────────────────────────────────
+  if (!alreadyDistributed.includes('facebook')) {
+    let fbStatus = 'failed'
+    let fbPlatformId: string | undefined
+    let fbPlatformUrl: string | undefined
+    let fbError: string | undefined
+
+    if (post.imageUrl) {
+      const fbResult = await publishToFacebook(
+        post.imageUrl,
+        adapted.instagram.caption, // reuse Instagram caption for Facebook
+        adapted.instagram.hashtags,
+      )
+      fbStatus = fbResult.success ? 'published' : 'failed'
+      fbPlatformId = fbResult.platformId
+      fbPlatformUrl = fbResult.platformUrl
+      fbError = fbResult.error
+    } else {
+      fbStatus = 'skipped'
+      fbError = 'No image available for Facebook post'
+    }
+
+    await prisma.socialPost.create({
+      data: {
+        blogPostId: post.id,
+        platform: 'facebook',
+        status: fbStatus,
+        caption: adapted.instagram.caption,
+        hashtags: adapted.instagram.hashtags,
+        platformId: fbPlatformId,
+        platformUrl: fbPlatformUrl,
+        error: fbError,
+        publishedAt: fbStatus === 'published' ? new Date() : undefined,
+      },
+    })
+
+    results.facebook = { status: fbStatus, url: fbPlatformUrl, error: fbError }
   }
 
   // ── TikTok (script saved, manual posting) ─────────────────────────────────

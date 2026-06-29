@@ -51,15 +51,18 @@ async function fetchNewsArticles(query: string): Promise<Array<{
   }
 }
 
-// ── Unsplash ───────────────────────────────────────────────────────────────
-async function fetchUnsplashImage(query: string): Promise<string | null> {
+// ── Unsplash — returns a unique image not already used in this category ───
+async function fetchUnsplashImage(
+  query: string,
+  usedUrls: Set<string> = new Set(),
+): Promise<string | null> {
   const accessKey = process.env.UNSPLASH_ACCESS_KEY
   if (!accessKey) return null
 
   try {
     const params = new URLSearchParams({
       query: `Switzerland ${query}`,
-      per_page: '1',
+      per_page: '10',
       orientation: 'landscape',
     })
     const res = await fetch(`https://api.unsplash.com/search/photos?${params}`, {
@@ -67,7 +70,13 @@ async function fetchUnsplashImage(query: string): Promise<string | null> {
     })
     if (!res.ok) return null
     const data = await res.json()
-    return data.results?.[0]?.urls?.regular ?? null
+    const results: Array<{ urls: { regular: string } }> = data.results ?? []
+
+    // Pick the first result whose URL hasn't been used in this category recently
+    const fresh = results.find((r) => !usedUrls.has(r.urls.regular))
+    // Fall back to a random one if all 10 have been used (unlikely)
+    const fallback = results[Math.floor(Math.random() * results.length)]
+    return fresh?.urls.regular ?? fallback?.urls.regular ?? null
   } catch {
     return null
   }
@@ -210,12 +219,13 @@ async function generatePosts() {
         category: categoryName,
         createdAt: { gte: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) },
       },
-      select: { title: true, sourceUrl: true },
+      select: { title: true, sourceUrl: true, imageUrl: true },
       orderBy: { createdAt: 'desc' },
       take: 30,
     })
 
     const usedSourceUrls = new Set(recentPosts.map((p) => p.sourceUrl).filter(Boolean) as string[])
+    const usedImageUrls = new Set(recentPosts.map((p) => p.imageUrl).filter(Boolean) as string[])
     const recentTitles = recentPosts.map((p) => p.title)
 
     const config = CATEGORIES[categoryName]
@@ -246,9 +256,9 @@ async function generatePosts() {
     const parsed = JSON.parse(cleaned)
     const { title, excerpt, content, imageQuery, tags } = parsed
 
-    // Fetch real image from Unsplash
+    // Fetch real image from Unsplash — unique within this category
     const imageSearchQuery = imageQuery || config.imageQuery
-    const imageUrl = await fetchUnsplashImage(imageSearchQuery)
+    const imageUrl = await fetchUnsplashImage(imageSearchQuery, usedImageUrls)
     const hasImage = !!imageUrl
 
     // Create unique slug from title + date

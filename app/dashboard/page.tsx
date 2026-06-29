@@ -34,7 +34,7 @@ type OrderData = {
   autoCreated: boolean;
 };
 
-const WHATSAPP_NUMBER = "41791234567"; // ← cambia por tu número real
+const WHATSAPP_NUMBER = "41772337553";
 
 function DashboardContent() {
   const searchParams = useSearchParams();
