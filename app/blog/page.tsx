@@ -106,7 +106,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
     ...(activeCategory ? { category: activeCategory } : {}),
   };
 
-  const [posts, totalCount, allCategories] = await Promise.all([
+  const [posts, totalCount, categoryCounts] = await Promise.all([
     prisma.blogPost.findMany({
       where,
       orderBy: { createdAt: 'desc' },
@@ -125,16 +125,17 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
       },
     }),
     prisma.blogPost.count({ where }),
-    prisma.blogPost.findMany({
+    prisma.blogPost.groupBy({
+      by: ['category'],
       where: { published: true },
-      select: { category: true },
-      distinct: ['category'],
+      _count: { id: true },
       orderBy: { category: 'asc' },
     }),
   ]);
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
-  const categories = allCategories.map(c => c.category);
+  const totalAll = categoryCounts.reduce((sum, c) => sum + c._count.id, 0);
+  const categories = categoryCounts.map(c => ({ name: c.category, count: c._count.id }));
   const featured = !activeCategory && currentPage === 1 ? posts[0] : null;
   const grid = featured ? posts.slice(1) : posts;
 
@@ -154,38 +155,80 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
           </p>
         </section>
 
-        {/* Category filter tabs */}
-        {categories.length > 0 && (
-          <div className="max-w-[1200px] mx-auto px-6 mb-10">
-            <div className="flex flex-wrap gap-2">
+        {/* ── Layout: sidebar + contenido ── */}
+        <div className="max-w-[1200px] mx-auto px-6 pb-20 flex gap-8 items-start">
+
+          {/* ── Sidebar izquierda ── */}
+          <aside className="hidden lg:block w-56 flex-shrink-0 sticky top-24">
+            <p className="text-white/30 text-xs font-semibold uppercase tracking-widest mb-4 px-1">Categorías</p>
+            <nav className="flex flex-col gap-1">
               <Link
                 href="/blog"
-                className={`text-sm font-medium px-4 py-2 rounded-full border transition-all ${
+                className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   !activeCategory
-                    ? 'bg-yellow-500 text-black border-yellow-500'
-                    : 'bg-white/5 text-white/60 border-white/10 hover:border-white/25 hover:text-white'
+                    ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30'
+                    : 'text-white/55 hover:text-white hover:bg-white/5'
                 }`}
               >
-                Todos
+                <span>Todos</span>
+                <span className={`text-xs px-1.5 py-0.5 rounded-md ${!activeCategory ? 'bg-yellow-500/20 text-yellow-400' : 'bg-white/8 text-white/30'}`}>
+                  {totalAll}
+                </span>
               </Link>
               {categories.map(cat => (
                 <Link
-                  key={cat}
-                  href={`/blog?categoria=${encodeURIComponent(cat)}`}
+                  key={cat.name}
+                  href={`/blog?categoria=${encodeURIComponent(cat.name)}`}
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    activeCategory === cat.name
+                      ? `border ${categoryActiveColor(cat.name)}`
+                      : 'text-white/55 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <span className="leading-snug">{cat.name}</span>
+                  <span className={`text-xs px-1.5 py-0.5 rounded-md flex-shrink-0 ml-2 ${
+                    activeCategory === cat.name ? 'bg-white/20 text-white' : 'bg-white/8 text-white/30'
+                  }`}>
+                    {cat.count}
+                  </span>
+                </Link>
+              ))}
+            </nav>
+          </aside>
+
+          {/* ── Mobile: tabs horizontales (solo < lg) ── */}
+          {categories.length > 0 && (
+            <div className="lg:hidden w-full mb-8">
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href="/blog"
                   className={`text-sm font-medium px-4 py-2 rounded-full border transition-all ${
-                    activeCategory === cat
-                      ? categoryActiveColor(cat)
+                    !activeCategory
+                      ? 'bg-yellow-500 text-black border-yellow-500'
                       : 'bg-white/5 text-white/60 border-white/10 hover:border-white/25 hover:text-white'
                   }`}
                 >
-                  {cat}
+                  Todos
                 </Link>
-              ))}
+                {categories.map(cat => (
+                  <Link
+                    key={cat.name}
+                    href={`/blog?categoria=${encodeURIComponent(cat.name)}`}
+                    className={`text-sm font-medium px-4 py-2 rounded-full border transition-all ${
+                      activeCategory === cat.name
+                        ? categoryActiveColor(cat.name)
+                        : 'bg-white/5 text-white/60 border-white/10 hover:border-white/25 hover:text-white'
+                    }`}
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <div className="max-w-[1200px] mx-auto px-6 pb-20">
+          {/* ── Contenido principal ── */}
+          <div className="flex-1 min-w-0">
           {posts.length === 0 ? (
             <div className="text-center py-20">
               <Sparkles className="w-12 h-12 text-yellow-500/40 mx-auto mb-4" />
@@ -308,7 +351,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
           )}
         {/* ── Paginación ── */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 pb-12">
+          <div className="flex items-center justify-center gap-2 pt-8 pb-4">
             {currentPage > 1 && (
               <Link
                 href={`/blog?${activeCategory ? `categoria=${encodeURIComponent(activeCategory)}&` : ''}pagina=${currentPage - 1}`}
@@ -332,7 +375,8 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
             )}
           </div>
         )}
-        </div>
+          </div>{/* fin contenido principal */}
+        </div>{/* fin layout flex */}
       </main>
       <Footer />
     </>
