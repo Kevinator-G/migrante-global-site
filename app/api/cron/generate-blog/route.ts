@@ -83,17 +83,19 @@ async function fetchUnsplashImage(
 }
 
 // ── Category config ────────────────────────────────────────────────────────
+const CURRENT_YEAR = new Date().getFullYear()
+
 const CATEGORIES: Record<
   string,
   { searchQuery: string; fallbackTopic: string; imageQuery: string }
 > = {
   'Visas y permisos': {
-    searchQuery: 'permiso residencia Suiza inmigrante 2025',
-    fallbackTopic: 'Los nuevos cambios en el sistema de permisos B y C en Suiza para 2025',
+    searchQuery: `permiso residencia Suiza inmigrante ${CURRENT_YEAR}`,
+    fallbackTopic: `Los nuevos cambios en el sistema de permisos B y C en Suiza para ${CURRENT_YEAR}`,
     imageQuery: 'visa permit document Switzerland',
   },
   'Mercado laboral': {
-    searchQuery: 'empleo trabajo Suiza salario extranjero',
+    searchQuery: `empleo trabajo Suiza salario extranjero ${CURRENT_YEAR}`,
     fallbackTopic: 'Cómo encontrar trabajo en Suiza sin hablar alemán: lo que nadie te dice',
     imageQuery: 'Switzerland office work professionals',
   },
@@ -118,7 +120,7 @@ const CATEGORIES: Record<
     imageQuery: 'Switzerland apartment housing city',
   },
   'Noticias Suiza': {
-    searchQuery: 'noticias Suiza latinos hispanos comunidad 2025',
+    searchQuery: `noticias Suiza latinos hispanos comunidad ${CURRENT_YEAR}`,
     fallbackTopic: 'Lo que está pasando en Suiza que afecta directamente a los inmigrantes latinos',
     imageQuery: 'Switzerland news city landscape',
   },
@@ -133,8 +135,8 @@ const CATEGORIES: Record<
     imageQuery: 'Switzerland business startup entrepreneur',
   },
   Impuestos: {
-    searchQuery: 'impuestos declaración renta Suiza inmigrante',
-    fallbackTopic: 'Declaración de impuestos en Suiza: guía clara para quien lleva menos de 2 años',
+    searchQuery: `impuestos declaración renta Suiza inmigrante ${CURRENT_YEAR}`,
+    fallbackTopic: `Declaración de impuestos en Suiza: guía clara para ${CURRENT_YEAR}`,
     imageQuery: 'Switzerland tax finance money',
   },
 }
@@ -146,11 +148,14 @@ function buildPrompt(
   newsContext: string,
   recentTitles: string[],
 ): string {
+  const year = new Date().getFullYear()
   const avoidSection = recentTitles.length
     ? `\nTEMAS YA PUBLICADOS — NO repitas estos ángulos, escribe desde una perspectiva diferente:\n${recentTitles.map((t) => `- ${t}`).join('\n')}\n`
     : ''
 
   return `Eres Kevin García, consultor de inmigración en Suiza con 10 años de experiencia ayudando a latinos a migrar de forma segura y ordenada. Escribes de forma directa, cercana y honesta — sin corporativismo ni jerga burocrática. Usas "tú", párrafos cortos, y abres cada artículo con un gancho que para al lector en seco.
+
+AÑO ACTUAL: ${year} — usa siempre ${year} cuando menciones el año. Nunca escribas años anteriores.
 
 CATEGORÍA: ${category}
 TEMA: ${topic}
