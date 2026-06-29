@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { sendWelcomeMessage } from "@/lib/whatsapp";
+import { sendPurchaseNotification, sendPurchaseConfirmation } from "@/lib/email";
 
 export async function POST(req: Request) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -121,7 +122,18 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
 
     console.log(`Subscription created for ${email} — total: ${total} CHF`);
 
-    // Send WhatsApp welcome message (fire-and-forget)
+    const orderData = {
+      clientEmail: email,
+      clientName: name || email.split("@")[0],
+      items,
+      total,
+      stripeSessionId: session.id,
+    };
+
+    // Fire-and-forget — emails y WhatsApp no bloquean el webhook
+    sendPurchaseNotification(orderData);
+    sendPurchaseConfirmation(orderData);
+
     const userPhone = phone || user.phone;
     if (userPhone && items.length > 0) {
       const serviceName = items.map((i: { nombre: string }) => i.nombre).join(' + ');

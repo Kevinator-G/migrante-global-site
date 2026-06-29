@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { sendLeadNotification } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
@@ -31,6 +32,9 @@ export async function POST(req: Request) {
         consentimiento: Boolean(consentimiento),
       },
     });
+
+    // Fire-and-forget — no rompemos la respuesta si el email falla
+    sendLeadNotification({ nombre, email, telefono, pais, mensaje });
 
     return NextResponse.json({ success: true, leadId: lead.id }, { status: 201 });
   } catch (error) {
