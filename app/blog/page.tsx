@@ -5,6 +5,35 @@ import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import { Calendar, ArrowRight, Sparkles } from 'lucide-react';
 
+const categoryFallbackImages: Record<string, string> = {
+  'Visas y permisos':        'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=600&q=70',
+  'Mercado laboral':         'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=70',
+  'Finanzas y vivienda':     'https://images.unsplash.com/photo-1560520031-3a4dc4e9de0c?w=600&q=70',
+  'Homologación de títulos': 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=70',
+  'Bienestar y salud':       'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=600&q=70',
+  'Educación y familia':     'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&q=70',
+  'Noticias Suiza':          'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=600&q=70',
+  'Cultura y adaptación':    'https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=600&q=70',
+  'Emprendimiento':          'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=600&q=70',
+  'Impuestos':               'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=70',
+  // legacy slugs
+  noticias:       'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=600&q=70',
+  trabajo:        'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=70',
+  vivienda:       'https://images.unsplash.com/photo-1560520031-3a4dc4e9de0c?w=600&q=70',
+  tramites:       'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=600&q=70',
+  medicina:       'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=600&q=70',
+  finanzas:       'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=70',
+  'alemán':       'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=70',
+  'vida-en-suiza':'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=70',
+  'reglas-normas':'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=70',
+  herramientas:   'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=70',
+};
+
+function getCategoryImage(category: string): string {
+  return categoryFallbackImages[category]
+    ?? 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=70';
+}
+
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
@@ -199,11 +228,6 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
                         <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${categoryColor(featured.category)}`}>
                           {featured.category}
                         </span>
-                        {featured.aiGenerated && (
-                          <span className="text-xs text-yellow-500/70 flex items-center gap-1">
-                            <Sparkles className="w-3 h-3" /> Generado con IA
-                          </span>
-                        )}
                       </div>
                       <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-yellow-400 transition">
                         {featured.title}
@@ -248,8 +272,8 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
                         ) : (
                           <div className="relative w-full h-44 flex-shrink-0">
                             <Image
-                              src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=70"
-                              alt="Suiza"
+                              src={getCategoryImage(post.category)}
+                              alt={post.category}
                               fill
                               className="object-cover opacity-60"
                               sizes="(max-width: 768px) 100vw, 400px"
@@ -273,7 +297,6 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
                               <Calendar className="w-3 h-3" />
                               {new Date(post.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
                             </span>
-                            {post.aiGenerated && <Sparkles className="w-3.5 h-3.5 text-yellow-500/50" />}
                           </div>
                         </div>
                       </div>
