@@ -70,30 +70,16 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
         },
       ],
     },
-    // Track 1 — dark overlay for text readability
+    // Track 1 — brand name
     {
       clips: [
         {
           asset: {
-            type: 'html',
-            html: '<div style="width:100%;height:100%;background:rgba(0,0,0,0.45)"></div>',
-            width: 1080,
-            height: 1920,
-          },
-          start: 0,
-          length: 45,
-        },
-      ],
-    },
-    // Track 2 — brand logo / channel name
-    {
-      clips: [
-        {
-          asset: {
-            type: 'html',
-            html: '<p style="font-family:sans-serif;font-size:36px;font-weight:700;color:#F97316;letter-spacing:2px;text-transform:uppercase">MIGRANTE GLOBAL</p>',
-            width: 900,
-            height: 80,
+            type: 'title',
+            text: 'MIGRANTE GLOBAL',
+            style: 'minimal',
+            color: '#F97316',
+            size: 'small',
           },
           start: 0,
           length: 45,
@@ -103,15 +89,16 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
         },
       ],
     },
-    // Track 3 — main title
+    // Track 2 — main title
     {
       clips: [
         {
           asset: {
-            type: 'html',
-            html: `<p style="font-family:sans-serif;font-size:58px;font-weight:800;color:#FFFFFF;text-align:center;line-height:1.2;text-shadow:2px 2px 8px rgba(0,0,0,0.8)">${titleText}</p>`,
-            width: 960,
-            height: 500,
+            type: 'title',
+            text: titleText,
+            style: 'minimal',
+            color: '#FFFFFF',
+            size: 'large',
           },
           start: 0.5,
           length: 44,
@@ -121,33 +108,35 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
         },
       ],
     },
-    // Track 4 — excerpt / subtitle
+    // Track 3 — excerpt
     {
       clips: [
         {
           asset: {
-            type: 'html',
-            html: `<p style="font-family:sans-serif;font-size:38px;color:#E5E7EB;text-align:center;line-height:1.4;text-shadow:1px 1px 4px rgba(0,0,0,0.6)">${excerptText}</p>`,
-            width: 900,
-            height: 300,
+            type: 'title',
+            text: excerptText,
+            style: 'minimal',
+            color: '#E5E7EB',
+            size: 'medium',
           },
           start: 1.5,
           length: 42,
           position: 'center',
-          offset: { y: 0.22 },
+          offset: { y: 0.25 },
           transition: { in: 'fade' },
         },
       ],
     },
-    // Track 5 — CTA at bottom
+    // Track 4 — CTA
     {
       clips: [
         {
           asset: {
-            type: 'html',
-            html: '<p style="font-family:sans-serif;font-size:36px;font-weight:700;color:#F97316;text-align:center">👇 Link en bio — migranteglobal.ch</p>',
-            width: 900,
-            height: 80,
+            type: 'title',
+            text: 'migranteglobal.ch',
+            style: 'minimal',
+            color: '#F97316',
+            size: 'small',
           },
           start: 38,
           length: 7,
