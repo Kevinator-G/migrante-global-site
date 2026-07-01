@@ -214,7 +214,7 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
     if (!renderId) return { success: false, error: 'No render ID returned' }
 
     // Wait for the video to finish rendering
-    const videoUrl = await pollRender(renderId, apiKey, env)
+    const videoUrl = await pollRender(renderId, apiKey, env, 180_000)
     if (!videoUrl) {
       return { success: false, renderId, error: 'Render timed out or failed' }
     }
