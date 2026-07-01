@@ -178,12 +178,6 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
 
   const editPayload = {
     timeline: {
-      soundtrack: {
-        // Soft background music — royalty-free from Shotstack's library
-        src: 'https://shotstack-assets.s3.ap-southeast-2.amazonaws.com/music/unminus/ambisonic.mp3',
-        effect: 'fadeOut',
-        volume: input.audioUrl ? 0.1 : 0.3, // lower music if voiceover present
-      },
       tracks,
     },
     output: {
