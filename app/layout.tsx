@@ -182,6 +182,12 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning className={`dark ${inter.variable} ${outfit.variable}`}>
       <head>
+        {/* Restaura el tema antes del primer paint — reemplaza el gate de hidratación que dejaba la web en blanco en SSR */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('mg-theme')==='light')document.documentElement.classList.add('light')}catch(e){}`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -1,6 +1,11 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy init — instanciar en import rompe el build cuando RESEND_API_KEY no existe en el entorno
+let _resend: Resend | null = null;
+function getResend() {
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY);
+  return _resend;
+}
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "kagm94@gmail.com";
 const FROM_EMAIL = process.env.FROM_EMAIL || "Migrante Global <noreply@migranteglobal.ch>";
 
@@ -16,7 +21,7 @@ interface LeadData {
 
 export async function sendLeadNotification(lead: LeadData) {
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to: ADMIN_EMAIL,
       subject: `🔔 Nuevo contacto: ${lead.nombre}`,
@@ -85,7 +90,7 @@ export async function sendPurchaseNotification(order: PurchaseData) {
       )
       .join("");
 
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to: ADMIN_EMAIL,
       subject: `💳 Nueva compra: ${order.clientName} — ${order.total} CHF`,
@@ -141,7 +146,7 @@ export async function sendPurchaseConfirmation(order: PurchaseData) {
       )
       .join("");
 
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to: order.clientEmail,
       subject: `✅ Confirmación de compra — Migrante Global`,

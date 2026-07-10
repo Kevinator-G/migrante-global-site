@@ -19,7 +19,7 @@ const nextConfig = {
       "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https://images.unsplash.com https://img.youtube.com https://i.ytimg.com https://www.google-analytics.com https://www.googletagmanager.com",
+      "img-src 'self' data: blob: https://images.unsplash.com https://images.squarespace-cdn.com https://img.youtube.com https://i.ytimg.com https://www.google-analytics.com https://www.googletagmanager.com",
       "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com",
       "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://js.stripe.com https://hooks.stripe.com",
       "media-src 'self'",

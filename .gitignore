@@ -58,3 +58,5 @@ prisma/migrations/*.sql
 # Videos originales grandes (solo se sube el hero-video.mp4 optimizado)
 public/*.mp4
 !public/hero-video.mp4
+.vercel
+.env*

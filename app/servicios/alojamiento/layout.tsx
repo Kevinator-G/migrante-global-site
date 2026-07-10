@@ -1,23 +1,23 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cómo Encontrar Alojamiento en Suiza | Guía para Migrantes | Migrante Global",
+  title: "Habitaciones en Zúrich para Migrantes | Alojamiento Verificado | Migrante Global",
   description:
-    "Orientación completa para encontrar vivienda en Suiza sin riesgos. Plataformas, contratos de alquiler, depósitos de garantía y derechos del inquilino explicados.",
+    "Habitaciones amuebladas disponibles en Wetzikon (cantón de Zúrich) desde 1.150 CHF/mes. Acompañamiento en español: contrato, depósito y llegada sin riesgos.",
   keywords: [
+    "habitaciones en Zúrich",
     "alojamiento en Suiza",
-    "buscar piso en Suiza",
+    "habitación amueblada Wetzikon",
+    "alquilar habitación Suiza",
     "vivienda para migrantes",
     "contrato de alquiler suizo",
     "depósito de garantía Suiza",
-    "derechos inquilino Suiza",
-    "Mietwohnung Schweiz",
-    "cómo alquilar en Suiza",
+    "WG Zimmer Zürich",
   ],
   openGraph: {
-    title: "Cómo Encontrar Alojamiento en Suiza | Guía para Migrantes",
+    title: "Habitaciones en Zúrich para Migrantes | Alojamiento Verificado",
     description:
-      "Todo lo que necesitas saber para encontrar vivienda en Suiza: plataformas, contratos, depósitos y derechos.",
+      "Habitaciones amuebladas en Wetzikon desde 1.150 CHF/mes con acompañamiento en español: contrato, depósito y llegada.",
   },
 };
 
