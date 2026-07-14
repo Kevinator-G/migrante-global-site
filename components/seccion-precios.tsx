@@ -10,24 +10,6 @@ const GOLD = '#c9a96e';
 
 const planes = [
   {
-    id: 'consultoria-1a1',
-    nombre: 'Consultoría 1:1',
-    precio: 147,
-    precioRef: 'Sesión de 60 min',
-    moneda: '€',
-    tipo: 'Videollamada · Pago único',
-    descripcion: 'Primera orientación',
-    destacado: false,
-    icon: Video,
-    caracteristicas: [
-      'Videollamada de 60 minutos',
-      'Análisis de tu situación actual',
-      'Hoja de ruta personalizada',
-      'Recomendaciones concretas',
-      'Resumen por escrito incluido',
-    ],
-  },
-  {
     id: 'solo-alojamiento',
     nombre: 'Alojamiento + Consultoría',
     precio: 200,
@@ -46,6 +28,24 @@ const planes = [
     ],
   },
   {
+    id: 'llegada-completa',
+    nombre: 'Llegada Completa',
+    precio: 997,
+    precioRef: '≈ 1.037 CHF · pago a plazos disponible',
+    moneda: '€',
+    tipo: 'Pago único · plazas limitadas por mes',
+    descripcion: 'Te dejo instalado',
+    destacado: true,
+    icon: Package2,
+    caracteristicas: [
+      'Todo lo del Pack Completo',
+      'Habitación asegurada (consultoría de alojamiento incluida)',
+      'Recogida en el aeropuerto y acompañamiento el primer día',
+      'Trámites de llegada hechos contigo (Anmeldung, seguro, banco)',
+      'Soporte prioritario por WhatsApp durante 6 meses',
+    ],
+  },
+  {
     id: 'pack-completo',
     nombre: 'Pack Completo',
     precio: 497,
@@ -53,7 +53,7 @@ const planes = [
     moneda: '€',
     tipo: 'Pago único',
     descripcion: 'Reubicación integral',
-    destacado: true,
+    destacado: false,
     icon: Package2,
     caracteristicas: [
       'Consultoría de alojamiento incluida (habitaciones verificadas)',
@@ -96,7 +96,7 @@ export function SeccionPrecios() {
       precio: plan.precio,
       moneda: plan.moneda,
       tipo: plan.tipo,
-      emoji: plan.id === 'solo-alojamiento' ? '🏠' : plan.id === 'pack-completo' ? '📦' : plan.id === 'consultoria-1a1' ? '🎯' : '🤝',
+      emoji: plan.id === 'solo-alojamiento' ? '🏠' : plan.id === 'pack-completo' ? '📦' : plan.id === 'llegada-completa' ? '🚀' : '🤝',
     });
     trackEvent('add_to_cart', {
       item_id: plan.id,

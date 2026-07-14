@@ -79,7 +79,7 @@ export function SeccionEtapas() {
         </motion.div>
 
         {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-3 gap-5 mb-10">
           {etapas.map((etapa, index) => {
             const Icon = etapa.icon;
             return (
@@ -145,6 +145,30 @@ export function SeccionEtapas() {
             );
           })}
         </div>
+
+        {/* CTA diagnóstico — el filtro pago de leads */}
+        <motion.div
+          initial={{ y: 15 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="rounded-2xl p-6 md:p-7 flex flex-col md:flex-row items-center justify-between gap-5"
+          style={{ background: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}
+        >
+          <div>
+            <p className="text-white font-bold text-lg mb-1">¿No sabes si tu proyecto es viable?</p>
+            <p className="text-white/55 text-sm max-w-lg">
+              Responde 4 preguntas y en 24h te doy mi diagnóstico honesto — incluso si la respuesta es que Suiza no te conviene. Los 47 € se descuentan de cualquier servicio.
+            </p>
+          </div>
+          <Link
+            href="/diagnostico"
+            className="shrink-0 inline-flex items-center gap-2 font-bold px-7 py-3.5 rounded-xl transition hover:-translate-y-0.5"
+            style={{ background: GOLD, color: '#111318' }}
+          >
+            Hacer el diagnóstico <ArrowRight className="w-4 h-4" />
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

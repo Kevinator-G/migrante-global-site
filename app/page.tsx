@@ -3,7 +3,6 @@ import { Hero } from '@/components/hero';
 import { Footer } from '@/components/footer';
 import { SeccionCalculadoraModal } from '@/components/seccion-calculadora-modal';
 import { FormularioContacto } from '@/components/formulario-contacto';
-import { SeccionValidacion } from '@/components/seccion-validacion';
 import { SeccionEtapas } from '@/components/seccion-etapas';
 import { SeccionAlojamientoHome } from '@/components/seccion-alojamiento-home';
 import { SeccionServicios } from '@/components/seccion-servicios';
@@ -22,9 +21,7 @@ export default function HomePage() {
       <main>
         {/* 1. Hero — captura atención y define la promesa */}
         <Hero />
-        {/* 2. Validación — prueba social inmediata (150+ personas, 3 años) */}
-        <SeccionValidacion />
-        {/* 3. Etapas — "¿En qué etapa estás?": guía al visitante a su camino */}
+        {/* 2. Etapas — "¿En qué etapa estás?": guía al visitante a su camino */}
         <SeccionEtapas />
         {/* 4. Alojamiento — habitaciones reales disponibles, producto estrella */}
         <SeccionAlojamientoHome />

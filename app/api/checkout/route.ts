@@ -38,7 +38,8 @@ export async function POST(req: Request) {
     );
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      // Sin payment_method_types: Stripe muestra lo activado en el dashboard
+      // (tarjeta, Klarna a plazos, TWINT...) — activa Klarna en Settings → Payment methods
       line_items: lineItems,
       mode: "payment",
       customer_email: customerEmail || undefined,

@@ -80,6 +80,23 @@ const servicios = [
     fotoAlt: 'Consulta personalizada por videollamada',
   },
   {
+    id: 'empleo-vip',
+    href: '/servicios/orientacion-laboral',
+    icon: Briefcase,
+    categoria: 'Empleo',
+    titulo: 'Búsqueda de Empleo VIP',
+    descripcion:
+      'Yo aplico por ti: envío tu CV adaptado a vacantes reales de tu sector durante 4 semanas, con informe semanal de postulaciones y respuestas.',
+    precio: 397,
+    moneda: '€',
+    precioTipo: '4 semanas de postulación activa · Pago único',
+    tag: 'Hecho por ti',
+    tagColor: '#F97316',
+    destacado: false,
+    foto: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=200&q=80',
+    fotoAlt: 'Profesional gestionando postulaciones de empleo',
+  },
+  {
     id: 'solo-alojamiento',
     href: '/servicios/alojamiento',
     icon: Home,
