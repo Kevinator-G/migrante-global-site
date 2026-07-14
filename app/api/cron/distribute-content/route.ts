@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 import { adaptContentForSocials } from '@/lib/social/content-adapter'
 import { publishToInstagram } from '@/lib/social/instagram'
-import { publishToFacebook } from '@/lib/social/facebook'
+import { publishToFacebook, publishVideoToFacebook } from '@/lib/social/facebook'
 import { textToSpeech } from '@/lib/social/elevenlabs'
 import { generateVideo } from '@/lib/social/video-generator'
 import { pickVideoMedia } from '@/lib/social/media-library'
@@ -157,7 +157,8 @@ async function distributeBlogPost(blogPostId: string) {
   const needsVideo =
     !alreadyDistributed.includes('tiktok') ||
     !alreadyDistributed.includes('youtube') ||
-    !alreadyDistributed.includes('instagram_reel')
+    !alreadyDistributed.includes('instagram_reel') ||
+    !alreadyDistributed.includes('facebook_video')
 
   if (needsVideo && post.imageUrl) {
     // 1. Generate voiceover — el guion de voz sigue las escenas del video
@@ -269,6 +270,35 @@ async function distributeBlogPost(blogPostId: string) {
           status: ytResult.success ? 'published' : 'failed',
           url: ytResult.platformUrl,
           error: ytResult.error,
+        }
+      }
+
+      // ── Facebook video ────────────────────────────────────────────────────
+      if (!alreadyDistributed.includes('facebook_video')) {
+        const fbVideoResult = await publishVideoToFacebook(
+          videoUrl,
+          adapted.instagram.caption,
+          adapted.instagram.hashtags,
+        )
+
+        await prisma.socialPost.create({
+          data: {
+            blogPostId: post.id,
+            platform: 'facebook_video',
+            status: fbVideoResult.success ? 'published' : 'failed',
+            caption: adapted.instagram.caption,
+            hashtags: adapted.instagram.hashtags,
+            platformId: fbVideoResult.platformId,
+            platformUrl: fbVideoResult.platformUrl,
+            error: fbVideoResult.error,
+            publishedAt: fbVideoResult.success ? new Date() : undefined,
+          },
+        })
+
+        results.facebook_video = {
+          status: fbVideoResult.success ? 'published' : 'failed',
+          url: fbVideoResult.platformUrl,
+          error: fbVideoResult.error,
         }
       }
 
