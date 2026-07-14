@@ -51,10 +51,16 @@ async function fetchNewsArticles(query: string): Promise<Array<{
   }
 }
 
-// ── Unsplash — returns a unique image not already used in this category ───
+// Las URLs de Unsplash llevan un parámetro ixid que cambia en cada petición —
+// para comparar si una foto ya se usó hay que quedarse con la parte estable.
+export function unsplashPhotoKey(url: string): string {
+  return url.split('?')[0]
+}
+
+// ── Unsplash — returns a unique image not already used recently ───────────
 async function fetchUnsplashImage(
   query: string,
-  usedUrls: Set<string> = new Set(),
+  usedKeys: Set<string> = new Set(),
 ): Promise<string | null> {
   const accessKey = process.env.UNSPLASH_ACCESS_KEY
   if (!accessKey) return null
@@ -62,7 +68,7 @@ async function fetchUnsplashImage(
   try {
     const params = new URLSearchParams({
       query: `Switzerland ${query}`,
-      per_page: '10',
+      per_page: '20',
       orientation: 'landscape',
     })
     const res = await fetch(`https://api.unsplash.com/search/photos?${params}`, {
@@ -72,11 +78,12 @@ async function fetchUnsplashImage(
     const data = await res.json()
     const results: Array<{ urls: { regular: string } }> = data.results ?? []
 
-    // Pick the first result whose URL hasn't been used in this category recently
-    const fresh = results.find((r) => !usedUrls.has(r.urls.regular))
-    // Fall back to a random one if all 10 have been used (unlikely)
-    const fallback = results[Math.floor(Math.random() * results.length)]
-    return fresh?.urls.regular ?? fallback?.urls.regular ?? null
+    // Candidatas cuya FOTO (no URL exacta) no se haya usado en los últimos posts,
+    // elegida al azar para variar incluso entre días con la misma búsqueda
+    const fresh = results.filter((r) => !usedKeys.has(unsplashPhotoKey(r.urls.regular)))
+    const pool = fresh.length > 0 ? fresh : results
+    const pick = pool[Math.floor(Math.random() * pool.length)]
+    return pick?.urls.regular ?? null
   } catch {
     return null
   }
@@ -230,7 +237,10 @@ async function generatePosts() {
     })
 
     const usedSourceUrls = new Set(recentPosts.map((p) => p.sourceUrl).filter(Boolean) as string[])
-    const usedImageUrls = new Set(recentPosts.map((p) => p.imageUrl).filter(Boolean) as string[])
+    // Clave estable de cada foto ya usada (sin el ixid variable de Unsplash)
+    const usedImageUrls = new Set(
+      (recentPosts.map((p) => p.imageUrl).filter(Boolean) as string[]).map(unsplashPhotoKey),
+    )
     const recentTitles = recentPosts.map((p) => p.title)
 
     const config = CATEGORIES[categoryName]

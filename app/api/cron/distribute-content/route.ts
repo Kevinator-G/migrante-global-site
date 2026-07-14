@@ -182,7 +182,9 @@ async function distributeBlogPost(blogPostId: string) {
     }
 
     // 2. Imágenes extra de Unsplash — una por escena en vez de una sola con zoom
-    const extraImages = await fetchUnsplashImages(adapted.video?.keywords ?? [post.category])
+    // (excluyendo la foto que ya usa el post del blog)
+    const extraImages = (await fetchUnsplashImages(adapted.video?.keywords ?? [post.category]))
+      .filter((u) => u.split('?')[0] !== post.imageUrl?.split('?')[0])
 
     // 3. Generate video with Shotstack
     const videoResult = await generateVideo({
