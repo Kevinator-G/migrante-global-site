@@ -1,7 +1,8 @@
 // Instagram Graph API — publishes an image post to a Business account
-// Required env vars:
-//   INSTAGRAM_ACCESS_TOKEN  — long-lived token (60 days), refresh before expiry
-//   INSTAGRAM_ACCOUNT_ID    — numeric ID of the Instagram Business Account
+// Token: usa el token de página permanente de SocialCredential ('meta_page')
+// con fallback a INSTAGRAM_ACCESS_TOKEN. INSTAGRAM_ACCOUNT_ID sigue en env.
+
+import { getInstagramToken } from './meta-token'
 
 const BASE = 'https://graph.facebook.com/v19.0'
 
@@ -57,11 +58,11 @@ export async function publishToInstagram(
   caption: string,
   hashtags: string[],
 ): Promise<PublishResult> {
-  const token = process.env.INSTAGRAM_ACCESS_TOKEN
+  const token = await getInstagramToken()
   const accountId = process.env.INSTAGRAM_ACCOUNT_ID
 
   if (!token || !accountId) {
-    return { success: false, error: 'INSTAGRAM_ACCESS_TOKEN or INSTAGRAM_ACCOUNT_ID not set' }
+    return { success: false, error: 'Token de Instagram no disponible o INSTAGRAM_ACCOUNT_ID not set' }
   }
 
   try {

@@ -1,7 +1,8 @@
 // Facebook Graph API — publishes photo and video posts to a Facebook Page
-// Required env vars:
-//   FACEBOOK_PAGE_ACCESS_TOKEN — Page token with pages_manage_posts permission
-//   FACEBOOK_PAGE_ID           — numeric Page ID
+// Token: usa el token de página permanente de SocialCredential ('meta_page')
+// con fallback a FACEBOOK_PAGE_ACCESS_TOKEN. FACEBOOK_PAGE_ID sigue en env.
+
+import { getFacebookToken } from './meta-token'
 
 const BASE = 'https://graph.facebook.com/v19.0'
 
@@ -17,11 +18,11 @@ export async function publishToFacebook(
   caption: string,
   hashtags: string[],
 ): Promise<PublishResult> {
-  const token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
+  const token = await getFacebookToken()
   const pageId = process.env.FACEBOOK_PAGE_ID
 
   if (!token || !pageId) {
-    return { success: false, error: 'FACEBOOK_PAGE_ACCESS_TOKEN or FACEBOOK_PAGE_ID not set' }
+    return { success: false, error: 'Token de Facebook no disponible o FACEBOOK_PAGE_ID not set' }
   }
 
   try {
@@ -63,11 +64,11 @@ export async function publishVideoToFacebook(
   description: string,
   hashtags: string[],
 ): Promise<PublishResult> {
-  const token = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
+  const token = await getFacebookToken()
   const pageId = process.env.FACEBOOK_PAGE_ID
 
   if (!token || !pageId) {
-    return { success: false, error: 'FACEBOOK_PAGE_ACCESS_TOKEN or FACEBOOK_PAGE_ID not set' }
+    return { success: false, error: 'Token de Facebook no disponible o FACEBOOK_PAGE_ID not set' }
   }
 
   try {

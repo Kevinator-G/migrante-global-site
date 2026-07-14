@@ -6,6 +6,7 @@ import { publishToFacebook, publishVideoToFacebook } from '@/lib/social/facebook
 import { textToSpeech } from '@/lib/social/elevenlabs'
 import { generateVideo } from '@/lib/social/video-generator'
 import { pickVideoMedia } from '@/lib/social/media-library'
+import { getInstagramToken } from '@/lib/social/meta-token'
 import { publishToTikTok } from '@/lib/social/tiktok'
 import { publishToYouTube } from '@/lib/social/youtube'
 
@@ -408,10 +409,10 @@ async function publishReelToInstagram(
   caption: string,
   hashtags: string[],
 ): Promise<{ success: boolean; platformId?: string; platformUrl?: string; error?: string }> {
-  const token = process.env.INSTAGRAM_ACCESS_TOKEN
+  const token = await getInstagramToken()
   const accountId = process.env.INSTAGRAM_ACCOUNT_ID
   if (!token || !accountId) {
-    return { success: false, error: 'INSTAGRAM_ACCESS_TOKEN or INSTAGRAM_ACCOUNT_ID not set' }
+    return { success: false, error: 'Token de Instagram no disponible o INSTAGRAM_ACCOUNT_ID not set' }
   }
 
   const BASE = 'https://graph.facebook.com/v19.0'
