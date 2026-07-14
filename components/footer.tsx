@@ -59,6 +59,7 @@ export function Footer() {
                 ['CV Formato Suizo', '/servicios/cv-formato-suizo'],
                 ['Trámites', '/servicios/tramites'],
                 ['Alojamiento', '/servicios/alojamiento'],
+                ['Tour por Zúrich', '/servicios/tour-zurich'],
                 ['Comunidad de Apoyo', '/servicios/comunidad-apoyo'],
                 ['Sesiones 1:1', '/servicios/sesiones-uno-a-uno'],
               ].map(([label, href]) => (

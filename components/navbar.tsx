@@ -70,6 +70,9 @@ export function Navbar() {
             <Link href="/servicios" className="text-white/80 hover:text-yellow-500 transition text-sm font-medium">
               Servicios
             </Link>
+            <Link href="/servicios/alojamiento" className="text-white/80 hover:text-yellow-500 transition text-sm font-medium">
+              Alojamiento
+            </Link>
             <Link href="/blog" className="text-white/80 hover:text-yellow-500 transition text-sm font-medium">
               Blog
             </Link>
@@ -170,6 +173,7 @@ export function Navbar() {
           >
             {[
               { href: '/servicios', label: 'Servicios' },
+              { href: '/servicios/alojamiento', label: 'Alojamiento' },
               { href: '/blog', label: 'Blog' },
               { href: '/#metodo', label: 'Método' },
             ].map(link => (

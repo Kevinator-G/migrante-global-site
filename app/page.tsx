@@ -4,6 +4,7 @@ import { Footer } from '@/components/footer';
 import { SeccionCalculadoraModal } from '@/components/seccion-calculadora-modal';
 import { FormularioContacto } from '@/components/formulario-contacto';
 import { SeccionValidacion } from '@/components/seccion-validacion';
+import { SeccionEtapas } from '@/components/seccion-etapas';
 import { SeccionServicios } from '@/components/seccion-servicios';
 import { SeccionMetodo } from '@/components/seccion-metodo';
 import { SeccionPrecios } from '@/components/seccion-precios';
@@ -23,7 +24,9 @@ export default function HomePage() {
         <Hero />
         {/* 2. Validación — prueba social inmediata (150+ personas, 3 años) */}
         <SeccionValidacion />
-        {/* 3. Quién soy — humaniza la marca antes de vender */}
+        {/* 3. Etapas — "¿En qué etapa estás?": guía al visitante a su camino */}
+        <SeccionEtapas />
+        {/* 4. Quién soy — humaniza la marca antes de vender */}
         <SeccionQuienSoy />
         {/* 4. Calculadora — enganche emocional: muestra el gap salarial */}
         <SeccionCalculadoraModal />

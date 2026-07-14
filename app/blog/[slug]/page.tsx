@@ -4,7 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
-import { Calendar, ArrowLeft, Tag, Sparkles, ExternalLink, ArrowRight } from 'lucide-react';
+import { Calendar, ArrowLeft, Tag, Sparkles, ExternalLink } from 'lucide-react';
+import { BlogCtaServicio } from '@/components/blog-cta-servicio';
 
 export const dynamic = 'force-dynamic';
 
@@ -242,22 +243,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             </div>
           )}
 
-          {/* CTA */}
-          <div
-            className="mt-14 rounded-2xl p-8 text-center"
-            style={{
-              background: 'linear-gradient(135deg, rgba(201,169,110,0.1), rgba(220,38,38,0.06))',
-              border: '1px solid rgba(201,169,110,0.2)',
-            }}
-          >
-            <h3 className="text-xl font-bold text-white mb-2">¿Listo para dar el paso?</h3>
-            <p className="text-white/55 mb-6 text-sm max-w-sm mx-auto">
-              Agenda una consulta gratuita y recibe orientación personalizada para tu proceso a Suiza.
-            </p>
-            <Link href="/#contacto" className="btn-primary inline-flex items-center gap-2">
-              Agenda tu consulta gratuita <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+          {/* CTA contextual — servicio según la categoría del artículo */}
+          <BlogCtaServicio category={post.category} />
         </article>
 
         {/* ── Artículos relacionados ── */}
