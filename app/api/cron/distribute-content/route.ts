@@ -48,14 +48,17 @@ export async function POST(req: NextRequest) {
 async function distributeBlogPost(blogPostId: string) {
   const post = await prisma.blogPost.findUnique({
     where: { id: blogPostId },
-    include: { socialPosts: { select: { platform: true } } },
+    include: { socialPosts: { select: { platform: true, status: true } } },
   })
 
   if (!post) {
     return NextResponse.json({ error: 'Blog post not found' }, { status: 404 })
   }
 
-  const alreadyDistributed = post.socialPosts.map((s) => s.platform)
+  // Solo lo PUBLICADO cuenta como distribuido — los intentos fallidos se reintentan
+  const alreadyDistributed = post.socialPosts
+    .filter((s) => s.status === 'published')
+    .map((s) => s.platform)
   const blogUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://migranteglobal.ch'}/blog/${post.slug}`
 
   let adapted
