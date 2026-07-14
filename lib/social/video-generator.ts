@@ -34,7 +34,8 @@ interface VideoInput {
   title: string
   excerpt: string
   imageUrl: string
-  imageUrls?: string[]  // imágenes extra (Unsplash) — una por escena
+  imageUrls?: string[]  // imágenes extra (biblioteca propia o Unsplash) — una por escena
+  clipUrl?: string      // clip de video propio para la escena del gancho (se silencia)
   gancho?: string       // textos de escena generados por el content-adapter
   puntos?: string[]
   cta?: string
@@ -92,14 +93,25 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
 
   const sceneTexts = [gancho, puntos[0], puntos[1], puntos[2], cta]
 
-  // Track 0 — imágenes de fondo, una por escena, con efectos alternados
-  const imageClips = SCENES.map(([start, end], i) => ({
-    asset: { type: 'image', src: sceneImages[i] },
-    start,
-    length: end - start,
-    effect: EFFECTS[i],
-    transition: { in: 'fade', out: 'fade' },
-  }))
+  // Track 0 — fondo de cada escena con efectos alternados. Si hay un clip de
+  // video propio, abre el gancho (silenciado — la voz en off va aparte).
+  const imageClips = SCENES.map(([start, end], i) => {
+    if (i === 0 && input.clipUrl) {
+      return {
+        asset: { type: 'video', src: input.clipUrl, volume: 0, trim: 0 },
+        start,
+        length: end - start,
+        transition: { in: 'fade', out: 'fade' },
+      }
+    }
+    return {
+      asset: { type: 'image', src: sceneImages[i] },
+      start,
+      length: end - start,
+      effect: EFFECTS[i],
+      transition: { in: 'fade', out: 'fade' },
+    }
+  })
 
   // Track 1 — texto principal de cada escena
   const textClips = SCENES.map(([start, end], i) => ({

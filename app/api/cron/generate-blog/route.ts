@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 import OpenAI from 'openai'
+import { pickBlogFoto } from '@/lib/social/media-library'
 
 const prisma = new PrismaClient()
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
@@ -53,7 +54,7 @@ async function fetchNewsArticles(query: string): Promise<Array<{
 
 // Las URLs de Unsplash llevan un parámetro ixid que cambia en cada petición —
 // para comparar si una foto ya se usó hay que quedarse con la parte estable.
-export function unsplashPhotoKey(url: string): string {
+function unsplashPhotoKey(url: string): string {
   return url.split('?')[0]
 }
 
@@ -271,9 +272,10 @@ async function generatePosts() {
     const parsed = JSON.parse(cleaned)
     const { title, excerpt, content, imageQuery, tags } = parsed
 
-    // Fetch real image from Unsplash — unique within this category
+    // Imagen del hero: primero material propio de la biblioteca, Unsplash de respaldo
     const imageSearchQuery = imageQuery || config.imageQuery
-    const imageUrl = await fetchUnsplashImage(imageSearchQuery, usedImageUrls)
+    const fotoPropia = await pickBlogFoto(categoryName)
+    const imageUrl = fotoPropia ?? (await fetchUnsplashImage(imageSearchQuery, usedImageUrls))
     const hasImage = !!imageUrl
 
     // Create unique slug from title + date

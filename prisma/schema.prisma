@@ -138,6 +138,21 @@ model SocialCredential {
   updatedAt    DateTime  @updatedAt
 }
 
+// Biblioteca de medios propios (fotos y clips en Vercel Blob) — el blog y los
+// videos sociales usan este material primero; Unsplash queda de respaldo
+model MediaAsset {
+  id         String    @id @default(cuid())
+  url        String    @unique
+  type       String    // 'foto' | 'video'
+  category   String?   // categoría del blog, o null = uso general
+  filename   String
+  timesUsed  Int       @default(0)
+  lastUsedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([type, category])
+}
+
 model SocialPost {
   id          String    @id @default(cuid())
   blogPostId  String

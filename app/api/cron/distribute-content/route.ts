@@ -5,6 +5,7 @@ import { publishToInstagram } from '@/lib/social/instagram'
 import { publishToFacebook } from '@/lib/social/facebook'
 import { textToSpeech } from '@/lib/social/elevenlabs'
 import { generateVideo } from '@/lib/social/video-generator'
+import { pickVideoMedia } from '@/lib/social/media-library'
 import { publishToTikTok } from '@/lib/social/tiktok'
 import { publishToYouTube } from '@/lib/social/youtube'
 
@@ -181,17 +182,23 @@ async function distributeBlogPost(blogPostId: string) {
       }
     }
 
-    // 2. Imágenes extra de Unsplash — una por escena en vez de una sola con zoom
-    // (excluyendo la foto que ya usa el post del blog)
-    const extraImages = (await fetchUnsplashImages(adapted.video?.keywords ?? [post.category]))
-      .filter((u) => u.split('?')[0] !== post.imageUrl?.split('?')[0])
+    // 2. Imágenes por escena: material propio de la biblioteca primero,
+    // Unsplash de relleno (excluyendo la foto que ya usa el post)
+    const propio = await pickVideoMedia(post.category)
+    const necesitaUnsplash = propio.fotos.length < 4
+    const extraUnsplash = necesitaUnsplash
+      ? (await fetchUnsplashImages(adapted.video?.keywords ?? [post.category])).filter(
+          (u) => u.split('?')[0] !== post.imageUrl?.split('?')[0],
+        )
+      : []
 
     // 3. Generate video with Shotstack
     const videoResult = await generateVideo({
       title: post.title,
       excerpt: post.excerpt,
       imageUrl: post.imageUrl,
-      imageUrls: extraImages,
+      imageUrls: [...propio.fotos, ...extraUnsplash],
+      clipUrl: propio.clip,
       gancho: adapted.video?.gancho,
       puntos: adapted.video?.puntos,
       cta: adapted.video?.cta,
