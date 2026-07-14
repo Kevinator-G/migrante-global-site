@@ -62,9 +62,9 @@ export default function GuiaTuristicaPage() {
         icon={Map}
         categoria="Experiencias en Suiza"
         precio={297}
-        moneda="€"
+        moneda="CHF"
         precioTipo="Jornada completa (hasta 8h) · por grupo de 1 a 4 personas · Zúrich, Lucerna, Berna o Interlaken"
-        valorMercado="Tours guiados privados en Suiza: €400–600/día"
+        valorMercado="Tours guiados privados en Suiza: 400–600 CHF/día"
         hideNavbar
         hideHero
         problema={{

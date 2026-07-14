@@ -158,7 +158,7 @@ export function SeccionEtapas() {
           <div>
             <p className="text-white font-bold text-lg mb-1">¿No sabes si tu proyecto es viable?</p>
             <p className="text-white/55 text-sm max-w-lg">
-              Responde 4 preguntas y en 24h te doy mi diagnóstico honesto — incluso si la respuesta es que Suiza no te conviene. Los 47 € se descuentan de cualquier servicio.
+              Responde 4 preguntas y en 24h te doy mi diagnóstico honesto — incluso si la respuesta es que Suiza no te conviene. Los 47 CHF se descuentan de cualquier servicio.
             </p>
           </div>
           <Link

@@ -58,9 +58,9 @@ export default function RecogidaAeropuertoPage() {
         icon={Plane}
         categoria="Bienvenida a Suiza"
         precio={177}
-        moneda="€"
+        moneda="CHF"
         precioTipo="Por traslado · hasta 4h de orientación · aeropuertos principales"
-        valorMercado="Servicios de recepción y orientación en Suiza: €200–450"
+        valorMercado="Servicios de recepción y orientación en Suiza: 200–450 CHF"
         hideNavbar
         hideHero
         problema={{

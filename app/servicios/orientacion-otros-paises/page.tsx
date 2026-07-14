@@ -13,9 +13,9 @@ export default function OrientacionOtrosPaisesPage() {
       icon={Globe}
       categoria="Migración Europea"
       precio={177}
-      moneda="€"
+      moneda="CHF"
       precioTipo="Pago único · incluye 1 sesión de consultoría"
-      valorMercado="Consultoría de migración comparativa en Europa: €200–400"
+      valorMercado="Consultoría de migración comparativa en Europa: 200–400 CHF"
       problema={{
         titulo: '¿Por qué Suiza no es la única opción — ni siempre la mejor?',
         descripcion:

@@ -37,7 +37,7 @@ const servicios = [
     descripcion:
       'Estrategia personalizada para entrar al mercado laboral suizo: portales, networking, entrevistas y plan de acción.',
     precio: 197,
-    moneda: '€',
+    moneda: 'CHF',
     precioTipo: 'Pago único',
     tag: 'Empleo',
     tagColor: GOLD,
@@ -54,7 +54,7 @@ const servicios = [
     descripcion:
       'Revisión y adaptación de tu CV al formato exacto que usan los empleadores suizos. Estructura, foto, longitud y contenido.',
     precio: 147,
-    moneda: '€',
+    moneda: 'CHF',
     precioTipo: 'Pago único',
     tag: 'Documentos',
     tagColor: '#ef4444',
@@ -71,7 +71,7 @@ const servicios = [
     descripcion:
       'Consultoría personalizada de 60 minutos para resolver tus dudas específicas. Plan de acción y grabación incluida.',
     precio: 147,
-    moneda: '€/sesión',
+    moneda: 'CHF/sesión',
     precioTipo: 'Por sesión',
     tag: 'Incluido en planes',
     tagColor: '#60a5fa',
@@ -88,7 +88,7 @@ const servicios = [
     descripcion:
       'Yo aplico por ti: envío tu CV adaptado a vacantes reales de tu sector durante 4 semanas, con informe semanal de postulaciones y respuestas.',
     precio: 397,
-    moneda: '€',
+    moneda: 'CHF',
     precioTipo: '4 semanas de postulación activa · Pago único',
     tag: 'Hecho por ti',
     tagColor: '#F97316',
@@ -156,7 +156,7 @@ const servicios = [
     descripcion:
       'Alguien que ya conoce Suiza te espera en el aeropuerto y te acompaña hasta tu alojamiento. Primer día sin estrés.',
     precio: 177,
-    moneda: '€',
+    moneda: 'CHF',
     precioTipo: 'Por traslado · hasta 4h de orientación',
     tag: null,
     tagColor: '',
@@ -173,7 +173,7 @@ const servicios = [
     descripcion:
       'Guía completa del Anmeldung, seguros de salud, cuenta bancaria y demás trámites obligatorios. 45 días de soporte.',
     precio: 247,
-    moneda: '€',
+    moneda: 'CHF',
     precioTipo: 'Pago único',
     tag: null,
     tagColor: '',
@@ -190,7 +190,7 @@ const servicios = [
     descripcion:
       'Acceso mensual a nuestra red de migrantes latinos en Suiza. Networking, eventos y recursos actualizados.',
     precio: 27,
-    moneda: '€/mes',
+    moneda: 'CHF/mes',
     precioTipo: 'Suscripción · cancela cuando quieras',
     tag: null,
     tagColor: '',
@@ -207,7 +207,7 @@ const servicios = [
     descripcion:
       'Descubre Suiza con alguien que ya vive aquí. Rincones reales, anécdotas locales y los lugares donde van los suizos de verdad.',
     precio: 297,
-    moneda: '€',
+    moneda: 'CHF',
     precioTipo: 'Jornada completa (8h) · por grupo de hasta 4 personas',
     tag: 'Nuevo',
     tagColor: '#10b981',
@@ -224,7 +224,7 @@ const servicios = [
     descripcion:
       'Análisis comparativo de Suiza vs Alemania, Austria, Países Bajos y Portugal según tu perfil. Incluye sesión 1:1.',
     precio: 177,
-    moneda: '€',
+    moneda: 'CHF',
     precioTipo: 'Pago único',
     tag: null,
     tagColor: '',
@@ -583,7 +583,7 @@ export default function ServiciosPage() {
 
         <div style={{ padding: '24px 0' }}>
           <p className="text-white/20 text-xs text-center max-w-[800px] mx-auto px-6">
-            Todos los precios en euros (€) · Referencia CHF orientativa · Pago coordinado personalmente
+            Todos los precios en francos suizos (CHF) · Referencia en euros orientativa · Pago online seguro con Stripe
           </p>
         </div>
       </main>

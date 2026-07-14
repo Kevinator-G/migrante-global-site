@@ -15,7 +15,7 @@ export default function ClasesAlemanPage() {
       precio={0}
       moneda=""
       precioTipo="Consulta gratuita · te orientamos sin compromiso"
-      valorMercado="Clases de alemán privadas en Suiza: €40–100/hora"
+      valorMercado="Clases de alemán privadas en Suiza: 40–100 CHF/hora"
       problema={{
         titulo: '¿Por qué el alemán define tu futuro en Suiza?',
         descripcion:

@@ -5,8 +5,8 @@ import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import { CheckCircle2, ArrowRight, Loader2, Stethoscope } from 'lucide-react';
 
-// Enlace de pago de Stripe (live) — Diagnóstico de viabilidad 47 €
-const STRIPE_DIAGNOSTICO = 'https://buy.stripe.com/28E7sEd3ocJ98EReMt5sA02';
+// Enlace de pago de Stripe (live) — Diagnóstico de viabilidad 47 CHF (antes 47 EUR)
+const STRIPE_DIAGNOSTICO = 'https://buy.stripe.com/00w5kwbZk8sTcV733L5sA03';
 
 const PREGUNTAS = [
   {
@@ -75,7 +75,7 @@ export default function DiagnosticoPage() {
             <p className="text-white/60 leading-relaxed">
               Recibí tu pago y tus respuestas. En las próximas <b className="text-white">24 horas</b> te
               escribo por WhatsApp con tu diagnóstico personalizado: si tu proyecto es viable, qué camino
-              te conviene y tu siguiente paso concreto. Los 47 € se descuentan de cualquier servicio que contrates.
+              te conviene y tu siguiente paso concreto. Los 47 CHF se descuentan de cualquier servicio que contrates.
             </p>
           </div>
         </main>
@@ -103,7 +103,7 @@ export default function DiagnosticoPage() {
             </h1>
             <p className="text-white/60 max-w-xl mx-auto">
               Responde 4 preguntas y recibe en 24h mi diagnóstico honesto: si conviene, cuándo y por dónde
-              empezar — o si mejor no (también te lo diré). <b className="text-white">47 € que se descuentan de cualquier servicio.</b>
+              empezar — o si mejor no (también te lo diré). <b className="text-white">47 CHF que se descuentan de cualquier servicio.</b>
             </p>
           </div>
 
@@ -172,7 +172,7 @@ export default function DiagnosticoPage() {
               style={{ background: '#c9a96e', color: '#111318' }}
             >
               {enviando ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
-              {enviando ? 'Guardando…' : 'Recibir mi diagnóstico · 47 €'}
+              {enviando ? 'Guardando…' : 'Recibir mi diagnóstico · 47 CHF'}
             </button>
             <p className="text-white/30 text-xs text-center -mt-4">
               Pago seguro con Stripe · Si tu proyecto no es viable, te lo digo igual — sin venderte humo.

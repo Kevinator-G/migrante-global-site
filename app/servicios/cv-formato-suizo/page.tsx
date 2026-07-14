@@ -13,9 +13,9 @@ export default function CVFormatoSuizoPage() {
       icon={FileText}
       categoria="Empleo en Suiza"
       precio={147}
-      moneda="€"
+      moneda="CHF"
       precioTipo="Pago único · incluye 1 revisión adicional"
-      valorMercado="Servicios de CV profesional en Europa: €250–500"
+      valorMercado="Servicios de CV profesional en Suiza: 250–500 CHF"
       problema={{
         titulo: '¿Por qué tu CV actual no funciona en Suiza?',
         descripcion:
@@ -40,7 +40,7 @@ export default function CVFormatoSuizoPage() {
         'No escribimos tu CV desde cero — necesitas tener uno base',
         'No garantizamos entrevistas ni respuestas de empleadores',
         'No traducimos el CV completo a alemán/francés (solo orientamos)',
-        'La carta de presentación se cotiza aparte (47€)',
+        'La carta de presentación se cotiza aparte (47 CHF)',
       ]}
       paraQuien={[
         'Profesionales que aplican a empleos suizos sin obtener respuesta',

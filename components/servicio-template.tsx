@@ -565,8 +565,8 @@ export function ServicioTemplate({
                 <div className="space-y-3.5">
                   {[
                     { plan: 'Alojamiento + Consultoría — 200 CHF', info: planInfo.inicio },
-                    { plan: 'Pack Completo — 497 €', info: planInfo.estrategia },
-                    { plan: 'Comunidad — 27 €/mes', info: planInfo.comunidad },
+                    { plan: 'Pack Completo — 497 CHF', info: planInfo.estrategia },
+                    { plan: 'Comunidad — 27 CHF/mes', info: planInfo.comunidad },
                   ].map((p, i) => (
                     <div key={i} className="flex items-start gap-3 text-sm">
                       <ChevronRight
@@ -643,7 +643,7 @@ export function ServicioTemplate({
             <p className="text-white/18 text-xs leading-relaxed">
               Migrante Global no es agencia de empleo, inmobiliaria ni asesoría legal.
               Ofrecemos orientación y acompañamiento. No garantizamos empleo, residencia
-              ni aprobación de trámites. Todos los precios en euros (€).
+              ni aprobación de trámites. Todos los precios en francos suizos (CHF).
             </p>
           </div>
         </div>

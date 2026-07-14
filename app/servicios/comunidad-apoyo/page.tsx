@@ -13,9 +13,9 @@ export default function ComunidadApoyoPage() {
       icon={Users}
       categoria="Red y Comunidad"
       precio={27}
-      moneda="€ / mes"
+      moneda="CHF / mes"
       precioTipo="Suscripción mensual · cancela cuando quieras"
-      valorMercado="Membresías de comunidades para migrantes: €60–150/mes"
+      valorMercado="Membresías de comunidades para migrantes: 60–150 CHF/mes"
       problema={{
         titulo: '¿Por qué la comunidad es el recurso más infravalorodo en migración?',
         descripcion:
@@ -52,7 +52,7 @@ export default function ComunidadApoyoPage() {
       planInfo={{
         inicio: 'Acceso de prueba durante 30 días incluido con el plan.',
         estrategia: 'Acceso durante 3 meses incluido dentro del Pack Completo.',
-        comunidad: 'Este servicio es el núcleo del plan Comunidad (27€/mes).',
+        comunidad: 'Este servicio es el núcleo del plan Comunidad (27 CHF/mes).',
       }}
     />
   );

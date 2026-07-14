@@ -31,8 +31,8 @@ const planes = [
     id: 'llegada-completa',
     nombre: 'Llegada Completa',
     precio: 997,
-    precioRef: '≈ 1.037 CHF · pago a plazos disponible',
-    moneda: '€',
+    precioRef: '≈ 960 € · pago a plazos disponible',
+    moneda: 'CHF',
     tipo: 'Pago único · plazas limitadas por mes',
     descripcion: 'Te dejo instalado',
     destacado: true,
@@ -49,8 +49,8 @@ const planes = [
     id: 'pack-completo',
     nombre: 'Pack Completo',
     precio: 497,
-    precioRef: '≈ 517 CHF',
-    moneda: '€',
+    precioRef: '≈ 480 €',
+    moneda: 'CHF',
     tipo: 'Pago único',
     descripcion: 'Reubicación integral',
     destacado: false,
@@ -70,7 +70,7 @@ const planes = [
     nombre: 'Comunidad',
     precio: 27,
     precioRef: 'Sin permanencia',
-    moneda: '€/mes',
+    moneda: 'CHF/mes',
     tipo: 'Suscripción mensual',
     descripcion: 'Sin permanencia',
     destacado: false,
@@ -102,7 +102,7 @@ export function SeccionPrecios() {
       item_id: plan.id,
       item_name: plan.nombre,
       value: plan.precio,
-      currency: 'EUR',
+      currency: 'CHF',
     });
   };
 
@@ -341,7 +341,7 @@ export function SeccionPrecios() {
           className="text-center mt-6 space-y-1"
         >
           <p className="text-white/30 text-sm">
-            * Precios en euros (€). Referencia en CHF orientativa (1 € ≈ 1,04 CHF). Pago coordinado personalmente.
+            * Precios en francos suizos (CHF). Referencia en euros orientativa (1 CHF ≈ 0,96 €). Pago online seguro con Stripe.
             Como referencia: una agencia de relocation suiza cobra desde 4.500 CHF por un acompañamiento equivalente.
           </p>
         </motion.div>

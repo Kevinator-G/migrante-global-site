@@ -13,9 +13,9 @@ export default function TramitesPage() {
       icon={FileCheck}
       categoria="Trámites Administrativos"
       precio={247}
-      moneda="€"
+      moneda="CHF"
       precioTipo="Pago único · 45 días de soporte activo"
-      valorMercado="Servicios de orientación administrativa para migrantes: €300–600"
+      valorMercado="Servicios de orientación administrativa para migrantes: 300–600 CHF"
       problema={{
         titulo: '¿Por qué los trámites en Suiza pueden hundirte?',
         descripcion:

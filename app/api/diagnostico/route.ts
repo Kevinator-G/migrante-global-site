@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
         email,
         telefono: telefono || null,
         pais: null,
-        mensaje: `[DIAGNÓSTICO 47€] Etapa: ${etapa} · Pasaporte: ${pasaporte} · Sector: ${sector} · Presupuesto: ${presupuesto}`,
+        mensaje: `[DIAGNÓSTICO 47 CHF] Etapa: ${etapa} · Pasaporte: ${pasaporte} · Sector: ${sector} · Presupuesto: ${presupuesto}`,
         consentimiento: true,
       },
     })
