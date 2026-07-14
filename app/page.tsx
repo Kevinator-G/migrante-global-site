@@ -5,15 +5,15 @@ import { SeccionCalculadoraModal } from '@/components/seccion-calculadora-modal'
 import { FormularioContacto } from '@/components/formulario-contacto';
 import { SeccionValidacion } from '@/components/seccion-validacion';
 import { SeccionEtapas } from '@/components/seccion-etapas';
+import { SeccionAlojamientoHome } from '@/components/seccion-alojamiento-home';
 import { SeccionServicios } from '@/components/seccion-servicios';
-import { SeccionMetodo } from '@/components/seccion-metodo';
 import { SeccionPrecios } from '@/components/seccion-precios';
 import { SeccionTestimonios } from '@/components/seccion-testimonios';
 import { SeccionQuienSoy } from '@/components/seccion-quien-soy';
-import { SeccionYoutube } from '@/components/seccion-youtube';
-import { SeccionFaq } from '@/components/seccion-faq';
 import { SeccionLeadMagnet } from '@/components/seccion-lead-magnet';
-import { SeccionGeneradorPreview } from '@/components/seccion-generador-preview';
+
+// Las habitaciones de la home se rectifican desde la fuente cada hora
+export const revalidate = 3600;
 
 export default function HomePage() {
   return (
@@ -26,28 +26,23 @@ export default function HomePage() {
         <SeccionValidacion />
         {/* 3. Etapas — "¿En qué etapa estás?": guía al visitante a su camino */}
         <SeccionEtapas />
-        {/* 4. Quién soy — humaniza la marca antes de vender */}
+        {/* 4. Alojamiento — habitaciones reales disponibles, producto estrella */}
+        <SeccionAlojamientoHome />
+        {/* 5. Quién soy — humaniza la marca antes de vender */}
         <SeccionQuienSoy />
-        {/* 4. Calculadora — enganche emocional: muestra el gap salarial */}
+        {/* 6. Calculadora — enganche emocional: muestra el gap salarial */}
         <SeccionCalculadoraModal />
-        {/* 5. Método — elimina el miedo al proceso */}
-        <SeccionMetodo />
-        {/* 6. Servicios — qué ofrezco, con contexto y confianza ya construidos */}
+        {/* 7. Servicios — qué ofrezco, con contexto y confianza ya construidos */}
         <SeccionServicios />
-        {/* 7. Testimonios — prueba social de clientes reales */}
+        {/* 8. Testimonios — prueba social de clientes reales */}
         <SeccionTestimonios />
-        {/* 8. YouTube — prueba social en video */}
-        <SeccionYoutube />
         {/* 9. Precios — inversión, después de haber construido valor */}
         <SeccionPrecios />
-        {/* 10. FAQ — elimina objeciones antes del cierre */}
-        <SeccionFaq />
-        {/* 11. Generador — herramienta gratuita que engancha y captura leads */}
-        <SeccionGeneradorPreview />
-        {/* 12. Lead magnet — captura emails de los que no están listos aún */}
+        {/* 10. Lead magnet — captura emails de los que no están listos aún */}
         <SeccionLeadMagnet />
-        {/* 13. Contacto — acción final */}
+        {/* 11. Contacto — acción final */}
         <FormularioContacto />
+        {/* Método, FAQ y YouTube viven ahora en /metodo — menos scroll aquí */}
       </main>
       <Footer />
     </>

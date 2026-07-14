@@ -138,6 +138,23 @@ model SocialCredential {
   updatedAt    DateTime  @updatedAt
 }
 
+// Habitaciones de Domenico (quadoimmobilien.com/camere) — se sincronizan
+// automáticamente desde su web en lib/alojamiento/quado-sync.ts
+model Habitacion {
+  codigo      String    @id // CS1, CSD1, CD2...
+  tipo        String    @default("singola") // singola | doppia | singola o doppia
+  disponible  DateTime?
+  precio      Int       // CHF/mes (individual)
+  precioDoble Int?      // CHF/mes si tiene opción doble
+  deposito    Int       @default(1000)
+  metros      Int
+  direccion   String
+  fotos       String[]
+  activa      Boolean   @default(true) // false si desaparece de la fuente
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
 // Biblioteca de medios propios (fotos y clips en Vercel Blob) — el blog y los
 // videos sociales usan este material primero; Unsplash queda de respaldo
 model MediaAsset {

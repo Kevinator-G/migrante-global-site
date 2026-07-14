@@ -1,199 +1,62 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
-import { MapPin, Calendar, Maximize2, ChevronLeft, ChevronRight, MessageCircle, CheckCircle2, Home, FileText, ChevronDown, CreditCard } from 'lucide-react';
+import { HabitacionCard, type HabitacionView } from '@/components/habitacion-card';
+import { PagoBanner } from '@/components/pago-banner';
+import { getHabitaciones } from '@/lib/alojamiento/quado-sync';
+import { MessageCircle, CheckCircle2, Home, FileText, ChevronDown } from 'lucide-react';
+
+// La página se auto-rectifica: en cada revalidación vuelve a leer la web de
+// Domenico (quadoimmobilien.com/camere), actualiza fechas/precios/habitaciones
+// en la DB y recién entonces las muestra.
+export const revalidate = 3600;
 
 const WHATSAPP = '+41772337353';
-// Enlace de pago de Stripe (live) — Consultoría de alojamiento 200 CHF.
-// client_reference_id lleva el código de la habitación para verlo en el dashboard de Stripe.
-const STRIPE_CONSULTORIA = 'https://buy.stripe.com/14A7sEaVg5gH2gt6fX5sA01';
 
-const habitaciones = [
-  {
-    codigo: 'CS1',
-    disponible: '06 jul 2026',
-    precio: 1250,
-    deposito: 1000,
-    metros: 15,
-    direccion: 'Haldenstrasse 20, 8620 Wetzikon',
-    fotos: [
-      'https://images.squarespace-cdn.com/content/v1/689745af7da5f5244adcce8d/6b141bd3-8b90-4f35-b9d5-c7c23195f251/IMG_9863.jpeg',
-      'https://images.squarespace-cdn.com/content/v1/689745af7da5f5244adcce8d/e69954de-addb-4f49-9035-a23d9b2642d9/IMG_9864.jpeg',
-    ],
-  },
-  {
-    codigo: 'CS2',
-    disponible: '01 ago 2026',
-    precio: 1250,
-    deposito: 1000,
-    metros: 15,
-    direccion: 'Haldenstrasse 20, 8620 Wetzikon',
-    fotos: [
-      'https://images.squarespace-cdn.com/content/v1/689745af7da5f5244adcce8d/83ce783d-851a-4ebc-8a9e-8e3da04c30a0/IMG_9861.jpeg',
-      'https://images.squarespace-cdn.com/content/v1/689745af7da5f5244adcce8d/7f3bf664-b359-4d27-a2e7-c1fdcc22d5c8/IMG_9862.jpeg',
-    ],
-  },
-  {
-    codigo: 'CS3',
-    disponible: '01 ago 2026',
-    precio: 1250,
-    deposito: 1000,
-    metros: 23,
-    direccion: 'Tösstalstrasse 4, 8620 Wetzikon',
-    fotos: [
-      'https://images.squarespace-cdn.com/content/v1/689745af7da5f5244adcce8d/e58c613b-6c9a-4790-b704-2482e862256d/WhatsApp+Image+2026-06-30+at+21.10.44.jpeg',
-      'https://images.squarespace-cdn.com/content/v1/689745af7da5f5244adcce8d/decb8e2f-f64f-476d-8ef3-b34d5433846a/WhatsApp+Image+2026-06-30+at+21.10.44+%281%29.jpeg',
-    ],
-  },
-  {
-    codigo: 'CS4',
-    disponible: '01 sep 2026',
-    precio: 1150,
-    deposito: 1000,
-    metros: 15,
-    direccion: 'Tösstalstrasse 4, 8620 Wetzikon',
-    fotos: [
-      'https://images.squarespace-cdn.com/content/v1/689745af7da5f5244adcce8d/7b5257e1-cde4-43d2-aab0-ca57fb31753b/WhatsApp+Image+2026-06-18+at+08.19.20+%282%29.jpeg',
-      'https://images.squarespace-cdn.com/content/v1/689745af7da5f5244adcce8d/b32e5e4b-6452-4c39-8fc9-0017e6393274/WhatsApp+Image+2026-06-18+at+08.19.20+%283%29.jpeg',
-    ],
-  },
-];
+const TIPO_LABEL: Record<string, string> = {
+  singola: 'Individual',
+  doppia: 'Doble',
+  'singola o doppia': 'Individual o doble',
+};
 
-function HabitacionCard({ h }: { h: (typeof habitaciones)[0] }) {
-  const [foto, setFoto] = useState(0);
-
-  const prev = () => setFoto((f) => (f === 0 ? h.fotos.length - 1 : f - 1));
-  const next = () => setFoto((f) => (f === h.fotos.length - 1 ? 0 : f + 1));
-
-  return (
-    <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0f1117] flex flex-col">
-      {/* Foto carousel */}
-      <div className="relative h-56 bg-black overflow-hidden group">
-        <img
-          src={h.fotos[foto]}
-          alt={`Habitación ${h.codigo}`}
-          className="w-full h-full object-cover transition-transform duration-500"
-        />
-        {h.fotos.length > 1 && (
-          <>
-            <button
-              onClick={prev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={next}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-              {h.fotos.map((_, i) => (
-                <div
-                  key={i}
-                  className={`w-1.5 h-1.5 rounded-full transition-colors ${i === foto ? 'bg-white' : 'bg-white/40'}`}
-                />
-              ))}
-            </div>
-          </>
-        )}
-        {/* Badge código */}
-        <div className="absolute top-3 left-3 bg-[#E63946] text-white text-xs font-bold px-2.5 py-1 rounded-full">
-          {h.codigo}
-        </div>
-      </div>
-
-      {/* Info */}
-      <div className="p-5 flex flex-col gap-4 flex-1">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-start gap-2 text-white/60 text-sm">
-            <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-[#E63946]" />
-            <span>{h.direccion}</span>
-          </div>
-          <div className="flex items-center gap-4 text-sm text-white/60">
-            <span className="flex items-center gap-1.5">
-              <Maximize2 className="w-4 h-4 text-[#E63946]" />
-              {h.metros} m²
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Calendar className="w-4 h-4 text-[#E63946]" />
-              Disponible {h.disponible}
-            </span>
-          </div>
-        </div>
-
-        {/* Precios */}
-        <div className="border border-white/10 rounded-xl p-4 flex flex-col gap-3">
-          <div className="flex justify-between items-center">
-            <span className="text-white/60 text-sm">Alquiler mensual</span>
-            <span className="text-white font-bold text-lg">{h.precio} CHF<span className="text-white/40 text-xs font-normal">/mes</span></span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-white/60 text-sm">Depósito</span>
-            <span className="text-white/80 text-sm">{h.deposito} CHF</span>
-          </div>
-          <div className="border-t border-white/10 pt-3 flex justify-between items-center">
-            <span className="text-[#F97316] text-sm font-medium">Consultoría Kevin</span>
-            <span className="text-[#F97316] font-bold">200 CHF</span>
-          </div>
-        </div>
-
-        {/* CTA — el pago es el filtro del lead: sin consultoría pagada no hay gestión */}
-        <div className="mt-auto flex flex-col gap-2">
-          <a
-            href={`${STRIPE_CONSULTORIA}?client_reference_id=${h.codigo}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 bg-[#F97316] hover:bg-[#ea6a06] text-white font-semibold py-3 rounded-xl transition-colors"
-          >
-            <CreditCard className="w-4 h-4" />
-            Reservar esta habitación · 200 CHF
-          </a>
-          <p className="text-white/35 text-xs text-center">
-            Pagas la consultoría y te escribo por WhatsApp en horas para gestionar tu habitación
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+function formatearFecha(d: Date | null): string {
+  if (!d) return 'a confirmar';
+  return new Intl.DateTimeFormat('es-CH', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(d);
 }
 
-export default function AlojamientoPage() {
-  // Banner de confirmación al volver del pago de Stripe (?pago=exitoso)
-  const [pagoOk, setPagoOk] = useState(false);
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get('pago') === 'exitoso') {
-      setPagoOk(true);
-    }
-  }, []);
+export default async function AlojamientoPage() {
+  const habitaciones = await getHabitaciones();
+
+  const vistas: HabitacionView[] = habitaciones.map((h) => ({
+    codigo: h.codigo,
+    tipoLabel: TIPO_LABEL[h.tipo] ?? 'Individual',
+    disponible: formatearFecha(h.disponible),
+    precio: h.precio,
+    precioDoble: h.precioDoble,
+    deposito: h.deposito,
+    metros: h.metros,
+    direccion: h.direccion,
+    fotos: h.fotos,
+  }));
+
+  const mesActual = new Intl.DateTimeFormat('es-CH', { month: 'long', year: 'numeric' }).format(new Date());
 
   return (
     <>
       <Navbar />
-
-      {pagoOk && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 max-w-lg w-[calc(100%-2rem)]">
-          <div className="flex items-start gap-3 bg-[#0f1117] border border-[#25D366]/50 rounded-2xl p-5 shadow-2xl">
-            <CheckCircle2 className="w-5 h-5 text-[#25D366] mt-0.5 shrink-0" />
-            <div>
-              <p className="text-white font-semibold text-sm mb-1">¡Pago recibido — gracias por tu confianza!</p>
-              <p className="text-white/60 text-sm">
-                Te escribo por WhatsApp en las próximas horas para arrancar con tu habitación. Si quieres adelantar,
-                mándame un mensaje con el código de la habitación que te interesa.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      <PagoBanner />
 
       {/* Hero */}
       <section className="pt-28 pb-16 px-6 text-center bg-[#080a0f]">
         <div className="max-w-2xl mx-auto">
-          <span className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6"
-            style={{ background: 'rgba(230,57,70,0.12)', border: '1px solid rgba(230,57,70,0.3)', color: '#E63946' }}>
+          <span
+            className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-6"
+            style={{ background: 'rgba(230,57,70,0.12)', border: '1px solid rgba(230,57,70,0.3)', color: '#E63946' }}
+          >
             <Home className="w-3.5 h-3.5" />
             Habitaciones disponibles en Suiza
           </span>
@@ -224,13 +87,15 @@ export default function AlojamientoPage() {
         </div>
       </section>
 
-      {/* Grid habitaciones */}
+      {/* Grid habitaciones — datos rectificados desde la fuente */}
       <section className="py-16 px-6 bg-[#080a0f]">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-white mb-2">Habitaciones disponibles</h2>
-          <p className="text-white/50 text-sm mb-10">Actualizadas en julio 2026 · Wetzikon, cantón de Zúrich</p>
+          <p className="text-white/50 text-sm mb-10">
+            Disponibilidad verificada · {mesActual} · Cantón de Zúrich
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-            {habitaciones.map((h) => (
+            {vistas.map((h) => (
               <HabitacionCard key={h.codigo} h={h} />
             ))}
           </div>
@@ -322,7 +187,7 @@ export default function AlojamientoPage() {
               },
               {
                 q: '¿Qué pasa si la habitación que quiero ya está ocupada?',
-                a: 'Las habitaciones se actualizan cada mes. Si la que te interesa ya no está disponible, te aviso apenas se libere una similar y te ayudo a buscar alternativas en la zona.',
+                a: 'La disponibilidad se sincroniza directamente con el propietario. Si la que te interesa ya no está disponible, te aviso apenas se libere una similar y te ayudo a buscar alternativas en la zona.',
               },
             ].map((faq) => (
               <details key={faq.q} className="group border border-white/10 rounded-xl bg-[#0f1117] overflow-hidden">
