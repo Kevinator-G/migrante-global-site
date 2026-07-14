@@ -1,11 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
-import { MapPin, Calendar, Maximize2, ChevronLeft, ChevronRight, MessageCircle, CheckCircle2, Home, FileText, ChevronDown } from 'lucide-react';
+import { MapPin, Calendar, Maximize2, ChevronLeft, ChevronRight, MessageCircle, CheckCircle2, Home, FileText, ChevronDown, CreditCard } from 'lucide-react';
 
 const WHATSAPP = '+41772337353';
+// Enlace de pago de Stripe (live) — Consultoría de alojamiento 200 CHF.
+// client_reference_id lleva el código de la habitación para verlo en el dashboard de Stripe.
+const STRIPE_CONSULTORIA = 'https://buy.stripe.com/14A7sEaVg5gH2gt6fX5sA01';
 
 const habitaciones = [
   {
@@ -144,24 +147,58 @@ function HabitacionCard({ h }: { h: (typeof habitaciones)[0] }) {
         </div>
 
         {/* CTA */}
-        <a
-          href={waUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-auto flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold py-3 rounded-xl transition-colors"
-        >
-          <MessageCircle className="w-4 h-4" />
-          Me interesa esta habitación
-        </a>
+        <div className="mt-auto flex flex-col gap-2">
+          <a
+            href={waUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold py-3 rounded-xl transition-colors"
+          >
+            <MessageCircle className="w-4 h-4" />
+            Me interesa esta habitación
+          </a>
+          <a
+            href={`${STRIPE_CONSULTORIA}?client_reference_id=${h.codigo}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 bg-transparent hover:bg-[#F97316]/10 text-[#F97316] font-semibold py-3 rounded-xl transition-colors border border-[#F97316]/40"
+          >
+            <CreditCard className="w-4 h-4" />
+            Pagar consultoría · 200 CHF
+          </a>
+        </div>
       </div>
     </div>
   );
 }
 
 export default function AlojamientoPage() {
+  // Banner de confirmación al volver del pago de Stripe (?pago=exitoso)
+  const [pagoOk, setPagoOk] = useState(false);
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get('pago') === 'exitoso') {
+      setPagoOk(true);
+    }
+  }, []);
+
   return (
     <>
       <Navbar />
+
+      {pagoOk && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 max-w-lg w-[calc(100%-2rem)]">
+          <div className="flex items-start gap-3 bg-[#0f1117] border border-[#25D366]/50 rounded-2xl p-5 shadow-2xl">
+            <CheckCircle2 className="w-5 h-5 text-[#25D366] mt-0.5 shrink-0" />
+            <div>
+              <p className="text-white font-semibold text-sm mb-1">¡Pago recibido — gracias por tu confianza!</p>
+              <p className="text-white/60 text-sm">
+                Te escribo por WhatsApp en las próximas horas para arrancar con tu habitación. Si quieres adelantar,
+                mándame un mensaje con el código de la habitación que te interesa.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Hero */}
       <section className="pt-28 pb-16 px-6 text-center bg-[#080a0f]">
