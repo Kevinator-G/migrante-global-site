@@ -11,7 +11,7 @@ const planes = [
   {
     id: 'consultoria-1a1',
     nombre: 'Consultoría 1:1',
-    precio: 120,
+    precio: 147,
     precioRef: 'Sesión de 60 min',
     moneda: '€',
     tipo: 'Videollamada · Pago único',
@@ -48,8 +48,8 @@ const planes = [
   {
     id: 'pack-completo',
     nombre: 'Pack Completo',
-    precio: 397,
-    precioRef: '≈ 413 CHF',
+    precio: 497,
+    precioRef: '≈ 517 CHF',
     moneda: '€',
     tipo: 'Pago único',
     descripcion: 'Reubicación integral',
@@ -328,6 +328,7 @@ export function SeccionPrecios() {
         >
           <p className="text-white/30 text-sm">
             * Precios en euros (€). Referencia en CHF orientativa (1 € ≈ 1,04 CHF). Pago coordinado personalmente.
+            Como referencia: una agencia de relocation suiza cobra desde 4.500 CHF por un acompañamiento equivalente.
           </p>
         </motion.div>
       </div>

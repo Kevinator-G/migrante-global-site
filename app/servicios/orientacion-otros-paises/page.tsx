@@ -12,7 +12,7 @@ export default function OrientacionOtrosPaisesPage() {
       tagline="Alemania, Austria, Países Bajos, Portugal — cada país tiene su propio camino"
       icon={Globe}
       categoria="Migración Europea"
-      precio={147}
+      precio={177}
       moneda="€"
       precioTipo="Pago único · incluye 1 sesión de consultoría"
       valorMercado="Consultoría de migración comparativa en Europa: €200–400"

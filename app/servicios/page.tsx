@@ -70,7 +70,7 @@ const servicios = [
     titulo: 'Sesiones 1:1',
     descripcion:
       'Consultoría personalizada de 60 minutos para resolver tus dudas específicas. Plan de acción y grabación incluida.',
-    precio: 120,
+    precio: 147,
     moneda: '€/sesión',
     precioTipo: 'Por sesión',
     tag: 'Incluido en planes',
@@ -155,7 +155,7 @@ const servicios = [
     titulo: 'Acompañamiento en Trámites',
     descripcion:
       'Guía completa del Anmeldung, seguros de salud, cuenta bancaria y demás trámites obligatorios. 45 días de soporte.',
-    precio: 197,
+    precio: 247,
     moneda: '€',
     precioTipo: 'Pago único',
     tag: null,
@@ -189,9 +189,9 @@ const servicios = [
     titulo: 'Guía Turística Local',
     descripcion:
       'Descubre Suiza con alguien que ya vive aquí. Rincones reales, anécdotas locales y los lugares donde van los suizos de verdad.',
-    precio: 149,
+    precio: 297,
     moneda: '€',
-    precioTipo: 'Jornada completa (8h) · hasta 4 personas',
+    precioTipo: 'Jornada completa (8h) · por grupo de hasta 4 personas',
     tag: 'Nuevo',
     tagColor: '#10b981',
     destacado: false,
@@ -206,7 +206,7 @@ const servicios = [
     titulo: 'Orientación Otros Países',
     descripcion:
       'Análisis comparativo de Suiza vs Alemania, Austria, Países Bajos y Portugal según tu perfil. Incluye sesión 1:1.',
-    precio: 147,
+    precio: 177,
     moneda: '€',
     precioTipo: 'Pago único',
     tag: null,

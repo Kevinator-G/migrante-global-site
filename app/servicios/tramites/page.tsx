@@ -12,7 +12,7 @@ export default function TramitesPage() {
       tagline="Cada cantón tiene sus propias reglas — conocerlas de antemano vale oro"
       icon={FileCheck}
       categoria="Trámites Administrativos"
-      precio={197}
+      precio={247}
       moneda="€"
       precioTipo="Pago único · 45 días de soporte activo"
       valorMercado="Servicios de orientación administrativa para migrantes: €300–600"

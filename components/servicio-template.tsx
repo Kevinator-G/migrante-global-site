@@ -564,9 +564,9 @@ export function ServicioTemplate({
                 </p>
                 <div className="space-y-3.5">
                   {[
-                    { plan: 'Solo Alojamiento — 149 €', info: planInfo.inicio },
-                    { plan: 'Pack Completo — 347 €', info: planInfo.estrategia },
-                    { plan: 'Comunidad — 17 €/mes', info: planInfo.comunidad },
+                    { plan: 'Solo Alojamiento — 189 €', info: planInfo.inicio },
+                    { plan: 'Pack Completo — 497 €', info: planInfo.estrategia },
+                    { plan: 'Comunidad — 27 €/mes', info: planInfo.comunidad },
                   ].map((p, i) => (
                     <div key={i} className="flex items-start gap-3 text-sm">
                       <ChevronRight

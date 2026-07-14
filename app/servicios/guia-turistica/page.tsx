@@ -61,10 +61,10 @@ export default function GuiaTuristicaPage() {
         tagline="Rincones reales, anécdotas locales y los lugares donde van los suizos de verdad"
         icon={Map}
         categoria="Experiencias en Suiza"
-        precio={149}
+        precio={297}
         moneda="€"
-        precioTipo="Jornada completa (hasta 8h) · grupos de 1 a 4 personas · Zúrich, Lucerna, Berna o Interlaken"
-        valorMercado="Tours guiados privados en Suiza: €200–400/día"
+        precioTipo="Jornada completa (hasta 8h) · por grupo de 1 a 4 personas · Zúrich, Lucerna, Berna o Interlaken"
+        valorMercado="Tours guiados privados en Suiza: €400–600/día"
         hideNavbar
         hideHero
         problema={{
