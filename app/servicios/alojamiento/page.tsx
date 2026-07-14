@@ -67,11 +67,6 @@ function HabitacionCard({ h }: { h: (typeof habitaciones)[0] }) {
   const prev = () => setFoto((f) => (f === 0 ? h.fotos.length - 1 : f - 1));
   const next = () => setFoto((f) => (f === h.fotos.length - 1 ? 0 : f + 1));
 
-  const mensaje = encodeURIComponent(
-    `Hola Kevin, me interesa la habitación ${h.codigo} en ${h.direccion} (${h.precio} CHF/mes). ¿Podemos hablar?`
-  );
-  const waUrl = `https://wa.me/${WHATSAPP.replace('+', '')}?text=${mensaje}`;
-
   return (
     <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#0f1117] flex flex-col">
       {/* Foto carousel */}
@@ -146,26 +141,20 @@ function HabitacionCard({ h }: { h: (typeof habitaciones)[0] }) {
           </div>
         </div>
 
-        {/* CTA */}
+        {/* CTA — el pago es el filtro del lead: sin consultoría pagada no hay gestión */}
         <div className="mt-auto flex flex-col gap-2">
-          <a
-            href={waUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white font-semibold py-3 rounded-xl transition-colors"
-          >
-            <MessageCircle className="w-4 h-4" />
-            Me interesa esta habitación
-          </a>
           <a
             href={`${STRIPE_CONSULTORIA}?client_reference_id=${h.codigo}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 bg-transparent hover:bg-[#F97316]/10 text-[#F97316] font-semibold py-3 rounded-xl transition-colors border border-[#F97316]/40"
+            className="flex items-center justify-center gap-2 bg-[#F97316] hover:bg-[#ea6a06] text-white font-semibold py-3 rounded-xl transition-colors"
           >
             <CreditCard className="w-4 h-4" />
-            Pagar consultoría · 200 CHF
+            Reservar esta habitación · 200 CHF
           </a>
+          <p className="text-white/35 text-xs text-center">
+            Pagas la consultoría y te escribo por WhatsApp en horas para gestionar tu habitación
+          </p>
         </div>
       </div>
     </div>
@@ -222,8 +211,8 @@ export default function AlojamientoPage() {
         <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
           {[
             { num: '1', texto: 'Elige la habitación que te interesa' },
-            { num: '2', texto: 'Me escribes por WhatsApp — hablamos y te oriento' },
-            { num: '3', texto: 'Te conecto con el propietario y cierras el contrato' },
+            { num: '2', texto: 'Reservas pagando la consultoría (200 CHF) — online y seguro' },
+            { num: '3', texto: 'Te escribo en horas: reviso el contrato y te conecto con el propietario' },
           ].map((paso) => (
             <div key={paso.num} className="flex flex-col items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-[#E63946] flex items-center justify-center text-white font-bold text-sm">
@@ -329,7 +318,7 @@ export default function AlojamientoPage() {
               },
               {
                 q: '¿Cómo y cuándo pago la consultoría de 200 CHF?',
-                a: 'La consultoría se paga una sola vez, directamente conmigo (Twint o transferencia), cuando decides avanzar con una habitación. Es independiente del alquiler: el precio de la habitación lo pagas directamente al propietario.',
+                a: 'Se paga una sola vez, online con tarjeta desde el botón "Reservar" de cada habitación (pago seguro con Stripe). Con el pago aseguras mi acompañamiento y te contacto en horas. Es independiente del alquiler: el precio de la habitación lo pagas directamente al propietario.',
               },
               {
                 q: '¿Qué pasa si la habitación que quiero ya está ocupada?',

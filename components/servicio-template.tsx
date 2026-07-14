@@ -564,7 +564,7 @@ export function ServicioTemplate({
                 </p>
                 <div className="space-y-3.5">
                   {[
-                    { plan: 'Solo Alojamiento — 189 €', info: planInfo.inicio },
+                    { plan: 'Alojamiento + Consultoría — 200 CHF', info: planInfo.inicio },
                     { plan: 'Pack Completo — 497 €', info: planInfo.estrategia },
                     { plan: 'Comunidad — 27 €/mes', info: planInfo.comunidad },
                   ].map((p, i) => (

@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { Check, Home, Package2, Users, CheckCircle2, ArrowRight, ShieldCheck, Video, BookOpen } from 'lucide-react';
 import { useCart } from '@/lib/cart-context';
 import { trackEvent } from '@/lib/gtag';
@@ -28,21 +29,20 @@ const planes = [
   },
   {
     id: 'solo-alojamiento',
-    nombre: 'Solo Alojamiento',
-    precio: 189,
-    precioRef: '≈ 196 CHF',
-    moneda: '€',
-    tipo: 'Pago único',
-    descripcion: 'Servicio puntual',
+    nombre: 'Alojamiento + Consultoría',
+    precio: 200,
+    precioRef: '≈ 192 €',
+    moneda: 'CHF',
+    tipo: 'Pago único · habitaciones reales en Zúrich',
+    descripcion: 'Habitación verificada',
     destacado: false,
     icon: Home,
     caracteristicas: [
-      'Asesoría para encontrar alojamiento',
-      'Guía de búsqueda de vivienda',
-      'Revisión de contratos de alquiler',
-      'Orientación sobre zonas y costos',
-      'Soporte durante 30 días',
-      'Dossier de candidato incluido',
+      'Habitaciones amuebladas verificadas (cantón de Zúrich)',
+      'Revisión del contrato antes de firmar',
+      'Conexión directa con el propietario',
+      'Guía de llegada a la zona (transporte, servicios)',
+      'Soporte 30 días por WhatsApp',
     ],
   },
   {
@@ -56,7 +56,7 @@ const planes = [
     destacado: true,
     icon: Package2,
     caracteristicas: [
-      'Todo lo de Solo Alojamiento',
+      'Consultoría de alojamiento incluida (habitaciones verificadas)',
       'CV adaptado al formato suizo',
       'Estrategia de búsqueda de empleo',
       'Guía completa de trámites',
@@ -251,7 +251,20 @@ export function SeccionPrecios() {
                     ))}
                   </ul>
 
-                  {/* Botón carrito */}
+                  {/* El plan de alojamiento va a las habitaciones reales — el pago es por habitación */}
+                  {plan.id === 'solo-alojamiento' ? (
+                    <Link
+                      href="/servicios/alojamiento"
+                      className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-95"
+                      style={{
+                        background: 'var(--surface-card-elevated)',
+                        border: '1px solid rgba(128,128,128,0.2)',
+                        color: 'var(--white)',
+                      }}
+                    >
+                      <ArrowRight className="w-4 h-4" /> Ver habitaciones disponibles
+                    </Link>
+                  ) : (
                   <button
                     onClick={() => handleAddToCart(plan)}
                     className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-95"
@@ -294,6 +307,7 @@ export function SeccionPrecios() {
                       <><ArrowRight className="w-4 h-4" /> Empezar con este plan</>
                     )}
                   </button>
+                  )}
                 </div>
               </motion.div>
             );
