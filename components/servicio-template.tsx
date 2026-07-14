@@ -566,7 +566,7 @@ export function ServicioTemplate({
                   {[
                     { plan: 'Alojamiento + Consultoría — 200 CHF', info: planInfo.inicio },
                     { plan: 'Pack Completo — 497 CHF', info: planInfo.estrategia },
-                    { plan: 'Comunidad — 27 CHF/mes', info: planInfo.comunidad },
+                    { plan: 'Comunidad — Gratis', info: planInfo.comunidad },
                   ].map((p, i) => (
                     <div key={i} className="flex items-start gap-3 text-sm">
                       <ChevronRight

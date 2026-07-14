@@ -60,27 +60,9 @@ const planes = [
       'CV adaptado al formato suizo',
       'Estrategia de búsqueda de empleo',
       'Guía completa de trámites',
-      'Acceso a comunidad durante 3 meses',
+      'Acceso prioritario a la comunidad',
       '2 sesiones personalizadas 1:1',
       'Soporte prioritario 90 días',
-    ],
-  },
-  {
-    id: 'comunidad',
-    nombre: 'Comunidad',
-    precio: 27,
-    precioRef: 'Sin permanencia',
-    moneda: 'CHF/mes',
-    tipo: 'Suscripción mensual',
-    descripcion: 'Sin permanencia',
-    destacado: false,
-    icon: Users,
-    caracteristicas: [
-      'Acceso a comunidad exclusiva',
-      'Eventos mensuales de networking',
-      'Recursos y guías actualizadas',
-      'Descuentos en servicios adicionales',
-      'Cancela cuando quieras',
     ],
   },
 ];
@@ -154,7 +136,7 @@ export function SeccionPrecios() {
         </motion.a>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
           {planes.map((plan, index) => {
             const inCart = isInCart(plan.id);
             const Icon = plan.icon;
