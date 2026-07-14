@@ -1,16 +1,44 @@
-// Shotstack — generates a 45-60s vertical video (9:16) from blog content
+// Shotstack — genera un video vertical de 45s (9:16) desde el contenido del blog
+//
+// Estructura del video (5 escenas, no una sola imagen con zoom):
+//   0–6s    GANCHO      — frase que para el scroll, imagen 1
+//   6–17s   PUNTO 1     — imagen 2
+//   17–28s  PUNTO 2     — imagen 3
+//   28–38s  PUNTO 3     — imagen 4
+//   38–45s  CTA         — vuelve a la imagen 1
+// Cada escena usa una imagen y un efecto de movimiento distintos.
+// Si solo hay una imagen disponible, se reutiliza variando el efecto.
+//
 // Required env vars:
 //   SHOTSTACK_API_KEY  — from shotstack.io
 //   SHOTSTACK_ENV      — "stage" (free/test) or "v1" (production)
+//
+// NOTA sandbox (stage): solo assets tipo 'title'/'image'/'audio' con URLs
+// públicas; nada de soundtrack ni html (ver commits jul 2026).
 
 const BASE = 'https://api.shotstack.io'
+
+const DURATION = 45
+// [inicio, fin] de cada escena
+const SCENES: Array<[number, number]> = [
+  [0, 6],
+  [6, 17],
+  [17, 28],
+  [28, 38],
+  [38, DURATION],
+]
+// Efectos válidos de Shotstack, uno distinto por escena
+const EFFECTS = ['zoomIn', 'slideLeft', 'zoomOut', 'slideRight', 'zoomIn']
 
 interface VideoInput {
   title: string
   excerpt: string
   imageUrl: string
-  audioUrl?: string   // hosted MP3 from ElevenLabs (optional)
-  audioBase64?: string // base64 MP3 (fallback)
+  imageUrls?: string[]  // imágenes extra (Unsplash) — una por escena
+  gancho?: string       // textos de escena generados por el content-adapter
+  puntos?: string[]
+  cta?: string
+  audioUrl?: string     // MP3 de ElevenLabs alojado en Vercel Blob
 }
 
 interface VideoResult {
@@ -48,29 +76,69 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
 
   const env = process.env.SHOTSTACK_ENV ?? 'stage'
 
-  // Truncate title and excerpt to safe lengths for overlays
-  const titleText = input.title.slice(0, 80)
-  const excerptText = input.excerpt.slice(0, 160)
+  // Textos por escena — con fallback al comportamiento anterior (título + excerpt)
+  const gancho = (input.gancho ?? input.title).slice(0, 80)
+  const puntos = (input.puntos && input.puntos.length >= 3
+    ? input.puntos
+    : [input.excerpt.slice(0, 90), 'Te lo explico paso a paso', 'Sin promesas falsas — información real']
+  ).map((p) => p.slice(0, 100))
+  const cta = (input.cta ?? 'Lee la guía completa en migranteglobal.ch').slice(0, 60)
 
-  // Build Shotstack Edit JSON
-  // Vertical 1080×1920 (9:16) — suitable for TikTok, Instagram Reels, YouTube Shorts
-  const tracks: object[] = [
-    // Track 0 — background image with Ken Burns effect
-    {
-      clips: [
-        {
-          asset: {
-            type: 'image',
-            src: input.imageUrl,
-          },
-          start: 0,
-          length: 45,
-          effect: 'zoomIn',
-          transition: { in: 'fade', out: 'fade' },
-        },
-      ],
+  // Pool de imágenes: la del blog + extras; se recicla si faltan
+  const pool = [input.imageUrl, ...(input.imageUrls ?? [])].filter(Boolean)
+  const imageFor = (i: number) => pool[i % pool.length]
+  // La escena CTA vuelve a la primera imagen para cerrar el círculo
+  const sceneImages = [imageFor(0), imageFor(1), imageFor(2), imageFor(3), imageFor(0)]
+
+  const sceneTexts = [gancho, puntos[0], puntos[1], puntos[2], cta]
+
+  // Track 0 — imágenes de fondo, una por escena, con efectos alternados
+  const imageClips = SCENES.map(([start, end], i) => ({
+    asset: { type: 'image', src: sceneImages[i] },
+    start,
+    length: end - start,
+    effect: EFFECTS[i],
+    transition: { in: 'fade', out: 'fade' },
+  }))
+
+  // Track 1 — texto principal de cada escena
+  const textClips = SCENES.map(([start, end], i) => ({
+    asset: {
+      type: 'title',
+      text: sceneTexts[i],
+      style: 'blockbuster',
+      color: i === SCENES.length - 1 ? '#F97316' : '#FFFFFF',
+      size: i === 0 ? 'large' : 'medium',
+      position: 'center',
     },
-    // Track 1 — brand name
+    start: start + 0.3,
+    length: end - start - 0.3,
+    transition: { in: 'slideUp', out: 'fade' },
+  }))
+
+  // Track 2 — numeración de los puntos (1/3, 2/3, 3/3) para dar progresión
+  const counterClips = [1, 2, 3].map((n, i) => {
+    const [start, end] = SCENES[i + 1]
+    return {
+      asset: {
+        type: 'title',
+        text: `${n}/3`,
+        style: 'minimal',
+        color: '#F97316',
+        size: 'small',
+      },
+      start: start + 0.3,
+      length: end - start - 0.3,
+      position: 'top',
+      offset: { y: -0.18 },
+      transition: { in: 'fade', out: 'fade' },
+    }
+  })
+
+  const tracks: object[] = [
+    { clips: textClips },
+    { clips: counterClips },
+    // Marca siempre visible
     {
       clips: [
         {
@@ -79,55 +147,17 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
             text: 'MIGRANTE GLOBAL',
             style: 'minimal',
             color: '#F97316',
-            size: 'small',
+            size: 'x-small',
           },
           start: 0,
-          length: 45,
+          length: DURATION,
           position: 'top',
           offset: { y: 0.08 },
           transition: { in: 'slideDown' },
         },
       ],
     },
-    // Track 2 — main title
-    {
-      clips: [
-        {
-          asset: {
-            type: 'title',
-            text: titleText,
-            style: 'minimal',
-            color: '#FFFFFF',
-            size: 'large',
-          },
-          start: 0.5,
-          length: 44,
-          position: 'center',
-          offset: { y: -0.1 },
-          transition: { in: 'slideUp' },
-        },
-      ],
-    },
-    // Track 3 — excerpt
-    {
-      clips: [
-        {
-          asset: {
-            type: 'title',
-            text: excerptText,
-            style: 'minimal',
-            color: '#E5E7EB',
-            size: 'medium',
-          },
-          start: 1.5,
-          length: 42,
-          position: 'center',
-          offset: { y: 0.25 },
-          transition: { in: 'fade' },
-        },
-      ],
-    },
-    // Track 4 — CTA
+    // Dominio en la escena final
     {
       clips: [
         {
@@ -135,40 +165,35 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
             type: 'title',
             text: 'migranteglobal.ch',
             style: 'minimal',
-            color: '#F97316',
+            color: '#FFFFFF',
             size: 'small',
           },
-          start: 38,
-          length: 7,
+          start: SCENES[4][0],
+          length: DURATION - SCENES[4][0],
           position: 'bottom',
-          offset: { y: -0.08 },
+          offset: { y: -0.1 },
           transition: { in: 'slideUp', out: 'fade' },
         },
       ],
     },
+    { clips: imageClips },
   ]
 
-  // Add audio track if we have an MP3
+  // Voz en off (si el MP3 quedó alojado)
   if (input.audioUrl) {
     tracks.push({
       clips: [
         {
-          asset: {
-            type: 'audio',
-            src: input.audioUrl,
-            volume: 1,
-          },
+          asset: { type: 'audio', src: input.audioUrl, volume: 1 },
           start: 0,
-          length: 45,
+          length: DURATION,
         },
       ],
     })
   }
 
   const editPayload = {
-    timeline: {
-      tracks,
-    },
+    timeline: { tracks },
     output: {
       format: 'mp4',
       resolution: '1080',

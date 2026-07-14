@@ -16,6 +16,13 @@ export interface AdaptedContent {
     description: string
     tags: string[]
   }
+  // Textos cortos para las escenas del video vertical (Reels/TikTok/Shorts)
+  video?: {
+    gancho: string
+    puntos: string[]
+    cta: string
+    keywords: string[]
+  }
 }
 
 const SYSTEM_PROMPT = `Eres el equipo de marketing de Kevin García, consultor de inmigración en Suiza con más de 10 años de experiencia. Kevin habla en primera persona, de forma directa, cercana y honesta. Su audiencia son latinos que quieren migrar a Suiza.`
@@ -49,6 +56,12 @@ Genera el siguiente JSON exacto:
     "script": "Guión completo para vídeo de YouTube de 8-12 minutos. Estructura: INTRO (gancho + presentación), DESARROLLO (5-6 secciones con H2), CIERRE (resumen + CTA a consulta). Usa [PAUSA], [PANTALLA: X], [B-ROLL: X] para indicar edición. Voz de Kevin, cercano y directo.",
     "description": "Descripción de YouTube (500 palabras). Incluye: párrafo resumen, índice con timestamps aproximados, links relevantes, hashtags al final.",
     "tags": ["array", "de", "20", "tags", "para", "youtube"]
+  },
+  "video": {
+    "gancho": "Frase de MÁXIMO 8 palabras que para el scroll. Directa, con tensión o dato fuerte. Sin emojis.",
+    "puntos": ["3 puntos clave del artículo, MÁXIMO 12 palabras cada uno, accionables y concretos", "punto 2", "punto 3"],
+    "cta": "Cierre de máximo 8 palabras invitando a leer más en migranteglobal.ch",
+    "keywords": ["3 términos EN INGLÉS para buscar fotos de stock relacionadas con el tema, ej: switzerland apartment, job interview, swiss city"]
   }
 }
 

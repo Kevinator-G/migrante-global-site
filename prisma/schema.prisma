@@ -126,6 +126,18 @@ model BlogPost {
   socialPosts  SocialPost[]
 }
 
+// Tokens OAuth de plataformas sociales (TikTok los rota cada 24h — se
+// refrescan automáticamente en lib/social/tiktok.ts usando refreshToken)
+model SocialCredential {
+  platform     String    @id // 'tiktok' | 'youtube' | ...
+  accessToken  String    @db.Text
+  refreshToken String?   @db.Text
+  openId       String?
+  expiresAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
 model SocialPost {
   id          String    @id @default(cuid())
   blogPostId  String

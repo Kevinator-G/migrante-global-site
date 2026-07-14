@@ -10,6 +10,9 @@ import { publishToYouTube } from '@/lib/social/youtube'
 
 const prisma = new PrismaClient()
 
+// La distribución completa (render de video incluido) puede tardar varios minutos
+export const maxDuration = 300
+
 function isAuthorized(req: NextRequest): boolean {
   const secret = process.env.CRON_SECRET
   if (!secret) return false
@@ -34,6 +37,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'blogPostId required' }, { status: 400 })
   }
 
+  return distributeBlogPost(blogPostId)
+}
+
+// Lógica compartida por POST (id explícito) y GET (último post publicado).
+// Corre en el mismo proceso — la versión anterior se llamaba a sí misma por HTTP
+// con NEXT_PUBLIC_SITE_URL sin definir (localhost) y la distribución nunca corría.
+async function distributeBlogPost(blogPostId: string) {
   const post = await prisma.blogPost.findUnique({
     where: { id: blogPostId },
     include: { socialPosts: { select: { platform: true } } },
@@ -149,39 +159,40 @@ export async function POST(req: NextRequest) {
     !alreadyDistributed.includes('instagram_reel')
 
   if (needsVideo && post.imageUrl) {
-    // 1. Generate voiceover
+    // 1. Generate voiceover — el guion de voz sigue las escenas del video
     let audioUrl: string | undefined
-    const voiceScript = adapted.tiktok.script ?? `${post.title}. ${post.excerpt}`
+    const voiceScript = adapted.video
+      ? `${adapted.video.gancho}. ${adapted.video.puntos.join('. ')}. ${adapted.video.cta}`
+      : adapted.tiktok.script ?? `${post.title}. ${post.excerpt}`
     const audioResult = await textToSpeech(voiceScript)
 
     if (audioResult.success && audioResult.audioBuffer) {
-      // Upload audio buffer to a public URL via Vercel's own API route
-      // so Shotstack can access it. We store it as base64 and serve it.
-      // For now we pass undefined if no dedicated audio hosting is configured.
-      // Set AUDIO_HOSTING_URL env var to enable (see docs/VIDEO_SETUP.md)
-      const audioHostingUrl = process.env.AUDIO_HOSTING_URL
-      if (audioHostingUrl) {
-        try {
-          const uploadRes = await fetch(`${audioHostingUrl}/upload`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'audio/mpeg' },
-            body: audioResult.audioBuffer,
-          })
-          if (uploadRes.ok) {
-            const { url } = await uploadRes.json()
-            audioUrl = url
-          }
-        } catch {
-          // non-fatal — video will use background music only
-        }
+      // Alojar el MP3 en Vercel Blob para que Shotstack pueda accederlo
+      try {
+        const { put } = await import('@vercel/blob')
+        const blob = await put(`social/voz-${post.id}.mp3`, audioResult.audioBuffer, {
+          access: 'public',
+          contentType: 'audio/mpeg',
+          allowOverwrite: true,
+        })
+        audioUrl = blob.url
+      } catch {
+        // no fatal — el video sale sin voz
       }
     }
 
-    // 2. Generate video with Shotstack
+    // 2. Imágenes extra de Unsplash — una por escena en vez de una sola con zoom
+    const extraImages = await fetchUnsplashImages(adapted.video?.keywords ?? [post.category])
+
+    // 3. Generate video with Shotstack
     const videoResult = await generateVideo({
       title: post.title,
       excerpt: post.excerpt,
       imageUrl: post.imageUrl,
+      imageUrls: extraImages,
+      gancho: adapted.video?.gancho,
+      puntos: adapted.video?.puntos,
+      cta: adapted.video?.cta,
       audioUrl,
     })
 
@@ -330,6 +341,28 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ success: true, blogPostId, results })
 }
 
+// Busca hasta 3 fotos verticales en Unsplash para variar las escenas del video.
+// No fatal: si falla, el video reutiliza la imagen del blog.
+async function fetchUnsplashImages(keywords: string[]): Promise<string[]> {
+  const accessKey = process.env.UNSPLASH_ACCESS_KEY
+  if (!accessKey || keywords.length === 0) return []
+
+  try {
+    const query = encodeURIComponent(keywords.slice(0, 3).join(' '))
+    const res = await fetch(
+      `https://api.unsplash.com/search/photos?query=${query}&per_page=3&orientation=portrait`,
+      { headers: { Authorization: `Client-ID ${accessKey}` } },
+    )
+    if (!res.ok) return []
+    const data = await res.json()
+    return (data.results ?? [])
+      .map((r: { urls?: { regular?: string } }) => r.urls?.regular)
+      .filter((u: string | undefined): u is string => Boolean(u))
+  } catch {
+    return []
+  }
+}
+
 // Instagram Reels — two-step: create container → publish
 async function publishReelToInstagram(
   videoUrl: string,
@@ -400,7 +433,7 @@ async function publishReelToInstagram(
   }
 }
 
-// GET — manually distribute the most recent blog post
+// GET — distribuye el último post publicado (lo invoca el cron de Vercel a diario)
 export async function GET(req: NextRequest) {
   if (!isAuthorized(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -416,16 +449,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'No published posts found' }, { status: 404 })
   }
 
-  const internalUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'}/api/cron/distribute-content`
-  const res = await fetch(internalUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      authorization: `Bearer ${process.env.CRON_SECRET}`,
-    },
-    body: JSON.stringify({ blogPostId: latest.id }),
-  })
-
+  const res = await distributeBlogPost(latest.id)
   const data = await res.json()
-  return NextResponse.json({ post: latest.title, ...data })
+  return NextResponse.json({ post: latest.title, ...data }, { status: res.status })
 }
