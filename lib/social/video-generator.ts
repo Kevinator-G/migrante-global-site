@@ -78,7 +78,7 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
   const env = process.env.SHOTSTACK_ENV ?? 'stage'
 
   // Textos por escena — con fallback al comportamiento anterior (título + excerpt)
-  const gancho = (input.gancho ?? input.title).slice(0, 80)
+  const gancho = (input.gancho ?? input.title).slice(0, 50)
   const puntos = (input.puntos && input.puntos.length >= 3
     ? input.puntos
     : [input.excerpt.slice(0, 90), 'Te lo explico paso a paso', 'Sin promesas falsas — información real']
@@ -121,7 +121,7 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
       text: sceneTexts[i],
       style: 'minimal',
       color: i === SCENES.length - 1 ? '#F97316' : '#FFFFFF',
-      size: i === 0 ? 'large' : 'medium',
+      size: 'medium',
     },
     start: start + 0.3,
     length: end - start - 0.3,
