@@ -27,8 +27,8 @@ const SCENES: Array<[number, number]> = [
   [28, 38],
   [38, DURATION],
 ]
-// Efectos válidos de Shotstack, uno distinto por escena
-const EFFECTS = ['zoomIn', 'slideLeft', 'zoomOut', 'slideRight', 'zoomIn']
+// Efectos válidos de Shotstack — solo slides para evitar que el zoom corte el texto
+const EFFECTS = ['slideLeft', 'slideRight', 'slideLeft', 'slideRight', 'slideLeft']
 
 interface VideoInput {
   title: string
@@ -114,17 +114,18 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
   })
 
   // Track 1 — texto principal de cada escena
+  // style 'minimal' es el más fiable en sandbox — 'blockbuster' desborda el frame 9:16
   const textClips = SCENES.map(([start, end], i) => ({
     asset: {
       type: 'title',
       text: sceneTexts[i],
-      style: 'blockbuster',
+      style: 'minimal',
       color: i === SCENES.length - 1 ? '#F97316' : '#FFFFFF',
       size: i === 0 ? 'large' : 'medium',
-      position: 'center',
     },
     start: start + 0.3,
     length: end - start - 0.3,
+    position: 'center',
     transition: { in: 'slideUp', out: 'fade' },
   }))
 

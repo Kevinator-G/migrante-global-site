@@ -175,16 +175,24 @@ async function distributeBlogPost(blogPostId: string) {
     if (audioResult.success && audioResult.audioBuffer) {
       // Alojar el MP3 en Vercel Blob para que Shotstack pueda accederlo
       try {
-        const { put } = await import('@vercel/blob')
-        const blob = await put(`social/voz-${post.id}.mp3`, audioResult.audioBuffer, {
-          access: 'public',
-          contentType: 'audio/mpeg',
-          allowOverwrite: true,
-        })
-        audioUrl = blob.url
-      } catch {
+        if (!process.env.BLOB_READ_WRITE_TOKEN) {
+          console.warn('[audio] BLOB_READ_WRITE_TOKEN no configurado — video sin voz')
+        } else {
+          const { put } = await import('@vercel/blob')
+          const blob = await put(`social/voz-${post.id}.mp3`, audioResult.audioBuffer, {
+            access: 'public',
+            contentType: 'audio/mpeg',
+            allowOverwrite: true,
+          })
+          audioUrl = blob.url
+          console.log('[audio] MP3 alojado:', audioUrl)
+        }
+      } catch (blobErr) {
+        console.error('[audio] Error subiendo a Vercel Blob:', blobErr)
         // no fatal — el video sale sin voz
       }
+    } else if (!audioResult.success) {
+      console.warn('[audio] ElevenLabs falló:', audioResult.error)
     }
 
     // 2. Imágenes por escena: material propio de la biblioteca primero,
