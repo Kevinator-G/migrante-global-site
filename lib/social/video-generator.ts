@@ -78,12 +78,12 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
   const env = process.env.SHOTSTACK_ENV ?? 'stage'
 
   // Textos por escena — con fallback al comportamiento anterior (título + excerpt)
-  const gancho = (input.gancho ?? input.title).slice(0, 50)
+  const gancho = (input.gancho ?? input.title).slice(0, 28)
   const puntos = (input.puntos && input.puntos.length >= 3
     ? input.puntos
-    : [input.excerpt.slice(0, 90), 'Te lo explico paso a paso', 'Sin promesas falsas — información real']
-  ).map((p) => p.slice(0, 100))
-  const cta = (input.cta ?? 'Lee la guía completa en migranteglobal.ch').slice(0, 60)
+    : [input.excerpt.slice(0, 60), 'Te lo explico paso a paso', 'Info real, sin promesas']
+  ).map((p) => p.slice(0, 32))
+  const cta = (input.cta ?? 'Guía en migranteglobal.ch').slice(0, 28)
 
   // Pool de imágenes: la del blog + extras; se recicla si faltan
   const pool = [input.imageUrl, ...(input.imageUrls ?? [])].filter(Boolean)
@@ -121,7 +121,7 @@ export async function generateVideo(input: VideoInput): Promise<VideoResult> {
       text: sceneTexts[i],
       style: 'minimal',
       color: i === SCENES.length - 1 ? '#F97316' : '#FFFFFF',
-      size: 'medium',
+      size: 'small',
     },
     start: start + 0.3,
     length: end - start - 0.3,
