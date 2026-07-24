@@ -13,6 +13,18 @@ interface PublishResult {
   error?: string
 }
 
+// El media-id no forma una URL /p/ válida — el permalink real hay que pedirlo
+async function fetchPermalink(mediaId: string, token: string): Promise<string> {
+  try {
+    const res = await fetch(`${BASE}/${mediaId}?fields=permalink&access_token=${token}`)
+    const data = await res.json()
+    if (data.permalink) return data.permalink as string
+  } catch {
+    // no fatal — caemos a la URL construida
+  }
+  return `https://www.instagram.com/p/${mediaId}/`
+}
+
 // Step 1: create a media container
 async function createMediaContainer(
   accountId: string,
@@ -128,7 +140,7 @@ export async function publishCarouselToInstagram(
     return {
       success: true,
       platformId: postId,
-      platformUrl: `https://www.instagram.com/p/${postId}/`,
+      platformUrl: await fetchPermalink(postId, token),
     }
   } catch (err) {
     return {
@@ -159,9 +171,8 @@ export async function publishToInstagram(
     await new Promise((r) => setTimeout(r, 3000))
 
     const postId = await publishContainer(accountId, token, containerId)
-    const platformUrl = `https://www.instagram.com/p/${postId}/`
 
-    return { success: true, platformId: postId, platformUrl }
+    return { success: true, platformId: postId, platformUrl: await fetchPermalink(postId, token) }
   } catch (err) {
     return {
       success: false,
