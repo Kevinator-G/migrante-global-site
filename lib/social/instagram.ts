@@ -53,6 +53,91 @@ async function publishContainer(
   return data.id as string
 }
 
+// Carrusel: contenedor hijo por lámina → contenedor CAROUSEL → publicar.
+// Las URLs deben ser JPEG públicos (las prepara lib/social/carousel.ts).
+export async function publishCarouselToInstagram(
+  imageUrls: string[],
+  caption: string,
+  hashtags: string[],
+): Promise<PublishResult> {
+  const token = await getInstagramToken()
+  const accountId = process.env.INSTAGRAM_ACCOUNT_ID
+
+  if (!token || !accountId) {
+    return { success: false, error: 'Token de Instagram no disponible o INSTAGRAM_ACCOUNT_ID not set' }
+  }
+  if (imageUrls.length < 2 || imageUrls.length > 10) {
+    return { success: false, error: `Carrusel requiere 2-10 láminas, hay ${imageUrls.length}` }
+  }
+
+  try {
+    const fullCaption = `${caption}\n\n${hashtags.map((h) => `#${h}`).join(' ')}`
+
+    // 1. Contenedor por cada lámina
+    const children: string[] = []
+    for (const imageUrl of imageUrls) {
+      const res = await fetch(`${BASE}/${accountId}/media`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image_url: imageUrl,
+          is_carousel_item: true,
+          access_token: token,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.id) {
+        throw new Error(data.error?.message ?? 'Failed to create carousel item')
+      }
+      children.push(data.id as string)
+    }
+
+    // 2. Contenedor padre CAROUSEL
+    const parentRes = await fetch(`${BASE}/${accountId}/media`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        media_type: 'CAROUSEL',
+        children,
+        caption: fullCaption,
+        access_token: token,
+      }),
+    })
+    const parentData = await parentRes.json()
+    const parentId: string = parentData.id
+    if (!parentRes.ok || !parentId) {
+      throw new Error(parentData.error?.message ?? 'Failed to create carousel container')
+    }
+
+    // 3. Esperar a que el contenedor esté listo (hasta 60s)
+    const deadline = Date.now() + 60_000
+    while (Date.now() < deadline) {
+      await new Promise((r) => setTimeout(r, 4000))
+      const statusRes = await fetch(
+        `${BASE}/${parentId}?fields=status_code&access_token=${token}`,
+      )
+      const statusData = await statusRes.json()
+      if (statusData.status_code === 'FINISHED') break
+      if (statusData.status_code === 'ERROR') {
+        throw new Error('Instagram carousel container processing failed')
+      }
+    }
+
+    // 4. Publicar
+    const postId = await publishContainer(accountId, token, parentId)
+    return {
+      success: true,
+      platformId: postId,
+      platformUrl: `https://www.instagram.com/p/${postId}/`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Unknown Instagram carousel error',
+    }
+  }
+}
+
 export async function publishToInstagram(
   imageUrl: string,
   caption: string,

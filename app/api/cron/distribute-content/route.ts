@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
-import { adaptContentForSocials } from '@/lib/social/content-adapter'
-import { publishToInstagram } from '@/lib/social/instagram'
-import { publishToFacebook } from '@/lib/social/facebook'
+import { adaptContentForSocials, type CarouselMode } from '@/lib/social/content-adapter'
+import { publishToInstagram, publishCarouselToInstagram } from '@/lib/social/instagram'
+import { publishToFacebook, publishCarouselToFacebook } from '@/lib/social/facebook'
+import { buildSlides, renderCarouselJpegs } from '@/lib/social/carousel'
 
 const prisma = new PrismaClient()
 
-export const maxDuration = 60
+// Renderizar ~8 láminas + polling del contenedor de Instagram tarda un rato
+export const maxDuration = 300
 
 function isAuthorized(req: NextRequest): boolean {
   const secret = process.env.CRON_SECRET
@@ -55,6 +57,13 @@ async function distributeBlogPost(blogPostId: string) {
     .map((s) => s.platform)
   const blogUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://migranteglobal.ch'}/blog/${post.slug}`
 
+  // 1 de cada 3 días el carrusel es motivacional puro (mentalidad, sin trámites)
+  // — gancho pasivo de clientes los demás días, conciencia y comunidad ese día.
+  const dayOfYear = Math.floor(
+    (Date.now() - new Date(new Date().getUTCFullYear(), 0, 0).getTime()) / 86_400_000,
+  )
+  const modo: CarouselMode = dayOfYear % 3 === 0 ? 'motivacional' : 'blog'
+
   let adapted
   try {
     adapted = await adaptContentForSocials(
@@ -63,6 +72,7 @@ async function distributeBlogPost(blogPostId: string) {
       post.content,
       post.category,
       blogUrl,
+      modo,
     )
   } catch (err) {
     return NextResponse.json(
@@ -71,16 +81,38 @@ async function distributeBlogPost(blogPostId: string) {
     )
   }
 
-  const results: Record<string, unknown> = {}
+  const results: Record<string, unknown> = { modo }
 
-  // ── Instagram — image post ─────────────────────────────────────────────────
+  // ── Carrusel de texto (estilo elmodolobo) — láminas compartidas IG/FB ─────
+  // Si el render falla, cada red cae al post de imagen simple de siempre.
+  let carruselUrls: string[] | null = null
+  if (adapted.carousel?.gancho && adapted.carousel?.laminas?.length) {
+    try {
+      carruselUrls = await renderCarouselJpegs(buildSlides(adapted.carousel), post.id)
+      console.log(`[carrusel] ${carruselUrls.length} láminas listas`)
+    } catch (err) {
+      console.error('[carrusel] render falló, fallback a imagen simple:', err)
+    }
+  }
+
+  // ── Instagram — carrusel (o imagen simple de fallback) ─────────────────────
   if (!alreadyDistributed.includes('instagram')) {
     let igStatus = 'failed'
     let igPlatformId: string | undefined
     let igPlatformUrl: string | undefined
     let igError: string | undefined
 
-    if (post.imageUrl) {
+    if (carruselUrls && carruselUrls.length >= 2) {
+      const igResult = await publishCarouselToInstagram(
+        carruselUrls,
+        adapted.instagram.caption,
+        adapted.instagram.hashtags,
+      )
+      igStatus = igResult.success ? 'published' : 'failed'
+      igPlatformId = igResult.platformId
+      igPlatformUrl = igResult.platformUrl
+      igError = igResult.error
+    } else if (post.imageUrl) {
       const igResult = await publishToInstagram(
         post.imageUrl,
         adapted.instagram.caption,
@@ -92,7 +124,7 @@ async function distributeBlogPost(blogPostId: string) {
       igError = igResult.error
     } else {
       igStatus = 'skipped'
-      igError = 'No image available for Instagram post'
+      igError = 'No carousel and no image available for Instagram post'
     }
 
     await prisma.socialPost.create({
@@ -112,14 +144,24 @@ async function distributeBlogPost(blogPostId: string) {
     results.instagram = { status: igStatus, url: igPlatformUrl, error: igError }
   }
 
-  // ── Facebook — image post ──────────────────────────────────────────────────
+  // ── Facebook — carrusel multi-foto (o imagen simple de fallback) ───────────
   if (!alreadyDistributed.includes('facebook')) {
     let fbStatus = 'failed'
     let fbPlatformId: string | undefined
     let fbPlatformUrl: string | undefined
     let fbError: string | undefined
 
-    if (post.imageUrl) {
+    if (carruselUrls && carruselUrls.length >= 2) {
+      const fbResult = await publishCarouselToFacebook(
+        carruselUrls,
+        adapted.instagram.caption,
+        adapted.instagram.hashtags,
+      )
+      fbStatus = fbResult.success ? 'published' : 'failed'
+      fbPlatformId = fbResult.platformId
+      fbPlatformUrl = fbResult.platformUrl
+      fbError = fbResult.error
+    } else if (post.imageUrl) {
       const fbResult = await publishToFacebook(
         post.imageUrl,
         adapted.instagram.caption,
@@ -131,7 +173,7 @@ async function distributeBlogPost(blogPostId: string) {
       fbError = fbResult.error
     } else {
       fbStatus = 'skipped'
-      fbError = 'No image available for Facebook post'
+      fbError = 'No carousel and no image available for Facebook post'
     }
 
     await prisma.socialPost.create({
