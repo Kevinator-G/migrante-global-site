@@ -68,7 +68,7 @@ async function fetchUnsplashImage(
 
   try {
     const params = new URLSearchParams({
-      query: `Switzerland ${query}`,
+      query,
       per_page: '20',
       orientation: 'landscape',
     })
@@ -100,52 +100,52 @@ const CATEGORIES: Record<
   'Visas y permisos': {
     searchQuery: `permiso residencia Suiza inmigrante ${CURRENT_YEAR}`,
     fallbackTopic: `Los nuevos cambios en el sistema de permisos B y C en Suiza para ${CURRENT_YEAR}`,
-    imageQuery: 'visa permit document Switzerland',
+    imageQuery: 'passport visa stamp documents',
   },
   'Mercado laboral': {
     searchQuery: `empleo trabajo Suiza salario extranjero ${CURRENT_YEAR}`,
     fallbackTopic: 'Cómo encontrar trabajo en Suiza sin hablar alemán: lo que nadie te dice',
-    imageQuery: 'Switzerland office work professionals',
+    imageQuery: 'job interview office professionals',
   },
   'Homologación de títulos': {
     searchQuery: 'homologación título universitario Suiza reconocimiento',
     fallbackTopic: 'Paso a paso: cómo homologar tu título universitario en Suiza',
-    imageQuery: 'university degree diploma Switzerland',
+    imageQuery: 'university degree diploma certificate',
   },
   'Bienestar y salud': {
     searchQuery: 'seguro salud Suiza inmigrante KVG',
     fallbackTopic: 'Cómo funciona el seguro médico en Suiza y qué cubre para los recién llegados',
-    imageQuery: 'Switzerland health insurance medical',
+    imageQuery: 'doctor health insurance card clinic',
   },
   'Educación y familia': {
     searchQuery: 'educación hijos Suiza familia reagrupación',
     fallbackTopic: 'Reagrupación familiar en Suiza: qué necesitas saber antes de empezar',
-    imageQuery: 'Switzerland family education children',
+    imageQuery: 'family children school classroom',
   },
   'Finanzas y vivienda': {
     searchQuery: 'alquiler piso Suiza caro vivienda inmigrante',
     fallbackTopic: 'Cómo alquilar un piso en Suiza siendo extranjero: errores que cometen todos',
-    imageQuery: 'Switzerland apartment housing city',
+    imageQuery: 'apartment keys rental contract',
   },
   'Noticias Suiza': {
     searchQuery: `noticias Suiza latinos hispanos comunidad ${CURRENT_YEAR}`,
     fallbackTopic: 'Lo que está pasando en Suiza que afecta directamente a los inmigrantes latinos',
-    imageQuery: 'Switzerland news city landscape',
+    imageQuery: 'swiss flag newspaper government',
   },
   'Cultura y adaptación': {
     searchQuery: 'cultura suiza adaptación extranjero integración',
     fallbackTopic: 'Choques culturales reales que nadie te advierte antes de llegar a Suiza',
-    imageQuery: 'Switzerland culture integration people',
+    imageQuery: 'diverse people community meeting',
   },
   Emprendimiento: {
     searchQuery: 'emprender negocio Suiza startup extranjero',
     fallbackTopic: 'Cómo registrar una empresa en Suiza siendo extranjero y no morir en el intento',
-    imageQuery: 'Switzerland business startup entrepreneur',
+    imageQuery: 'entrepreneur laptop business plan',
   },
   Impuestos: {
     searchQuery: `impuestos declaración renta Suiza inmigrante ${CURRENT_YEAR}`,
     fallbackTopic: `Declaración de impuestos en Suiza: guía clara para ${CURRENT_YEAR}`,
-    imageQuery: 'Switzerland tax finance money',
+    imageQuery: 'tax forms calculator documents',
   },
 }
 
@@ -174,7 +174,7 @@ Escribe un artículo de blog en español (mínimo 600 palabras) con esta estruct
   "title": "Título directo y específico — sin clickbait barato, pero que genere urgencia real",
   "excerpt": "Resumen de 1-2 frases que engancha sin revelar todo",
   "content": "Contenido completo en Markdown. Empieza con un párrafo gancho de 2-3 líneas que describe la situación del lector. Sigue con H2 para cada sección. Termina con una llamada a la acción natural hacia una consulta personalizada.",
-  "imageQuery": "2-3 palabras en inglés para buscar una foto real en Unsplash (ej: 'Zurich street immigrants')",
+  "imageQuery": "3-5 palabras en inglés que describan VISUALMENTE el tema concreto del artículo para buscar en Unsplash. Objetos y personas del tema, NUNCA paisajes ni montañas (ej: seguro médico → 'doctor health insurance card', vivienda → 'apartment keys rental contract', permisos → 'passport residence permit stamp')",
   "tags": ["tag1", "tag2", "tag3"]
 }
 
@@ -272,10 +272,14 @@ async function generatePosts() {
     const parsed = JSON.parse(cleaned)
     const { title, excerpt, content, imageQuery, tags } = parsed
 
-    // Imagen del hero: primero material propio de la biblioteca, Unsplash de respaldo
-    const imageSearchQuery = imageQuery || config.imageQuery
+    // Imagen del hero: primero foto propia DE LA MISMA categoría; si no hay,
+    // Unsplash con el query específico del tema del artículo (generado por la IA)
+    // y como último recurso el query temático de la categoría. Nunca paisajes genéricos.
     const fotoPropia = await pickBlogFoto(categoryName)
-    const imageUrl = fotoPropia ?? (await fetchUnsplashImage(imageSearchQuery, usedImageUrls))
+    const imageUrl =
+      fotoPropia ??
+      (imageQuery ? await fetchUnsplashImage(imageQuery, usedImageUrls) : null) ??
+      (await fetchUnsplashImage(config.imageQuery, usedImageUrls))
     const hasImage = !!imageUrl
 
     // Create unique slug from title + date

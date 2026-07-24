@@ -2,26 +2,12 @@ import OpenAI from 'openai'
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
+// Solo publicamos imagen + caption en Instagram y Facebook (comparten texto),
+// enlazando al artículo del blog. El pipeline de video se eliminó.
 export interface AdaptedContent {
   instagram: {
     caption: string
     hashtags: string[]
-  }
-  tiktok: {
-    script: string
-    hashtags: string[]
-  }
-  youtube: {
-    script: string
-    description: string
-    tags: string[]
-  }
-  // Textos cortos para las escenas del video vertical (Reels/TikTok/Shorts)
-  video?: {
-    gancho: string
-    puntos: string[]
-    cta: string
-    keywords: string[]
   }
 }
 
@@ -34,7 +20,7 @@ export async function adaptContentForSocials(
   category: string,
   blogUrl: string,
 ): Promise<AdaptedContent> {
-  const prompt = `Adapta este artículo de blog para 3 plataformas sociales. Devuelve SOLO JSON válido.
+  const prompt = `Adapta este artículo de blog para una publicación de Instagram/Facebook. Devuelve SOLO JSON válido.
 
 TÍTULO: ${title}
 CATEGORÍA: ${category}
@@ -47,21 +33,6 @@ Genera el siguiente JSON exacto:
   "instagram": {
     "caption": "Caption para Instagram en primera persona (Kevin habla). Máximo 300 palabras. Empieza con un gancho de 1 línea que pare el scroll. Usa saltos de línea para separar ideas. Termina con 'Lee el artículo completo → link en bio 🔗'. Emoji al inicio de cada párrafo clave.",
     "hashtags": ["array", "de", "15", "hashtags", "relevantes", "sin", "el", "símbolo", "#"]
-  },
-  "tiktok": {
-    "script": "Guión para vídeo de TikTok de 60-75 segundos. Estructura: [GANCHO 0-3s] frase que para el scroll, [PROBLEMA 3-15s] la situación del espectador, [SOLUCIÓN 15-45s] 3 puntos clave del artículo, [CTA 45-60s] seguir para más + ver blog. Escríbelo como Kevin hablaría en cámara, natural, sin formalidades. Marca los tiempos con [XX-XXs].",
-    "hashtags": ["array", "de", "8", "hashtags", "para", "tiktok"]
-  },
-  "youtube": {
-    "script": "Guión completo para vídeo de YouTube de 8-12 minutos. Estructura: INTRO (gancho + presentación), DESARROLLO (5-6 secciones con H2), CIERRE (resumen + CTA a consulta). Usa [PAUSA], [PANTALLA: X], [B-ROLL: X] para indicar edición. Voz de Kevin, cercano y directo.",
-    "description": "Descripción de YouTube (500 palabras). Incluye: párrafo resumen, índice con timestamps aproximados, links relevantes, hashtags al final.",
-    "tags": ["array", "de", "20", "tags", "para", "youtube"]
-  },
-  "video": {
-    "gancho": "Frase de MÁXIMO 8 palabras que para el scroll. Directa, con tensión o dato fuerte. Sin emojis.",
-    "puntos": ["3 puntos clave del artículo, MÁXIMO 12 palabras cada uno, accionables y concretos", "punto 2", "punto 3"],
-    "cta": "Cierre de máximo 8 palabras invitando a leer más en migranteglobal.ch",
-    "keywords": ["3 términos EN INGLÉS para buscar fotos de stock relacionadas con el tema, ej: switzerland apartment, job interview, swiss city"]
   }
 }
 
@@ -74,7 +45,7 @@ IMPORTANTE: Devuelve SOLO el JSON. Sin markdown, sin explicaciones.`
       { role: 'user', content: prompt },
     ],
     temperature: 0.7,
-    max_tokens: 3000,
+    max_tokens: 1000,
   })
 
   const raw = completion.choices[0].message.content ?? '{}'
