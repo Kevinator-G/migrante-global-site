@@ -172,20 +172,22 @@ model MediaAsset {
 
 model SocialPost {
   id          String    @id @default(cuid())
-  blogPostId  String
-  platform    String    // 'instagram' | 'tiktok' | 'youtube'
+  blogPostId  String?   // null para posts no ligados al blog (ej. historia humana)
+  platform    String    // 'instagram' | 'facebook' | 'instagram_historia' | 'facebook_historia'
   status      String    // 'published' | 'pending_script' | 'failed' | 'skipped'
   caption     String?   @db.Text
   script      String?   @db.Text
   hashtags    String[]
+  sourceUrl   String?   // URL de la noticia origen (dedup de historias humanas)
   platformId  String?   // ID returned by the platform after publishing
   platformUrl String?   // URL of the published post
   error       String?   @db.Text
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  blogPost    BlogPost  @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
+  blogPost    BlogPost? @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
 
   @@index([platform, status])
   @@index([blogPostId])
+  @@index([sourceUrl])
 }
