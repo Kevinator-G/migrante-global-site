@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import { adaptContentForSocials, type CarouselMode } from '@/lib/social/content-adapter'
 import { publishToInstagram, publishCarouselToInstagram } from '@/lib/social/instagram'
 import { publishToFacebook, publishCarouselToFacebook } from '@/lib/social/facebook'
-import { buildSlides, renderCarouselJpegs } from '@/lib/social/carousel'
+import { buildSlides, gatherSlideImages, renderCarouselJpegs } from '@/lib/social/carousel'
 
 const prisma = new PrismaClient()
 
@@ -88,8 +88,14 @@ async function distributeBlogPost(blogPostId: string) {
   let carruselUrls: string[] | null = null
   if (adapted.carousel?.gancho && adapted.carousel?.laminas?.length) {
     try {
-      carruselUrls = await renderCarouselJpegs(buildSlides(adapted.carousel), post.id)
-      console.log(`[carrusel] ${carruselUrls.length} láminas listas`)
+      const slides = buildSlides(adapted.carousel)
+      const imagenes = await gatherSlideImages(
+        post.category,
+        adapted.carousel.keywords ?? [],
+        slides.length,
+      )
+      carruselUrls = await renderCarouselJpegs(slides, post.id, imagenes)
+      console.log(`[carrusel] ${carruselUrls.length} láminas listas (${imagenes.length} con foto)`)
     } catch (err) {
       console.error('[carrusel] render falló, fallback a imagen simple:', err)
     }

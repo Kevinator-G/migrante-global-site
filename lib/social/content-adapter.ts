@@ -17,6 +17,7 @@ export interface AdaptedContent {
     gancho: string // lámina 1 — para el scroll
     laminas: string[] // 4-6 láminas de desarrollo, una idea por lámina
     cta: string // lámina final
+    keywords: string[] // términos en inglés para las fotos de fondo
   }
 }
 
@@ -95,7 +96,8 @@ Genera el siguiente JSON exacto:
   "carousel": {
     "gancho": "Primera lámina. Fórmula 'No es que X. Es que Y.' u otra verdad incómoda sobre el tema del artículo. MÁXIMO 15 palabras. Sin emojis.",
     "laminas": ["4 a 6 láminas de desarrollo. Cada una es UNA sola idea escrita como aforismo contundente en segunda persona. MÁXIMO 25 palabras por lámina. Sin emojis, sin hashtags. Progresión: problema → detalle concreto → giro hacia la persona → solución.", "lámina 3", "lámina 4", "lámina 5"],
-    "cta": "Última lámina. Máximo 15 palabras invitando a leer el artículo completo. Sin emojis. Ejemplo: 'La guía completa está en el blog. No migres a ciegas.'"
+    "cta": "Última lámina. Máximo 15 palabras invitando a leer el artículo completo. Sin emojis. Ejemplo: 'La guía completa está en el blog. No migres a ciegas.'",
+    "keywords": ["3-4 términos EN INGLÉS que describan VISUALMENTE el tema concreto para buscar fotos de fondo. Objetos y personas del tema, NO paisajes (ej: 'family airport reunion hug', 'passport documents desk')"]
   }
 }
 
@@ -124,7 +126,8 @@ Genera el siguiente JSON exacto:
   "carousel": {
     "gancho": "Primera lámina. Fórmula 'No es que X. Es que Y.' sobre el tema de hoy. MÁXIMO 15 palabras. Sin emojis.",
     "laminas": ["5 a 6 láminas de desarrollo. Cada una es UN aforismo contundente en segunda persona sobre el tema. MÁXIMO 25 palabras por lámina. Sin emojis. Progresión: verdad incómoda → detalle cotidiano que el lector reconoce → giro de responsabilidad → esperanza ganada, no regalada.", "lámina 3", "lámina 4", "lámina 5", "lámina 6"],
-    "cta": "Última lámina. Máximo 12 palabras. Una frase que se quede grabada, no publicidad. Ejemplo: 'Tu nueva vida empieza con una decisión, no con un vuelo.'"
+    "cta": "Última lámina. Máximo 12 palabras. Una frase que se quede grabada, no publicidad. Ejemplo: 'Tu nueva vida empieza con una decisión, no con un vuelo.'",
+    "keywords": ["3-4 términos EN INGLÉS para fotos de fondo con atmósfera emocional acorde al tema (ej: 'man silhouette sunrise city', 'person walking alone airport')"]
   }
 }
 

@@ -35,6 +35,9 @@ export async function GET(req: NextRequest) {
   const tipo = sp.get('tipo') ?? 'idea' // gancho | idea | cta
   const n = Math.max(1, Number(sp.get('n') ?? '1') || 1)
   const total = Math.max(n, Number(sp.get('total') ?? '1') || 1)
+  // Foto de fondo opcional (https) — con capa oscura para que el texto respire
+  const imgParam = sp.get('img') ?? ''
+  const img = imgParam.startsWith('https://') ? imgParam : ''
 
   if (!texto) {
     return new Response('texto requerido', { status: 400 })
@@ -56,12 +59,44 @@ export async function GET(req: NextRequest) {
           flexDirection: 'column',
           justifyContent: 'space-between',
           backgroundColor: '#0a0a0b',
-          backgroundImage: 'radial-gradient(circle at 50% 38%, #1c1c1f 0%, #0a0a0b 68%)',
+          ...(img
+            ? {}
+            : { backgroundImage: 'radial-gradient(circle at 50% 38%, #1c1c1f 0%, #0a0a0b 68%)' }),
           padding: '90px 96px',
           color: '#f4efe6',
           fontFamily: 'Playfair',
         }}
       >
+        {img ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={img}
+            alt=""
+            width={1080}
+            height={1350}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: 1080,
+              height: 1350,
+              objectFit: 'cover',
+            }}
+          />
+        ) : null}
+        {img ? (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: 1080,
+              height: 1350,
+              backgroundImage:
+                'linear-gradient(180deg, rgba(10,10,11,0.78) 0%, rgba(10,10,11,0.62) 45%, rgba(10,10,11,0.88) 100%)',
+            }}
+          />
+        ) : null}
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <span
             style={{
@@ -97,6 +132,7 @@ export async function GET(req: NextRequest) {
                 lineHeight: 1.3,
                 margin: 0,
                 maxWidth: 880,
+                textShadow: '0 2px 16px rgba(0,0,0,0.65)',
               }}
             >
               {texto}

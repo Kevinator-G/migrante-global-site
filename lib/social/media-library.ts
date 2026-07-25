@@ -14,6 +14,26 @@ const ordenMenosUsado = [
   { timesUsed: 'asc' as const },
 ]
 
+// Hasta n fotos propias de la categoría exacta para los fondos del carrusel
+export async function pickCarouselFotos(category: string, n: number): Promise<string[]> {
+  try {
+    const fotos = await prisma.mediaAsset.findMany({
+      where: { type: 'foto', category },
+      orderBy: ordenMenosUsado,
+      take: n,
+    })
+    if (fotos.length > 0) {
+      await prisma.mediaAsset.updateMany({
+        where: { id: { in: fotos.map((f) => f.id) } },
+        data: { timesUsed: { increment: 1 }, lastUsedAt: new Date() },
+      })
+    }
+    return fotos.map((f) => f.url)
+  } catch {
+    return []
+  }
+}
+
 // Foto propia para el hero del artículo del blog, o null (→ Unsplash).
 // Solo fotos etiquetadas con la categoría EXACTA del artículo — las genéricas
 // sin categoría (paisajes, etc.) no encajan con temas concretos como seguros.
