@@ -11,7 +11,7 @@ export interface CarouselSlideDef {
   tipo: 'gancho' | 'idea' | 'cta'
 }
 
-export function buildSlides(carousel: AdaptedContent['carousel']): CarouselSlideDef[] {
+export function buildSlides(carousel: NonNullable<AdaptedContent['carousel']>): CarouselSlideDef[] {
   // Instagram admite máximo 10 láminas por carrusel: gancho + 8 + cta
   const slides: CarouselSlideDef[] = [
     { texto: carousel.gancho, tipo: 'gancho' },

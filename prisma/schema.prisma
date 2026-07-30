@@ -187,7 +187,32 @@ model SocialPost {
   updatedAt   DateTime  @updatedAt
   blogPost    BlogPost? @relation(fields: [blogPostId], references: [id], onDelete: Cascade)
 
+  // Ciclo de 8 formatos + barrido de tendencias (lib/social/format-cycle.ts, lib/social/trending/)
+  formato          String? // 'carrusel' | 'foto' | 'dato' — posición del ciclo de 8, nunca la decide el trending
+  ganchoId         Int?    // índice en BANCO_GANCHOS usado para este post (anti-repetición)
+  tema             String? // 'salud' | 'vivienda' | 'impuestos' | 'trabajo' | 'idioma' | 'tramites'
+  referenciaUrl    String? // URL del candidato en tendencia usado como referencia (o null = evergreen)
+  referenciaAngulo String? @db.Text // ángulo redactado por IA, nunca el caption original
+  referenciaScore  Float?
+  referenciaFuente String? // 'hashtag' | 'cuenta' | 'noticia'
+
   @@index([platform, status])
   @@index([blogPostId])
   @@index([sourceUrl])
+}
+
+// Barrido diario de tendencias del nicho (TOP 5 candidatos) — cachea el resultado
+// del cron trending-scan para que distribute-content no tenga que rehacer el scan.
+model TrendingScan {
+  fecha      String   @id // 'YYYY-MM-DD'
+  candidatos Json
+  createdAt  DateTime @default(now())
+}
+
+// Cache de hashtag_id resueltos vía ig_hashtag_search — Meta limita la búsqueda
+// a ~30 hashtags únicos por ventana de 7 días, así que no se puede resolver cada vez.
+model HashtagCache {
+  tag       String   @id
+  hashtagId String
+  updatedAt DateTime @updatedAt
 }
