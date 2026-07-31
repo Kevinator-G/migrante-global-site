@@ -7,6 +7,7 @@ import OpenAI from 'openai'
 import { PrismaClient } from '@prisma/client'
 import { publishToInstagram } from './instagram'
 import { publishToFacebook } from './facebook'
+import { sendPublishFailureAlert } from '@/lib/email'
 
 const prisma = new PrismaClient()
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
@@ -185,6 +186,9 @@ export async function publicarHistoria(articulo: Historia, imageOverride?: strin
         publishedAt: r.success ? new Date() : undefined,
       },
     })
+    if (!r.success) {
+      await sendPublishFailureAlert(platform, `historia-humana — "${gen.titulo}"`, r.error ?? 'error desconocido')
+    }
   }
 
   return {

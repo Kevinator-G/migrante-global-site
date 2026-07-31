@@ -9,6 +9,35 @@ function getResend() {
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "kagm94@gmail.com";
 const FROM_EMAIL = process.env.FROM_EMAIL || "Migrante Global <noreply@migranteglobal.ch>";
 
+// ── Publish failure alert (Instagram/Facebook) ──────────────────────────────
+// El token de Meta es permanente (no tiene fecha de vencimiento), pero puede
+// invalidarse por otras razones (revisión de permisos, revocación manual).
+// Este alert avisa por email en vez de que el fallo pase en silencio.
+export async function sendPublishFailureAlert(platform: string, context: string, error: string) {
+  try {
+    await getResend().emails.send({
+      from: FROM_EMAIL,
+      to: ADMIN_EMAIL,
+      subject: `⚠️ Falló publicación en ${platform}`,
+      html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
+          <h2 style="color:#dc2626;border-bottom:2px solid #dc2626;padding-bottom:8px">
+            Publicación fallida — ${platform}
+          </h2>
+          <p style="color:#666">${context}</p>
+          <pre style="background:#f9f9f9;padding:12px;border-radius:6px;white-space:pre-wrap;color:#991b1b">${error}</pre>
+          <p style="color:#666;margin-top:16px">
+            Si esto se repite, revisa el token de Meta en SocialCredential (tabla 'meta_page') —
+            puede que haya que regenerarlo en /api/social/meta.
+          </p>
+        </div>
+      `,
+    });
+  } catch (err) {
+    console.error("sendPublishFailureAlert error:", err);
+  }
+}
+
 // ── Lead notification ────────────────────────────────────────────────────────
 
 interface LeadData {

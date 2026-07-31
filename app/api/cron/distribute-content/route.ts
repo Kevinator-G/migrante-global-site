@@ -7,6 +7,7 @@ import { buildSlides, gatherSlideImages, renderCarouselJpegs, type CarouselSlide
 import { getFormatoYGancho, simularCiclo, BANCO_GANCHOS } from '@/lib/social/format-cycle'
 import { selectReferencia } from '@/lib/social/trending/seleccion'
 import type { ReferenciaTrending } from '@/lib/social/trending/types'
+import { sendPublishFailureAlert } from '@/lib/email'
 
 const prisma = new PrismaClient()
 
@@ -223,6 +224,9 @@ async function distributeBlogPost(blogPostId: string) {
     })
 
     results.instagram = { status: igStatus, url: igPlatformUrl, error: igError }
+    if (igStatus === 'failed') {
+      await sendPublishFailureAlert('Instagram', `distribute-content — post "${post.title}"`, igError ?? 'error desconocido')
+    }
   }
 
   // ── Facebook ─────────────────────────────────────────────────────────────
@@ -271,6 +275,9 @@ async function distributeBlogPost(blogPostId: string) {
     })
 
     results.facebook = { status: fbStatus, url: fbPlatformUrl, error: fbError }
+    if (fbStatus === 'failed') {
+      await sendPublishFailureAlert('Facebook', `distribute-content — post "${post.title}"`, fbError ?? 'error desconocido')
+    }
   }
 
   return NextResponse.json({ success: true, blogPostId, results })
