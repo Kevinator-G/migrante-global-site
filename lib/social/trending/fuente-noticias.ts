@@ -14,13 +14,16 @@
 
 import type { CandidatoCrudo, Tema } from './types'
 
+// GNews exige que TODAS las palabras del query aparezcan en el artículo (AND
+// implícito) y su parser de sintaxis falla con tildes en frases largas — por
+// eso son de máximo 2 palabras (verificado 31 jul 2026 junto con historia-humana.ts).
 const QUERIES_POR_TEMA: Record<Tema, string> = {
-  salud: 'seguro médico Suiza primas',
-  vivienda: 'alquiler vivienda Suiza permiso',
-  impuestos: 'impuestos Suiza declaración extranjeros',
-  trabajo: 'trabajo Suiza salario permiso extranjeros',
-  idioma: 'idioma alemán francés integración Suiza',
-  tramites: 'permiso B C Suiza trámites extranjeros',
+  salud: 'seguro Suiza',
+  vivienda: 'alquiler Suiza',
+  impuestos: 'impuestos Suiza',
+  trabajo: 'trabajo Suiza',
+  idioma: 'idioma Suiza',
+  tramites: 'permiso Suiza',
 }
 
 async function fetchGNewsTema(tema: Tema): Promise<CandidatoCrudo[]> {

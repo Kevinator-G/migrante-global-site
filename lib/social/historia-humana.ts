@@ -18,15 +18,19 @@ export interface Historia {
   source: string
 }
 
-// Búsquedas rotadas por día — historias con personas, no comunicados
+// Búsquedas rotadas por día — historias con personas, no comunicados.
+// GNews exige que TODAS las palabras del query aparezcan en el artículo (AND
+// implícito) y su parser de sintaxis falla con algunas tildes en frases largas —
+// por eso son de máximo 2 palabras (verificado 31 jul 2026: 4 palabras nunca
+// encontraba nada, "médico" con 4 palabras daba error de sintaxis).
 const QUERIES = [
-  'inmigrante Suiza historia trabajo',
-  'latino Suiza vida testimonio',
-  'extranjero Suiza salario familia',
-  'español Suiza emigrar experiencia',
-  'colombiano venezolano Suiza vida',
-  'trabajador Suiza entrevista sueldo',
-  'familia inmigrante Suiza vivienda',
+  'inmigrante Suiza',
+  'latino Suiza',
+  'extranjero Suiza',
+  'migrante Suiza',
+  'colombiano Suiza',
+  'trabajador Suiza',
+  'familia Suiza',
 ]
 
 async function fetchGNews(query: string): Promise<Historia[]> {
