@@ -76,6 +76,34 @@ async function fetchUnsplashFoto(keywords: string[]): Promise<string | null> {
   }
 }
 
+// GNews con queries de 2 palabras a veces matchea artículos donde "Suiza" solo
+// aparece de pasada (ej. un escándalo de viajes de congresistas peruanos que
+// mencionaba Suiza como uno de varios destinos). Este filtro descarta esos
+// falsos positivos antes de gastar la generación completa del post.
+async function esRelevante(articulo: Historia): Promise<boolean> {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content:
+            'Respondes SOLO "si" o "no", sin explicación. Evalúas si una noticia es genuinamente relevante para latinos inmigrantes o residentes en Suiza — no basta con que mencione la palabra Suiza de pasada.',
+        },
+        {
+          role: 'user',
+          content: `¿Esta noticia trata genuinamente sobre migración, vida de extranjeros/latinos en Suiza, o tiene un protagonista humano cuya historia resuena con esa comunidad? Responde "no" si Suiza solo se menciona de pasada (ej. un país más en una lista, un viaje puntual, deporte, etc).\n\nTítulo: ${articulo.title}\nDescripción: ${articulo.description}`,
+        },
+      ],
+      temperature: 0,
+      max_tokens: 5,
+    })
+    return (completion.choices[0].message.content ?? '').trim().toLowerCase().startsWith('si')
+  } catch {
+    return false // ante la duda, no se publica
+  }
+}
+
 interface HistoriaGenerada {
   titulo: string
   cuerpo: string
@@ -207,7 +235,13 @@ export async function runHistoriaHumana() {
   let articulo: Historia | null = null
   for (const q of rotadas) {
     const articulos = await fetchGNews(q)
-    articulo = articulos.find((a) => !usadas.has(a.url)) ?? null
+    for (const candidato of articulos) {
+      if (usadas.has(candidato.url)) continue
+      if (await esRelevante(candidato)) {
+        articulo = candidato
+        break
+      }
+    }
     if (articulo) break
   }
 
