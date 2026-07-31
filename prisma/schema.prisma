@@ -104,6 +104,8 @@ model Lead {
   pais          String?
   mensaje       String   @db.Text
   consentimiento Boolean @default(false)
+  respuesta     String?  @db.Text
+  respondidoAt  DateTime?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

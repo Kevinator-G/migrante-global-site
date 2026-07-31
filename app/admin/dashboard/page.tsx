@@ -7,7 +7,7 @@ import { signOut } from 'next-auth/react';
 import {
   Download, Trash2, LogOut, Mail, Phone, MapPin,
   MessageSquare, Loader, FileText, Eye, EyeOff,
-  Sparkles, CheckCircle, XCircle,
+  Sparkles, CheckCircle, XCircle, Send, Reply,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -19,6 +19,8 @@ interface Lead {
   pais: string | null;
   mensaje: string;
   consentimiento: boolean;
+  respuesta: string | null;
+  respondidoAt: string | null;
   createdAt: string;
 }
 
@@ -50,6 +52,11 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [leadFilter, setLeadFilter] = useState<'todos' | 'contactados' | 'pendientes'>('todos');
+  const [replyingId, setReplyingId] = useState<string | null>(null);
+  const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
+  const [sendingReplyId, setSendingReplyId] = useState<string | null>(null);
+  const [togglingContactId, setTogglingContactId] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/admin/login');
@@ -85,6 +92,47 @@ export default function DashboardPage() {
     const res = await fetch(`/api/admin/leads?id=${id}`, { method: 'DELETE' });
     if (res.ok) setLeads(leads.filter(l => l.id !== id));
     setDeletingId(null);
+  };
+
+  const handleSendReply = async (id: string) => {
+    const respuesta = replyDrafts[id]?.trim();
+    if (!respuesta) return;
+    setSendingReplyId(id);
+    try {
+      const res = await fetch('/api/admin/leads/reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, respuesta }),
+      });
+      if (res.ok) {
+        const { lead } = await res.json();
+        setLeads(leads.map(l => (l.id === id ? lead : l)));
+        setReplyingId(null);
+        setReplyDrafts(prev => ({ ...prev, [id]: '' }));
+      } else {
+        const { error } = await res.json().catch(() => ({ error: 'Error desconocido' }));
+        alert(`No se pudo enviar la respuesta: ${error}`);
+      }
+    } finally {
+      setSendingReplyId(null);
+    }
+  };
+
+  const handleToggleContacted = async (id: string, contactado: boolean) => {
+    setTogglingContactId(id);
+    try {
+      const res = await fetch('/api/admin/leads', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, contactado }),
+      });
+      if (res.ok) {
+        const { lead } = await res.json();
+        setLeads(leads.map(l => (l.id === id ? lead : l)));
+      }
+    } finally {
+      setTogglingContactId(null);
+    }
   };
 
   const handleTogglePost = async (id: string, published: boolean) => {
@@ -209,26 +257,80 @@ export default function DashboardPage() {
         {/* Leads tab */}
         {activeTab === 'leads' && (
           <div className="space-y-4">
-            {leads.length === 0 ? (
+            <div className="flex gap-2">
+              {([
+                ['todos', `Todos (${leads.length})`],
+                ['pendientes', `Pendientes (${leads.filter(l => !l.respondidoAt).length})`],
+                ['contactados', `Contactados (${leads.filter(l => l.respondidoAt).length})`],
+              ] as const).map(([key, label]) => (
+                <button
+                  key={key}
+                  onClick={() => setLeadFilter(key)}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-medium transition ${
+                    leadFilter === key ? 'bg-gold text-black' : 'bg-white/5 text-bone/60 hover:text-bone'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {leads.filter(l =>
+              leadFilter === 'todos' ? true : leadFilter === 'contactados' ? !!l.respondidoAt : !l.respondidoAt
+            ).length === 0 ? (
               <div className="card text-center py-12">
                 <MessageSquare className="w-16 h-16 text-bone/30 mx-auto mb-4" />
-                <p className="text-bone/50">No hay leads registrados aún</p>
+                <p className="text-bone/50">No hay leads en esta vista</p>
               </div>
             ) : (
-              leads.map(lead => (
+              leads
+                .filter(l =>
+                  leadFilter === 'todos' ? true : leadFilter === 'contactados' ? !!l.respondidoAt : !l.respondidoAt
+                )
+                .map(lead => (
                 <div key={lead.id} className="card hover:border-gold/30 transition">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-xl font-semibold text-bone">{lead.nombre}</h3>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="text-xl font-semibold text-bone">{lead.nombre}</h3>
+                        {lead.respondidoAt ? (
+                          <span className="flex items-center gap-1 text-xs text-green-400 font-medium bg-green-500/10 px-2 py-0.5 rounded-full">
+                            <CheckCircle className="w-3 h-3" /> Contactado
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-xs text-yellow-400 font-medium bg-yellow-500/10 px-2 py-0.5 rounded-full">
+                            <XCircle className="w-3 h-3" /> Pendiente
+                          </span>
+                        )}
+                      </div>
                       <p className="text-bone/50 text-sm">{new Date(lead.createdAt).toLocaleString('es-ES')}</p>
                     </div>
-                    <button
-                      onClick={() => handleDeleteLead(lead.id)}
-                      disabled={deletingId === lead.id}
-                      className="text-red-600 hover:text-red-400 transition p-2"
-                    >
-                      {deletingId === lead.id ? <Loader className="w-5 h-5 animate-spin" /> : <Trash2 className="w-5 h-5" />}
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => handleToggleContacted(lead.id, !lead.respondidoAt)}
+                        disabled={togglingContactId === lead.id}
+                        className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition ${
+                          lead.respondidoAt
+                            ? 'bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20'
+                            : 'bg-green-500/10 text-green-400 hover:bg-green-500/20'
+                        }`}
+                      >
+                        {togglingContactId === lead.id ? (
+                          <Loader className="w-3.5 h-3.5 animate-spin" />
+                        ) : lead.respondidoAt ? (
+                          'Marcar pendiente'
+                        ) : (
+                          'Marcar contactado'
+                        )}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteLead(lead.id)}
+                        disabled={deletingId === lead.id}
+                        className="text-red-600 hover:text-red-400 transition p-2"
+                      >
+                        {deletingId === lead.id ? <Loader className="w-5 h-5 animate-spin" /> : <Trash2 className="w-5 h-5" />}
+                      </button>
+                    </div>
                   </div>
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <div className="flex items-center gap-3 text-bone/70 text-sm">
@@ -248,9 +350,55 @@ export default function DashboardPage() {
                       </div>
                     )}
                   </div>
-                  <div className="bg-gray/50 p-4 rounded-lg">
+                  <div className="bg-gray/50 p-4 rounded-lg mb-3">
                     <p className="text-bone/80 text-sm whitespace-pre-wrap">{lead.mensaje}</p>
                   </div>
+
+                  {lead.respuesta && (
+                    <div className="bg-gold/5 border border-gold/20 p-4 rounded-lg mb-3">
+                      <p className="text-gold/70 text-xs font-medium mb-1">Tu respuesta:</p>
+                      <p className="text-bone/70 text-sm whitespace-pre-wrap">{lead.respuesta}</p>
+                    </div>
+                  )}
+
+                  {replyingId === lead.id ? (
+                    <div className="space-y-2">
+                      <textarea
+                        value={replyDrafts[lead.id] ?? ''}
+                        onChange={(e) => setReplyDrafts(prev => ({ ...prev, [lead.id]: e.target.value }))}
+                        placeholder="Escribe tu respuesta..."
+                        rows={4}
+                        className="w-full bg-black/30 border border-gray rounded-lg p-3 text-bone/90 text-sm"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleSendReply(lead.id)}
+                          disabled={sendingReplyId === lead.id || !replyDrafts[lead.id]?.trim()}
+                          className="btn-primary flex items-center gap-2 text-sm px-4 py-2"
+                        >
+                          {sendingReplyId === lead.id ? (
+                            <Loader className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Send className="w-4 h-4" />
+                          )}
+                          Enviar
+                        </button>
+                        <button
+                          onClick={() => setReplyingId(null)}
+                          className="text-bone/50 hover:text-bone text-sm px-4 py-2"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setReplyingId(lead.id)}
+                      className="flex items-center gap-2 text-sm text-gold hover:text-gold/70 transition"
+                    >
+                      <Reply className="w-4 h-4" /> {lead.respuesta ? 'Responder de nuevo' : 'Responder por email'}
+                    </button>
+                  )}
                 </div>
               ))
             )}

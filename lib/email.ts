@@ -38,6 +38,32 @@ export async function sendPublishFailureAlert(platform: string, context: string,
   }
 }
 
+// ── Reply to a lead, sent from the admin panel ──────────────────────────────
+export async function sendLeadReply(lead: { nombre: string; email: string }, respuesta: string) {
+  await getResend().emails.send({
+    from: FROM_EMAIL,
+    to: lead.email,
+    replyTo: ADMIN_EMAIL,
+    subject: `Respuesta de Migrante Global`,
+    html: `
+      <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
+        <h2 style="color:#1a1a1a;border-bottom:2px solid #f59e0b;padding-bottom:8px">
+          Migrante Global
+        </h2>
+        <p style="color:#444">Hola ${lead.nombre},</p>
+        <p style="color:#444;line-height:1.6;white-space:pre-wrap">${respuesta}</p>
+        <p style="color:#888;font-size:13px;margin-top:24px">
+          Si tienes más preguntas, responde directamente a este correo o escríbenos a WhatsApp
+          al <strong>+41 77 233 73 53</strong>.
+        </p>
+        <p style="color:#bbb;font-size:12px;margin-top:24px">
+          Migrante Global — Acompañándote en tu proceso de migración
+        </p>
+      </div>
+    `,
+  });
+}
+
 // ── Lead notification ────────────────────────────────────────────────────────
 
 interface LeadData {
