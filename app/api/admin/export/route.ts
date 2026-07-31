@@ -5,8 +5,12 @@ import { prisma } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
+// Los leads vienen de un formulario público — sin esta guarda, un mensaje que
+// empiece con =, +, -, @ o un tab se interpreta como fórmula al abrir el CSV
+// en Excel/Sheets (CSV injection). Se neutraliza con una comilla al inicio.
 function toCsvCell(v: unknown) {
-  const s = String(v ?? '');
+  let s = String(v ?? '');
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
   return `"${s.replace(/"/g, '""')}"`;
 }
 

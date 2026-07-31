@@ -130,16 +130,26 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
       stripeSessionId: session.id,
     };
 
-    // Fire-and-forget — emails y WhatsApp no bloquean el webhook
-    sendPurchaseNotification(orderData);
-    sendPurchaseConfirmation(orderData);
-
+    // Se esperan (no fire-and-forget): en serverless la función puede
+    // congelarse justo después de responder al webhook, y una promesa sin
+    // await puede no llegar a completarse — el email de compra se perdería
+    // en silencio. Cada función ya atrapa sus propios errores internamente,
+    // así que esperar no bloquea el webhook por un fallo de email/WhatsApp.
     const userPhone = phone || user.phone;
-    if (userPhone && items.length > 0) {
-      const serviceName = items.map((i: { nombre: string }) => i.nombre).join(' + ');
-      sendWelcomeMessage(userPhone, user.name ?? 'cliente', serviceName, user.id)
-        .then((r) => { if (!r.success) console.warn('WhatsApp send failed:', r.error); })
-        .catch(() => {});
-    }
+    const whatsappPromise =
+      userPhone && items.length > 0
+        ? sendWelcomeMessage(
+            userPhone,
+            user.name ?? 'cliente',
+            items.map((i: { nombre: string }) => i.nombre).join(' + '),
+            user.id,
+          ).then((r) => { if (!r.success) console.warn('WhatsApp send failed:', r.error); })
+        : Promise.resolve();
+
+    await Promise.all([
+      sendPurchaseNotification(orderData),
+      sendPurchaseConfirmation(orderData),
+      whatsappPromise.catch(() => {}),
+    ]);
   }
 }

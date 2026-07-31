@@ -33,8 +33,12 @@ export async function POST(req: Request) {
       },
     });
 
-    // Fire-and-forget — no rompemos la respuesta si el email falla
-    sendLeadNotification({ nombre, email, telefono, pais, mensaje });
+    // Se espera (no fire-and-forget): en serverless la función puede
+    // congelarse justo después de responder, y una promesa sin await puede
+    // no llegar a completarse — el email se perdería en silencio (mismo bug
+    // que dejaba sin notificar leads reales antes de este fix). sendLeadNotification
+    // ya atrapa sus propios errores, así que esperar no puede romper la respuesta.
+    await sendLeadNotification(lead);
 
     return NextResponse.json({ success: true, leadId: lead.id }, { status: 201 });
   } catch (error) {
