@@ -90,6 +90,35 @@ async function fetchUnsplashImage(
   }
 }
 
+// GNews puede matchear artículos donde las palabras del query aparecen sueltas
+// sin que el artículo trate realmente el tema (ej. "Suiza" mencionada de pasada
+// en una noticia de otro país). Este filtro descarta esos falsos positivos antes
+// de usar el artículo como tema del blog — verificado en vivo el 31 jul 2026
+// junto con el mismo problema en historia-humana.ts.
+async function esRelevante(categoria: string, articulo: { title: string; description: string }): Promise<boolean> {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content:
+            'Respondes SOLO "si" o "no", sin explicación. Evalúas si una noticia es genuinamente relevante para un blog de inmigración de latinos en Suiza — no basta con que mencione Suiza de pasada.',
+        },
+        {
+          role: 'user',
+          content: `Categoría del blog: ${categoria}\n\n¿Esta noticia trata genuinamente ese tema para latinos que migran o viven en Suiza? Responde "no" si Suiza o el tema solo se mencionan de pasada (ej. un país más en una lista, algo de otro contexto).\n\nTítulo: ${articulo.title}\nDescripción: ${articulo.description}`,
+        },
+      ],
+      temperature: 0,
+      max_tokens: 5,
+    })
+    return (completion.choices[0].message.content ?? '').trim().toLowerCase().startsWith('si')
+  } catch {
+    return false // ante la duda, se usa el fallbackTopic en vez del artículo
+  }
+}
+
 // ── Category config ────────────────────────────────────────────────────────
 const CURRENT_YEAR = new Date().getFullYear()
 
@@ -246,9 +275,16 @@ async function generatePosts() {
 
     const config = CATEGORIES[categoryName]
 
-    // Fetch news candidates and pick the first unused article
+    // Fetch news candidates and pick the first unused, genuinely relevant article
     const articles = await fetchNewsArticles(config.searchQuery)
-    const freshArticle = articles.find((a) => !usedSourceUrls.has(a.url)) ?? null
+    let freshArticle: (typeof articles)[number] | null = null
+    for (const candidato of articles) {
+      if (usedSourceUrls.has(candidato.url)) continue
+      if (await esRelevante(categoryName, candidato)) {
+        freshArticle = candidato
+        break
+      }
+    }
     const hasTrend = !!freshArticle
 
     const topic = hasTrend
