@@ -41,9 +41,10 @@ export async function sendPublishFailureAlert(platform: string, context: string,
 // ── Reply to a lead, sent from the admin panel ──────────────────────────────
 export async function sendLeadReply(lead: { nombre: string; email: string }, respuesta: string) {
   await getResend().emails.send({
-    from: FROM_EMAIL,
+    // Se manda desde hola@ (no noreply@) a propósito: Kevin quiere que la gente
+    // pueda responder directo a ese correo y seguir la conversación con él.
+    from: 'Migrante Global <hola@migranteglobal.ch>',
     to: lead.email,
-    replyTo: ADMIN_EMAIL,
     subject: `Respuesta de Migrante Global`,
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
