@@ -20,6 +20,13 @@ const TIPO_LABEL: Record<string, string> = {
 
 function formatearFecha(d: Date | null): string {
   if (!d) return 'a confirmar';
+  // Domenico deja publicadas fichas cuya fecha de entrada ya pasó (CD1 seguía
+  // con "01 ago" el 3 de agosto). Mostrar una fecha vencida da sensación de
+  // anuncio abandonado — si ya se puede entrar, se dice así.
+  const hoy = new Date();
+  const hoyUTC = Date.UTC(hoy.getUTCFullYear(), hoy.getUTCMonth(), hoy.getUTCDate());
+  if (d.getTime() <= hoyUTC) return 'ya';
+
   return new Intl.DateTimeFormat('es-CH', {
     day: '2-digit',
     month: 'short',
