@@ -58,33 +58,82 @@ function unsplashPhotoKey(url: string): string {
   return url.split('?')[0]
 }
 
-// ── Unsplash — returns a unique image not already used recently ───────────
-async function fetchUnsplashImage(
+// ── Unsplash — una búsqueda, devuelve solo fotos NO usadas todavía ────────
+async function buscarUnsplash(
   query: string,
-  usedKeys: Set<string> = new Set(),
-): Promise<string | null> {
+  usedKeys: Set<string>,
+): Promise<string[]> {
   const accessKey = process.env.UNSPLASH_ACCESS_KEY
-  if (!accessKey) return null
+  if (!accessKey) return []
 
   try {
     const params = new URLSearchParams({
       query,
-      per_page: '20',
+      per_page: '30',
       orientation: 'landscape',
     })
+    const res = await fetch(`https://api.unsplash.com/search/photos?${params}`, {
+      headers: { Authorization: `Client-ID ${accessKey}` },
+    })
+    if (!res.ok) return []
+    const data = await res.json()
+    const results: Array<{ urls: { regular: string } }> = data.results ?? []
+    // Solo las que no se hayan publicado ya (comparando la foto, no la URL con ixid)
+    return results
+      .map((r) => r.urls.regular)
+      .filter((u) => !usedKeys.has(unsplashPhotoKey(u)))
+  } catch {
+    return []
+  }
+}
+
+// Variantes de búsqueda: el query principal y luego los imageTags que la IA
+// genera para el artículo. Ampliar los tags multiplica el pool de fotos — si
+// "apartment keys rental contract" ya se agotó, se prueba "moving boxes
+// apartment", "signing lease paperwork"... así dos artículos del mismo tema
+// casi nunca caen en la misma imagen.
+// Los `tags` en español NO se usan para buscar: Unsplash indexa en inglés y
+// devolvería resultados aleatorios sin relación con el tema.
+function construirQueries(
+  imageQuery: string | undefined,
+  fallback: string,
+  imageTags: unknown,
+): string[] {
+  const base = (imageQuery ?? '').trim()
+  const visuales = (Array.isArray(imageTags) ? imageTags : [])
+    .map((t) => String(t).trim())
+    .filter((t) => t.length > 2 && t.length < 60 && /^[\x20-\x7E]+$/.test(t))
+
+  const variantes = [base, ...visuales, fallback]
+
+  // Sin duplicados ni vacíos, manteniendo el orden de preferencia
+  return [...new Set(variantes.map((v) => v.replace(/\s+/g, ' ').trim()))].filter(Boolean)
+}
+
+// Recorre las variantes hasta encontrar una foto que no se haya usado nunca.
+// Solo si TODAS fallan se permite repetir (mejor una foto repetida que ninguna).
+async function elegirFotoUnica(
+  queries: string[],
+  usedKeys: Set<string>,
+): Promise<string | null> {
+  for (const q of queries) {
+    const libres = await buscarUnsplash(q, usedKeys)
+    if (libres.length > 0) {
+      return libres[Math.floor(Math.random() * libres.length)]
+    }
+  }
+  // Último recurso: cualquier resultado del primer query, aunque repita
+  const accessKey = process.env.UNSPLASH_ACCESS_KEY
+  if (!accessKey || queries.length === 0) return null
+  try {
+    const params = new URLSearchParams({ query: queries[0], per_page: '30', orientation: 'landscape' })
     const res = await fetch(`https://api.unsplash.com/search/photos?${params}`, {
       headers: { Authorization: `Client-ID ${accessKey}` },
     })
     if (!res.ok) return null
     const data = await res.json()
     const results: Array<{ urls: { regular: string } }> = data.results ?? []
-
-    // Candidatas cuya FOTO (no URL exacta) no se haya usado en los últimos posts,
-    // elegida al azar para variar incluso entre días con la misma búsqueda
-    const fresh = results.filter((r) => !usedKeys.has(unsplashPhotoKey(r.urls.regular)))
-    const pool = fresh.length > 0 ? fresh : results
-    const pick = pool[Math.floor(Math.random() * pool.length)]
-    return pick?.urls.regular ?? null
+    return results[Math.floor(Math.random() * results.length)]?.urls.regular ?? null
   } catch {
     return null
   }
@@ -204,7 +253,8 @@ Escribe un artículo de blog en español (mínimo 600 palabras) con esta estruct
   "excerpt": "Resumen de 1-2 frases que engancha sin revelar todo",
   "content": "Contenido completo en Markdown. Empieza con un párrafo gancho de 2-3 líneas que describe la situación del lector. Sigue con H2 para cada sección. Termina con una llamada a la acción natural hacia una consulta personalizada.",
   "imageQuery": "3-5 palabras en inglés que describan VISUALMENTE el tema concreto del artículo para buscar en Unsplash. Objetos y personas del tema, NUNCA paisajes ni montañas (ej: seguro médico → 'doctor health insurance card', vivienda → 'apartment keys rental contract', permisos → 'passport residence permit stamp')",
-  "tags": ["tag1", "tag2", "tag3"]
+  "tags": ["6 a 8 tags", "en español, específicos del artículo", "sirven para el SEO y para variar la foto de portada"],
+  "imageTags": ["4 a 6 términos VISUALES en inglés, distintos entre sí y distintos del imageQuery", "cada uno debe evocar una foto diferente del mismo tema", "ej. para vivienda: 'moving boxes apartment', 'signing lease paperwork', 'landlord handing keys', 'empty living room sunlight'"]
 }
 
 REGLAS DE VOZ:
@@ -267,11 +317,25 @@ async function generatePosts() {
     })
 
     const usedSourceUrls = new Set(recentPosts.map((p) => p.sourceUrl).filter(Boolean) as string[])
+    const recentTitles = recentPosts.map((p) => p.title)
+
+    // Las fotos ya usadas hay que mirarlas en TODO el blog, no solo en esta
+    // categoría: si no, la misma imagen aparecía en "Impuestos" y en "Finanzas
+    // y vivienda" sin que el filtro se enterara. Ventana amplia (1 año) porque
+    // el catálogo de Unsplash por query es corto y se agota rápido.
+    const postsConFoto = await prisma.blogPost.findMany({
+      where: {
+        imageUrl: { not: null },
+        createdAt: { gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) },
+      },
+      select: { imageUrl: true },
+      orderBy: { createdAt: 'desc' },
+      take: 500,
+    })
     // Clave estable de cada foto ya usada (sin el ixid variable de Unsplash)
     const usedImageUrls = new Set(
-      (recentPosts.map((p) => p.imageUrl).filter(Boolean) as string[]).map(unsplashPhotoKey),
+      (postsConFoto.map((p) => p.imageUrl).filter(Boolean) as string[]).map(unsplashPhotoKey),
     )
-    const recentTitles = recentPosts.map((p) => p.title)
 
     const config = CATEGORIES[categoryName]
 
@@ -306,7 +370,7 @@ async function generatePosts() {
     const raw = completion.choices[0].message.content ?? '{}'
     const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim()
     const parsed = JSON.parse(cleaned)
-    const { title, excerpt, content, imageQuery, tags } = parsed
+    const { title, excerpt, content, imageQuery, tags, imageTags } = parsed
 
     // Imagen del hero: primero foto propia DE LA MISMA categoría; si no hay,
     // Unsplash con el query específico del tema del artículo (generado por la IA)
@@ -314,8 +378,10 @@ async function generatePosts() {
     const fotoPropia = await pickBlogFoto(categoryName)
     const imageUrl =
       fotoPropia ??
-      (imageQuery ? await fetchUnsplashImage(imageQuery, usedImageUrls) : null) ??
-      (await fetchUnsplashImage(config.imageQuery, usedImageUrls))
+      (await elegirFotoUnica(
+        construirQueries(imageQuery, config.imageQuery, imageTags),
+        usedImageUrls,
+      ))
     const hasImage = !!imageUrl
 
     // Create unique slug from title + date

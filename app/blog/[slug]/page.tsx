@@ -132,13 +132,18 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       <main className="min-h-screen" style={{ background: '#0d1117' }}>
 
         {/* ── Hero image ── */}
-        <div className="relative w-full h-[62vh] min-h-[420px] overflow-hidden">
+        {/* Alto en `svh`, no en `vh`: en Chrome Android `vh` mide el viewport SIN la
+            barra de URL, así que el hero salía más alto que la pantalla y el título
+            quedaba bajo el pliegue (visible en Galaxy S22 Ultra y similares).
+            El foco se sube al 35% en móvil porque el tercio inferior lo tapa el
+            bloque de título — si se centra, el motivo de la foto queda oculto. */}
+        <div className="relative w-full h-[58svh] min-h-[400px] max-h-[520px] md:h-[62svh] md:max-h-[760px] overflow-hidden">
           <Image
             src={heroImage}
             alt={post.title}
             fill
             priority
-            className="object-cover object-center"
+            className="object-cover object-[50%_35%] md:object-center"
             sizes="100vw"
           />
           {/* Gradient: navbar clearance top, heavy dark at bottom */}
