@@ -19,8 +19,8 @@ export function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-6p-I-X-sPUY?w=1920&q=80&auto=format&fit=crop"
-          alt="Vista aérea de los edificios de Zúrich durante el día"
+          src="/zurich-ch-hero.ffeOwgdK.webp"
+          alt="Vista aérea de Zúrich, Suiza al atardecer"
           fill
           className="object-cover object-center"
           priority
