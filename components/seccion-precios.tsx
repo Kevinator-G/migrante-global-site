@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Check, Home, Package2, ArrowRight, ShieldCheck, BookOpen } from 'lucide-react';
 import { trackEvent } from '@/lib/gtag';
+import { openCalendly } from '@/components/calendly-widget';
 
 const GOLD = '#c9a96e';
 
@@ -225,9 +226,11 @@ export function SeccionPrecios() {
                       <ArrowRight className="w-4 h-4" /> Ver habitaciones disponibles
                     </Link>
                   ) : (
-                  <Link
-                    href={`/?plan=${plan.id}#contacto`}
-                    onClick={() => trackEvent('cta_click', { cta_name: 'plan_agendar_llamada', plan_id: plan.id, value: plan.precio, currency: 'CHF' })}
+                  <button
+                    onClick={() => {
+                      trackEvent('cta_click', { cta_name: 'plan_agendar_llamada', plan_id: plan.id, value: plan.precio, currency: 'CHF' });
+                      openCalendly(`plan_${plan.id}`);
+                    }}
                     className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-95"
                     style={
                       plan.destacado
@@ -245,7 +248,7 @@ export function SeccionPrecios() {
                     }
                   >
                     <ArrowRight className="w-4 h-4" /> Agenda tu llamada gratuita
-                  </Link>
+                  </button>
                   )}
                 </div>
               </motion.div>

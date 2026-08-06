@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Users, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { trackEvent } from '@/lib/gtag';
+import { openCalendly } from '@/components/calendly-widget';
 
 const stats = [
   { icon: Users,  value: '150+',    label: 'Personas acompañadas' },
@@ -68,13 +69,15 @@ export function Hero() {
 
           {/* CTAs */}
           <div className="flex flex-col items-center gap-3 mb-14">
-            <Link
-              href="/#contacto"
+            <button
               className="btn-primary text-base font-semibold px-10 py-4 min-w-[260px] text-center"
-              onClick={() => trackEvent('cta_click', { cta_name: 'hero_consulta_gratuita', location: 'hero' })}
+              onClick={() => {
+                trackEvent('cta_click', { cta_name: 'hero_consulta_gratuita', location: 'hero' });
+                openCalendly('hero_consulta_gratuita');
+              }}
             >
               Agenda tu consulta gratuita
-            </Link>
+            </button>
             <Link
               href="/#planes"
               className="flex items-center gap-1.5 text-white/50 hover:text-yellow-400 transition-colors duration-200 text-sm font-medium"

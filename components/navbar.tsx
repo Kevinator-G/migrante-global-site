@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Menu, X, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart-context';
+import { openCalendly } from '@/components/calendly-widget';
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -79,9 +80,9 @@ export function Navbar() {
               )}
             </button>
 
-            <Link href="/#contacto" className="btn-primary text-sm px-5 py-2.5">
+            <button onClick={() => openCalendly('navbar_contacto')} className="btn-primary text-sm px-5 py-2.5">
               Contacto
-            </Link>
+            </button>
           </div>
 
           {/* Mobile: cart + hamburger */}
@@ -129,13 +130,15 @@ export function Navbar() {
               </Link>
             ))}
 
-            <Link
-              href="/#contacto"
-              className="block btn-primary text-center mt-2"
-              onClick={() => setIsMenuOpen(false)}
+            <button
+              className="block w-full btn-primary text-center mt-2"
+              onClick={() => {
+                setIsMenuOpen(false);
+                openCalendly('navbar_mobile_contacto');
+              }}
             >
               Contacto
-            </Link>
+            </button>
           </div>
         )}
       </div>
