@@ -64,8 +64,21 @@ const CATEGORY_FALLBACKS: Record<string, string> = {
 };
 const DEFAULT_FALLBACK = 'https://images.unsplash.com/photo-1527668752968-14dc70a27c95?w=1600&q=80&auto=format&fit=crop';
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Escapamos ANTES de convertir a HTML: el contenido puede venir de una IA
+// alimentada con noticias externas, y sin esto cualquier <script> u
+// onerror= presente en el texto fuente se ejecutaría en el navegador de
+// cada visitante (XSS almacenado).
 function renderMarkdown(content: string): string {
-  return content
+  return escapeHtml(content)
     .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-white mt-10 mb-3 pb-2" style="border-bottom:1px solid rgba(255,255,255,0.07)">$1</h2>')
     .replace(/^### (.+)$/gm, '<h3 class="text-base font-semibold text-yellow-400 mt-6 mb-2">$1</h3>')
     .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
