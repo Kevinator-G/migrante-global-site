@@ -2,8 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Check, Home, Package2, Users, CheckCircle2, ArrowRight, ShieldCheck, Video, BookOpen } from 'lucide-react';
-import { useCart } from '@/lib/cart-context';
+import { Check, Home, Package2, ArrowRight, ShieldCheck, BookOpen } from 'lucide-react';
 import { trackEvent } from '@/lib/gtag';
 
 const GOLD = '#c9a96e';
@@ -68,26 +67,6 @@ const planes = [
 ];
 
 export function SeccionPrecios() {
-  const { addItem, openCart, isInCart } = useCart();
-
-  const handleAddToCart = (plan: typeof planes[0]) => {
-    if (isInCart(plan.id)) { openCart(); return; }
-    addItem({
-      id: plan.id,
-      nombre: plan.nombre,
-      precio: plan.precio,
-      moneda: plan.moneda,
-      tipo: plan.tipo,
-      emoji: plan.id === 'solo-alojamiento' ? '🏠' : plan.id === 'pack-completo' ? '📦' : plan.id === 'llegada-completa' ? '🚀' : '🤝',
-    });
-    trackEvent('add_to_cart', {
-      item_id: plan.id,
-      item_name: plan.nombre,
-      value: plan.precio,
-      currency: 'CHF',
-    });
-  };
-
   return (
     <section id="planes" className="section" style={{ background: '#111318' }}>
       <div className="max-w-[1100px] mx-auto px-6">
@@ -138,7 +117,6 @@ export function SeccionPrecios() {
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
           {planes.map((plan, index) => {
-            const inCart = isInCart(plan.id);
             const Icon = plan.icon;
 
             return (
@@ -247,17 +225,12 @@ export function SeccionPrecios() {
                       <ArrowRight className="w-4 h-4" /> Ver habitaciones disponibles
                     </Link>
                   ) : (
-                  <button
-                    onClick={() => handleAddToCart(plan)}
+                  <Link
+                    href={`/?plan=${plan.id}#contacto`}
+                    onClick={() => trackEvent('cta_click', { cta_name: 'plan_agendar_llamada', plan_id: plan.id, value: plan.precio, currency: 'CHF' })}
                     className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-95"
                     style={
-                      inCart
-                        ? {
-                            background: 'rgba(201,169,110,0.1)',
-                            border: `1px solid ${GOLD}40`,
-                            color: GOLD,
-                          }
-                        : plan.destacado
+                      plan.destacado
                         ? {
                             background: GOLD,
                             color: '#111318',
@@ -270,25 +243,9 @@ export function SeccionPrecios() {
                             color: 'var(--white)',
                           }
                     }
-                    onMouseEnter={e => {
-                      if (!inCart && !plan.destacado) {
-                        (e.currentTarget as HTMLElement).style.borderColor = `${GOLD}50`;
-                        (e.currentTarget as HTMLElement).style.color = GOLD;
-                      }
-                    }}
-                    onMouseLeave={e => {
-                      if (!inCart && !plan.destacado) {
-                        (e.currentTarget as HTMLElement).style.borderColor = 'rgba(128,128,128,0.2)';
-                        (e.currentTarget as HTMLElement).style.color = 'var(--white)';
-                      }
-                    }}
                   >
-                    {inCart ? (
-                      <><CheckCircle2 className="w-4 h-4" /> En tu carrito · Ver</>
-                    ) : (
-                      <><ArrowRight className="w-4 h-4" /> Empezar con este plan</>
-                    )}
-                  </button>
+                    <ArrowRight className="w-4 h-4" /> Agenda tu llamada gratuita
+                  </Link>
                   )}
                 </div>
               </motion.div>
