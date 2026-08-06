@@ -1,5 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import crypto from 'crypto'
+
+// Verifica que la petición venga realmente de Meta, comparando la firma
+// HMAC-SHA256 del cuerpo crudo contra el header X-Hub-Signature-256.
+// Sin esto cualquiera que adivine la URL puede falsificar mensajes entrantes.
+// App Secret: developers.facebook.com → tu app → Configuración básica.
+function verifyMetaSignature(rawBody: string, signatureHeader: string | null): boolean {
+  const appSecret = process.env.WHATSAPP_APP_SECRET
+  if (!appSecret) {
+    console.error('WHATSAPP_APP_SECRET no configurado — rechazando webhook de WhatsApp por seguridad.')
+    return false
+  }
+  if (!signatureHeader?.startsWith('sha256=')) return false
+
+  const expected = crypto.createHmac('sha256', appSecret).update(rawBody).digest('hex')
+  const received = signatureHeader.slice('sha256='.length)
+
+  const expectedBuf = Buffer.from(expected, 'hex')
+  const receivedBuf = Buffer.from(received, 'hex')
+  if (expectedBuf.length !== receivedBuf.length) return false
+  return crypto.timingSafeEqual(expectedBuf, receivedBuf)
+}
 
 // ── GET — Meta webhook verification ───────────────────────────────────────
 // Meta sends a GET with hub.challenge when you set up the webhook in the dashboard
@@ -17,8 +39,15 @@ export async function GET(req: NextRequest) {
 
 // ── POST — incoming messages from clients ──────────────────────────────────
 export async function POST(req: NextRequest) {
+  const rawBody = await req.text()
+
+  if (!verifyMetaSignature(rawBody, req.headers.get('x-hub-signature-256'))) {
+    console.error('WhatsApp webhook: firma inválida o ausente — petición rechazada.')
+    return NextResponse.json({ status: 'invalid_signature' }, { status: 401 })
+  }
+
   try {
-    const body = await req.json()
+    const body = JSON.parse(rawBody)
 
     const entry = body?.entry?.[0]
     const changes = entry?.changes?.[0]
