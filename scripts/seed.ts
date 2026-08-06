@@ -6,31 +6,34 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // Crear usuario de prueba por defecto (john@doe.com)
-  const testUser = await prisma.user.upsert({
-    where: { email: 'john@doe.com' },
-    update: {},
-    create: {
-      email: 'john@doe.com',
-      name: 'Test Admin',
-      password: await bcrypt.hash('johndoe123', 10),
-      role: 'admin',
-    },
-  });
-  console.log('✅ Test user created:', testUser.email);
+  const email = process.env.SEED_ADMIN_EMAIL;
+  const password = process.env.SEED_ADMIN_PASSWORD;
 
-  // Crear usuario admin adicional (admin@migranteglobal.com)
+  if (!email || !password) {
+    console.log(
+      'ℹ️  SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD no están definidas — no se crea ninguna cuenta admin.'
+    );
+    console.log(
+      '   Defínelas como variables de entorno temporales antes de correr este script si necesitas crear una cuenta.'
+    );
+    return;
+  }
+
+  if (password.length < 12) {
+    throw new Error('SEED_ADMIN_PASSWORD debe tener al menos 12 caracteres.');
+  }
+
   const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@migranteglobal.com' },
-    update: {},
+    where: { email },
+    update: { password: await bcrypt.hash(password, 10), role: 'admin' },
     create: {
-      email: 'admin@migranteglobal.com',
-      name: 'Migrante Global Admin',
-      password: await bcrypt.hash('migrante2024', 10),
+      email,
+      name: 'Admin',
+      password: await bcrypt.hash(password, 10),
       role: 'admin',
     },
   });
-  console.log('✅ Admin user created:', adminUser.email);
+  console.log('✅ Admin user created/updated:', adminUser.email);
 
   console.log('✨ Seeding completed!');
 }
