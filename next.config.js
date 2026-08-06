@@ -23,14 +23,14 @@ const nextConfig = {
   async headers() {
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com https://assets.calendly.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com",
       "font-src 'self' https://fonts.gstatic.com",
       // Ojo: `blob:` es el esquema de URI, NO el dominio de Vercel Blob.
       // Las fotos propias viven en *.public.blob.vercel-storage.com y necesitan su propia entrada.
-      "img-src 'self' data: blob: https://images.unsplash.com https://images.squarespace-cdn.com https://*.public.blob.vercel-storage.com https://img.youtube.com https://i.ytimg.com https://www.google-analytics.com https://www.googletagmanager.com",
-      "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com",
-      "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://js.stripe.com https://hooks.stripe.com",
+      "img-src 'self' data: blob: https://images.unsplash.com https://images.squarespace-cdn.com https://*.public.blob.vercel-storage.com https://img.youtube.com https://i.ytimg.com https://www.google-analytics.com https://www.googletagmanager.com https://*.calendly.com",
+      "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://calendly.com https://*.calendly.com",
+      "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://js.stripe.com https://hooks.stripe.com https://calendly.com https://*.calendly.com",
       "media-src 'self'",
     ].join('; ');
 

@@ -4,6 +4,7 @@ import MigranteChat from "@/components/migranteChat";
 import { WhatsappFlotante } from '@/components/whatsapp-flotante';
 import { CookieBanner } from '@/components/cookie-banner';
 import { GaScript } from '@/components/ga-script';
+import { CalendlyWidget } from '@/components/calendly-widget';
 import { Providers } from './providers';
 import { Inter, Outfit } from 'next/font/google';
 
@@ -200,6 +201,7 @@ export default function RootLayout({
         <MigranteChat />
         <CookieBanner />
         <WhatsappFlotante />
+        <CalendlyWidget />
         {/* GA4 — solo carga tras consentimiento explícito del usuario */}
         {GA_ID && <GaScript gaId={GA_ID} />}
       </body>
