@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Check, Home, Package2, ArrowRight, ShieldCheck, BookOpen } from 'lucide-react';
 import { trackEvent } from '@/lib/gtag';
-import { openCalendly } from '@/components/calendly-widget';
+import { useCalendlyGate } from '@/lib/calendly-gate-context';
 
 const GOLD = '#c9a96e';
 
@@ -68,6 +68,8 @@ const planes = [
 ];
 
 export function SeccionPrecios() {
+  const { requestCalendly } = useCalendlyGate();
+
   return (
     <section id="planes" className="section" style={{ background: '#111318' }}>
       <div className="max-w-[1100px] mx-auto px-6">
@@ -229,7 +231,7 @@ export function SeccionPrecios() {
                   <button
                     onClick={() => {
                       trackEvent('cta_click', { cta_name: 'plan_agendar_llamada', plan_id: plan.id, value: plan.precio, currency: 'CHF' });
-                      openCalendly(`plan_${plan.id}`);
+                      requestCalendly(`plan_${plan.id}`);
                     }}
                     className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-95"
                     style={

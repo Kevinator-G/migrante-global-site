@@ -5,12 +5,13 @@ import { motion } from 'framer-motion';
 import { Menu, X, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart-context';
-import { openCalendly } from '@/components/calendly-widget';
+import { useCalendlyGate } from '@/lib/calendly-gate-context';
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { itemCount, openCart } = useCart();
+  const { requestCalendly } = useCalendlyGate();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -80,7 +81,7 @@ export function Navbar() {
               )}
             </button>
 
-            <button onClick={() => openCalendly('navbar_contacto')} className="btn-primary text-sm px-5 py-2.5">
+            <button onClick={() => requestCalendly('navbar_contacto')} className="btn-primary text-sm px-5 py-2.5">
               Contacto
             </button>
           </div>
@@ -134,7 +135,7 @@ export function Navbar() {
               className="block w-full btn-primary text-center mt-2"
               onClick={() => {
                 setIsMenuOpen(false);
-                openCalendly('navbar_mobile_contacto');
+                requestCalendly('navbar_mobile_contacto');
               }}
             >
               Contacto

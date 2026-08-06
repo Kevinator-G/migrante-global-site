@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Users, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { trackEvent } from '@/lib/gtag';
-import { openCalendly } from '@/components/calendly-widget';
+import { useCalendlyGate } from '@/lib/calendly-gate-context';
 
 const stats = [
   { icon: Users,  value: '150+',    label: 'Personas acompañadas' },
@@ -14,6 +14,8 @@ const stats = [
 ];
 
 export function Hero() {
+  const { requestCalendly } = useCalendlyGate();
+
   return (
     <section data-hero="true" className="relative min-h-[92vh] flex flex-col items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -73,7 +75,7 @@ export function Hero() {
               className="btn-primary text-base font-semibold px-10 py-4 min-w-[260px] text-center"
               onClick={() => {
                 trackEvent('cta_click', { cta_name: 'hero_consulta_gratuita', location: 'hero' });
-                openCalendly('hero_consulta_gratuita');
+                requestCalendly('hero_consulta_gratuita');
               }}
             >
               Agenda tu consulta gratuita
