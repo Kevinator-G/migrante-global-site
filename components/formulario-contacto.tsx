@@ -1,14 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Send, CheckCircle, AlertCircle, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { trackEvent } from '@/lib/gtag';
-
-const PLAN_LABELS: Record<string, string> = {
-  'pack-completo': 'Pack Completo (497 CHF)',
-  'llegada-completa': 'Llegada Completa (997 CHF)',
-};
 
 export function FormularioContacto() {
   const [formData, setFormData] = useState({
@@ -22,19 +17,6 @@ export function FormularioContacto() {
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [planInteres, setPlanInteres] = useState<string | null>(null);
-
-  useEffect(() => {
-    const planId = new URLSearchParams(window.location.search).get('plan');
-    const label = planId ? PLAN_LABELS[planId] : undefined;
-    if (label) {
-      setPlanInteres(label);
-      setFormData(prev => ({
-        ...prev,
-        mensaje: `Me interesa el plan ${label}. Cuéntame más antes de decidir.`,
-      }));
-    }
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,14 +71,6 @@ export function FormularioContacto() {
           <p className="text-white/60 text-lg">
             Cuéntanos tu situación y te respondemos en menos de 48 horas con orientación real — sin compromiso.
           </p>
-          {planInteres && (
-            <span
-              className="inline-block mt-4 text-sm font-semibold px-4 py-1.5 rounded-full"
-              style={{ background: 'rgba(201,169,110,0.1)', border: '1px solid rgba(201,169,110,0.3)', color: '#c9a96e' }}
-            >
-              Hablemos sobre: {planInteres}
-            </span>
-          )}
         </motion.div>
 
         {/* Contacto directo */}

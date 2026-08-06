@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { Mail, MapPin, Instagram, Linkedin } from 'lucide-react';
+import { openCalendly } from '@/components/calendly-widget';
 
 export function Footer() {
   return (
@@ -94,12 +97,12 @@ export function Footer() {
             </div>
 
             <div className="mt-6">
-              <Link
-                href="/#contacto"
+              <button
+                onClick={() => openCalendly('footer_contacto')}
                 className="inline-block btn-primary text-sm px-5 py-2.5"
               >
                 Contactar ahora
-              </Link>
+              </button>
             </div>
           </div>
         </div>
