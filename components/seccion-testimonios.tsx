@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Star, MessageCircle } from 'lucide-react';
+import { MessageCircle, Instagram, Youtube } from 'lucide-react';
 
 const GOLD = '#c9a96e';
 
@@ -32,11 +32,12 @@ export function SeccionTestimonios() {
         >
           <span className="section-tag">Testimonios</span>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            150+ personas ya <span className="text-yellow-500">dieron el paso</span>
+            Historias reales, <span className="text-yellow-500">en construcción</span>
           </h2>
           <p className="text-white/55 text-lg max-w-xl mx-auto">
-            Estamos recopilando historias reales. Si pasaste por el proceso con Kevin,
-            tu experiencia puede ayudar a alguien más a decidirse.
+            Preferimos no publicar aquí nada que no puedas verificar. Cada testimonio
+            que veas en esta sección será de alguien real que pasó por el proceso —
+            mientras tanto, puedes ver conversaciones y contenido real en nuestras redes.
           </p>
         </motion.div>
 
@@ -51,14 +52,31 @@ export function SeccionTestimonios() {
             border: '1px solid rgba(201,169,110,0.18)',
           }}
         >
-          <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star key={s} className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-            ))}
+          <div className="flex gap-3">
+            <a
+              href="https://www.instagram.com/kevin.migranteglobal/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram Migrante Global"
+              className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
+              style={{ background: 'rgba(201,169,110,0.1)', border: '1px solid rgba(201,169,110,0.25)', color: GOLD }}
+            >
+              <Instagram className="w-4 h-4" />
+            </a>
+            <a
+              href="https://www.youtube.com/@migranteglobal"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube Migrante Global"
+              className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
+              style={{ background: 'rgba(201,169,110,0.1)', border: '1px solid rgba(201,169,110,0.25)', color: GOLD }}
+            >
+              <Youtube className="w-4 h-4" />
+            </a>
           </div>
           <p className="text-white/60 text-sm leading-relaxed max-w-sm">
             ¿Trabajaste con nosotros? Comparte tu historia —
-            nos encantaría publicarla aquí.
+            nos encantaría publicarla aquí con tu nombre real.
           </p>
           <a
             href="mailto:hola@migranteglobal.ch?subject=Mi experiencia con Migrante Global"

@@ -81,6 +81,9 @@ export function Hero() {
             >
               Ver planes y precios <ArrowRight className="w-3.5 h-3.5" />
             </Link>
+            <p className="text-white/40 text-xs" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.8)' }}>
+              Sin compromiso · Devolución si tu primera sesión no te aporta valor
+            </p>
           </div>
 
           {/* Stats bar */}

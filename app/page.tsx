@@ -10,6 +10,7 @@ import { SeccionPrecios } from '@/components/seccion-precios';
 import { SeccionTestimonios } from '@/components/seccion-testimonios';
 import { SeccionQuienSoy } from '@/components/seccion-quien-soy';
 import { SeccionLeadMagnet } from '@/components/seccion-lead-magnet';
+import { SeccionFaq } from '@/components/seccion-faq';
 
 // Las habitaciones de la home se rectifican desde la fuente cada hora
 export const revalidate = 3600;
@@ -37,9 +38,11 @@ export default function HomePage() {
         <SeccionPrecios />
         {/* 10. Lead magnet — captura emails de los que no están listos aún */}
         <SeccionLeadMagnet />
-        {/* 11. Contacto — acción final */}
+        {/* 11. FAQ — resuelve objeciones justo antes de pedir el contacto */}
+        <SeccionFaq />
+        {/* 12. Contacto — acción final */}
         <FormularioContacto />
-        {/* Método, FAQ y YouTube viven ahora en /metodo — menos scroll aquí */}
+        {/* Método completo y videos de YouTube viven en /metodo — menos scroll aquí */}
       </main>
       <Footer />
     </>
