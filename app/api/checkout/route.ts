@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { getCatalogItem } from "@/lib/service-catalog";
 
 type CartItem = {
   id: string;
@@ -23,8 +24,30 @@ export async function POST(req: Request) {
 
     const appUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
 
-    const lineItems = items.map(
-      (item: CartItem) => ({
+    // El precio SIEMPRE sale del catálogo del servidor, nunca de lo que
+    // manda el cliente — si no, cualquiera podría pagar lo que quisiera.
+    const unknownId = (items as CartItem[]).find((item) => !getCatalogItem(item.id));
+    if (unknownId) {
+      return NextResponse.json(
+        { error: `Servicio desconocido: ${unknownId.id}` },
+        { status: 400 }
+      );
+    }
+
+    const catalogItems = (items as CartItem[]).map((item) => ({
+      ...item,
+      ...getCatalogItem(item.id)!,
+    }));
+
+    if (catalogItems.some((item) => item.precio <= 0)) {
+      return NextResponse.json(
+        { error: "Uno de los servicios en el carrito es gratuito y no requiere pago." },
+        { status: 400 }
+      );
+    }
+
+    const lineItems = catalogItems.map(
+      (item) => ({
         price_data: {
           currency: "chf",
           product_data: {
@@ -51,7 +74,7 @@ export async function POST(req: Request) {
       allow_promotion_codes: true,
       metadata: {
         items: JSON.stringify(
-          items.map((i: CartItem) => ({
+          catalogItems.map((i) => ({
             id: i.id,
             nombre: i.nombre,
             tipo: i.tipo,
