@@ -19,8 +19,8 @@ export function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-5oiGnDYHxjQ?w=1920&q=80&auto=format&fit=crop"
-          alt="Quaibrücke sobre el río Limmat, Zúrich, al atardecer"
+          src="https://images.unsplash.com/photo-6p-I-X-sPUY?w=1920&q=80&auto=format&fit=crop"
+          alt="Vista aérea de los edificios de Zúrich durante el día"
           fill
           className="object-cover object-center"
           priority
