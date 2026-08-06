@@ -156,7 +156,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
         </section>
 
         {/* ── Layout: sidebar + contenido ── */}
-        <div className="max-w-[1200px] mx-auto px-6 pb-20 flex gap-8 items-start">
+        <div className="max-w-[1200px] mx-auto px-6 pb-20 flex flex-col lg:flex-row gap-8 items-start">
 
           {/* ── Sidebar izquierda ── */}
           <aside className="hidden lg:block w-56 flex-shrink-0 sticky top-24">
@@ -228,7 +228,7 @@ export default async function BlogPage({ searchParams }: { searchParams: { categ
           )}
 
           {/* ── Contenido principal ── */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 w-full">
           {posts.length === 0 ? (
             <div className="text-center py-20">
               <Sparkles className="w-12 h-12 text-yellow-500/40 mx-auto mb-4" />
