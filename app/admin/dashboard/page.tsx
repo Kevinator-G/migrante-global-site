@@ -7,7 +7,7 @@ import { signOut } from 'next-auth/react';
 import {
   Download, Trash2, LogOut, Mail, Phone, MapPin,
   MessageSquare, Loader, FileText, Eye, EyeOff,
-  Sparkles, CheckCircle, XCircle, Send, Reply,
+  Sparkles, CheckCircle, XCircle, Send, Reply, Settings,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -197,13 +197,22 @@ export default function DashboardPage() {
             <span className="text-bone/40">|</span>
             <h1 className="text-xl font-semibold text-bone">Panel de Administración</h1>
           </div>
-          <button
-            onClick={() => signOut({ callbackUrl: '/' })}
-            className="flex items-center gap-2 text-bone/70 hover:text-red-600 transition"
-          >
-            <LogOut className="w-5 h-5" />
-            Cerrar Sesión
-          </button>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/admin/settings"
+              className="flex items-center gap-2 text-bone/70 hover:text-gold transition"
+            >
+              <Settings className="w-5 h-5" />
+              Configuración
+            </Link>
+            <button
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="flex items-center gap-2 text-bone/70 hover:text-red-600 transition"
+            >
+              <LogOut className="w-5 h-5" />
+              Cerrar Sesión
+            </button>
+          </div>
         </div>
       </div>
 
