@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       request: req,
       onBeforeGenerateToken: async () => {
         const session = await getServerSession(authOptions)
-        if (!session) throw new Error('No autorizado')
+        if (!session || session.user?.role !== 'admin') throw new Error('No autorizado')
         return {
           allowedContentTypes: [
             'image/jpeg', 'image/png', 'image/webp', 'image/avif',
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!session || session.user?.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { url, filename, contentType, category } = await req.json()
   if (!url || !filename) {
@@ -69,7 +69,7 @@ export async function PUT(req: NextRequest) {
 
 export async function GET() {
   const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!session || session.user?.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const assets = await prisma.mediaAsset.findMany({ orderBy: { createdAt: 'desc' } })
   return NextResponse.json({ assets })
@@ -77,7 +77,7 @@ export async function GET() {
 
 export async function DELETE(req: NextRequest) {
   const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!session || session.user?.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const id = req.nextUrl.searchParams.get('id')
   if (!id) return NextResponse.json({ error: 'id requerido' }, { status: 400 })
