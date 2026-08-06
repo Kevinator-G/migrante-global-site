@@ -27,7 +27,7 @@ export function Hero() {
           sizes="100vw"
         />
         {/* Capa 1: degradado vertical base */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/55 to-black/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/90"></div>
         {/* Capa 2: oscurecimiento radial en el centro donde vive el título */}
         <div
           className="absolute inset-0"
@@ -78,15 +78,19 @@ export function Hero() {
             >
               Agenda tu consulta gratuita
             </button>
-            <Link
-              href="/#planes"
-              className="flex items-center gap-1.5 text-white/50 hover:text-yellow-400 transition-colors duration-200 text-sm font-medium"
+            <div
+              className="flex flex-col items-center gap-2 rounded-xl px-5 py-3 bg-black/40 backdrop-blur-sm border border-white/10"
             >
-              Ver planes y precios <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-            <p className="text-white/40 text-xs" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.8)' }}>
-              Sin compromiso · Devolución si tu primera sesión no te aporta valor
-            </p>
+              <Link
+                href="/#planes"
+                className="flex items-center gap-1.5 text-white/80 hover:text-yellow-400 transition-colors duration-200 text-sm font-medium"
+              >
+                Ver planes y precios <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <p className="text-white/60 text-xs">
+                Sin compromiso · Devolución si tu primera sesión no te aporta valor
+              </p>
+            </div>
           </div>
 
           {/* Stats bar */}
