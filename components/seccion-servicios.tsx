@@ -12,10 +12,7 @@ import {
   FilePenLine,
   FileCheck,
   Languages,
-  Plane,
   Users,
-  Globe,
-  Map,
   ChevronDown,
   ArrowRight,
 } from 'lucide-react';
@@ -67,9 +64,6 @@ const adicionales = [
   { icon: FileCheck,   titulo: 'Acompañamiento en Trámites', link: '/servicios/tramites',               descripcion: 'Trámites administrativos paso a paso.' },
   { icon: Languages,   titulo: 'Clases de Alemán',         link: '/servicios/clases-aleman',            descripcion: 'Clases personalizadas con profesora nativa.' },
   { icon: Users,       titulo: 'Comunidad de Apoyo',       link: '/servicios/comunidad-apoyo',          descripcion: 'Red exclusiva de migrantes y eventos mensuales.' },
-  { icon: Plane,       titulo: 'Recogida en Aeropuerto',   link: '/servicios/recogida-aeropuerto',      descripcion: 'Traslado desde el aeropuerto a tu alojamiento.' },
-  { icon: Map,         titulo: 'Guía Turística Local',     link: '/servicios/guia-turistica',           descripcion: 'Descubre Suiza con un local · jornadas a medida.' },
-  { icon: Globe,       titulo: 'Otros Países',             link: '/servicios/orientacion-otros-paises', descripcion: 'Orientación para migrar a otros países europeos.' },
 ];
 
 export function SeccionServicios() {

@@ -17,7 +17,6 @@ const etapas = [
     pasos: ['Evalúa tu perfil y tu sector', 'Calcula el presupuesto real', 'Define tu plan de idioma'],
     links: [
       { label: 'Orientación laboral', href: '/servicios/orientacion-laboral' },
-      { label: '¿Suiza u otro país?', href: '/servicios/orientacion-otros-paises' },
     ],
   },
   {
@@ -29,7 +28,6 @@ const etapas = [
     links: [
       { label: 'CV formato suizo', href: '/servicios/cv-formato-suizo' },
       { label: 'Habitaciones disponibles', href: '/servicios/alojamiento' },
-      { label: 'Recogida en aeropuerto', href: '/servicios/recogida-aeropuerto' },
     ],
   },
   {

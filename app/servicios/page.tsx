@@ -9,12 +9,9 @@ import {
   Video,
   Home,
   Languages,
-  Plane,
   FileCheck,
   Users,
-  Globe,
   FilePenLine,
-  Map,
   ArrowRight,
   ShoppingCart,
   CheckCircle2,
@@ -114,23 +111,6 @@ const servicios = [
     fotoAlt: 'Apartamento moderno en Suiza',
   },
   {
-    id: 'tour-zurich',
-    href: '/servicios/tour-zurich',
-    icon: Map,
-    categoria: 'Experiencias',
-    titulo: 'Tour por Zúrich · Hidden Zürich',
-    descripcion:
-      'Caminata guiada de 3 horas por el Limmat: Letten, Zúrich-West y rincones que no salen en las guías. En español e inglés.',
-    precio: 55,
-    moneda: 'CHF/persona',
-    precioTipo: '3 horas · Grupos de 2 a 8 personas',
-    tag: 'Nuevo',
-    tagColor: '#10b981',
-    destacado: false,
-    foto: 'https://images.unsplash.com/photo-1515488764276-beab7607c1e6?w=200&q=80',
-    fotoAlt: 'Río Limmat en Zúrich',
-  },
-  {
     id: 'clases-aleman',
     href: '/servicios/clases-aleman',
     icon: Languages,
@@ -146,23 +126,6 @@ const servicios = [
     destacado: false,
     foto: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=200&q=80',
     fotoAlt: 'Aprendizaje de idiomas',
-  },
-  {
-    id: 'recogida-aeropuerto',
-    href: '/servicios/recogida-aeropuerto',
-    icon: Plane,
-    categoria: 'Llegada',
-    titulo: 'Recogida en Aeropuerto',
-    descripcion:
-      'Alguien que ya conoce Suiza te espera en el aeropuerto y te acompaña hasta tu alojamiento. Primer día sin estrés.',
-    precio: 177,
-    moneda: 'CHF',
-    precioTipo: 'Por traslado · hasta 4h de orientación',
-    tag: null,
-    tagColor: '',
-    destacado: false,
-    foto: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=200&q=80',
-    fotoAlt: 'Aeropuerto internacional',
   },
   {
     id: 'tramites-suiza',
@@ -197,40 +160,6 @@ const servicios = [
     destacado: false,
     foto: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&q=80',
     fotoAlt: 'Comunidad de personas reunidas',
-  },
-  {
-    id: 'guia-turistica',
-    href: '/servicios/guia-turistica',
-    icon: Map,
-    categoria: 'Experiencias',
-    titulo: 'Guía Turística Local',
-    descripcion:
-      'Descubre Suiza con alguien que ya vive aquí. Rincones reales, anécdotas locales y los lugares donde van los suizos de verdad.',
-    precio: 297,
-    moneda: 'CHF',
-    precioTipo: 'Jornada completa (8h) · por grupo de hasta 4 personas',
-    tag: 'Nuevo',
-    tagColor: '#10b981',
-    destacado: false,
-    foto: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&q=80',
-    fotoAlt: 'Paisaje suizo con montañas',
-  },
-  {
-    id: 'orientacion-otros-paises',
-    href: '/servicios/orientacion-otros-paises',
-    icon: Globe,
-    categoria: 'Europa',
-    titulo: 'Orientación Otros Países',
-    descripcion:
-      'Análisis comparativo de Suiza vs Alemania, Austria, Países Bajos y Portugal según tu perfil. Incluye sesión 1:1.',
-    precio: 177,
-    moneda: 'CHF',
-    precioTipo: 'Pago único',
-    tag: null,
-    tagColor: '',
-    destacado: false,
-    foto: 'https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=200&q=80',
-    fotoAlt: 'Mapa de Europa',
   },
   {
     id: 'generador-documentos',
@@ -482,8 +411,8 @@ export default function ServiciosPage() {
                 <span style={{ color: GOLD }}>resuelven problemas reales</span>
               </h1>
               <p className="text-white/55 text-lg max-w-2xl mx-auto leading-relaxed">
-                Desde tu búsqueda de trabajo hasta el primer día en el aeropuerto —
-                cada servicio está diseñado para una etapa concreta de tu migración.
+                Desde tu búsqueda de trabajo hasta que te sientes instalado en Suiza —
+                cada servicio está diseñado para una etapa concreta de tu proceso.
               </p>
             </motion.div>
           </div>
