@@ -6,8 +6,13 @@ export default withAuth(
     const { pathname } = req.nextUrl;
     const token = req.nextauth.token;
 
-    // Si intenta acceder a /admin (excepto /admin/login) sin ser admin
-    if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+    // Si intenta acceder a /admin (excepto /admin/login y /admin/bootstrap,
+    // que tienen su propia protección por secreto) sin ser admin
+    if (
+      pathname.startsWith('/admin') &&
+      pathname !== '/admin/login' &&
+      pathname !== '/admin/bootstrap'
+    ) {
       if (!token || token.role !== 'admin') {
         const loginUrl = new URL('/admin/login', req.url);
         return NextResponse.redirect(loginUrl);
