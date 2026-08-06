@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import { Mail, MapPin, Instagram, Linkedin } from 'lucide-react';
-import { openCalendly } from '@/components/calendly-widget';
+import { useCalendlyGate } from '@/lib/calendly-gate-context';
 
 export function Footer() {
+  const { requestCalendly } = useCalendlyGate();
+
   return (
     <footer className="bg-[#0a0b0d] border-t border-white/5 py-14">
       <div className="max-w-[1200px] mx-auto px-6">
@@ -98,7 +100,7 @@ export function Footer() {
 
             <div className="mt-6">
               <button
-                onClick={() => openCalendly('footer_contacto')}
+                onClick={() => requestCalendly('footer_contacto')}
                 className="inline-block btn-primary text-sm px-5 py-2.5"
               >
                 Contactar ahora
